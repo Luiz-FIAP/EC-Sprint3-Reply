@@ -3,127 +3,30 @@
   "author": "Sistema de Monitoramento IoT",
   "editor": "wokwi",
   "parts": [
-    {
-      "type": "wokwi-esp32-devkit-v1",
-      "id": "esp",
-      "top": 0,
-      "left": 0,
-      "attrs": {}
-    },
-    {
-      "type": "wokwi-dht22",
-      "id": "dht22",
-      "top": -67.2,
-      "left": 172.8,
-      "attrs": {}
-    },
-    {
-      "type": "wokwi-sw-420",
-      "id": "vibration",
-      "top": 48,
-      "left": 172.8,
-      "attrs": {}
-    },
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht22", "top": -67.2, "left": 172.8, "attrs": {} },
+    { "type": "wokwi-sw-420", "id": "vibration", "top": 48, "left": 172.8, "attrs": {} },
     {
       "type": "wokwi-photoresistor-sensor",
       "id": "ldr",
       "top": 163.2,
       "left": 172.8,
       "attrs": {}
-    },
-    {
-      "type": "wokwi-breadboard-half",
-      "id": "bb",
-      "top": -140,
-      "left": 320,
-      "attrs": {}
-    },
-    {
-      "type": "wokwi-resistor",
-      "id": "r1",
-      "top": 230.4,
-      "left": 278.4,
-      "attrs": { "value": "10000" }
     }
   ],
   "connections": [
-    [
-      "esp:TX0",
-      "$serialMonitor:RX",
-      "",
-      []
-    ],
-    [
-      "esp:RX0",
-      "$serialMonitor:TX",
-      "",
-      []
-    ],
-    [
-      "dht22:VCC",
-      "esp:3V3",
-      "red",
-      ["h0"]
-    ],
-    [
-      "dht22:GND",
-      "esp:GND.1",
-      "black",
-      ["h0"]
-    ],
-    [
-      "dht22:SDA",
-      "esp:D4",
-      "green",
-      ["h0"]
-    ],
-    [
-      "vibration:VCC",
-      "esp:3V3",
-      "red",
-      ["h0"]
-    ],
-    [
-      "vibration:GND",
-      "esp:GND.1",
-      "black",
-      ["h0"]
-    ],
-    [
-      "vibration:DO",
-      "esp:D2",
-      "blue",
-      ["h0"]
-    ],
-    [
-      "ldr:VCC",
-      "esp:3V3",
-      "red",
-      ["h0"]
-    ],
-    [
-      "ldr:GND",
-      "esp:GND.1",
-      "black",
-      ["h0"]
-    ],
-    [
-      "ldr:AO",
-      "esp:A0",
-      "yellow",
-      ["h0"]
-    ],
-    [
-      "r1:1",
-      "ldr:AO",
-      "yellow",
-      ["h0"]
-    ],
-    [
-      "r1:2",
-      "esp:GND.1",
-      "black",
-      ["h0"]
-    ]
-  ]
-} 
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "dht22:VCC", "esp:3V3", "red", [ "h-5.4", "v110.8" ] ],
+    [ "dht22:GND", "esp:GND.1", "black", [ "h4.2", "v101.3" ] ],
+    [ "dht22:SDA", "esp:D4", "green", [ "h4.3", "v72.3" ] ],
+    [ "vibration:VCC", "esp:3V3", "red", [ "h0" ] ],
+    [ "vibration:GND", "esp:GND.1", "black", [ "h0" ] ],
+    [ "vibration:DO", "esp:D2", "blue", [ "h0" ] ],
+    [ "ldr:VCC", "esp:3V3", "red", [ "h10.4", "v-20.7" ] ],
+    [ "ldr:GND", "esp:GND.1", "black", [ "h29.6", "v-40.2" ] ],
+    [ "ldr:AO", "esp:A0", "yellow", [ "h0" ] ],
+    [ "esp:D34", "ldr:AO", "green", [ "h-14.6", "v177.3", "h355.2" ] ]
+  ],
+  "dependencies": {}
+}

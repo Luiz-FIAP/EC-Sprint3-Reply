@@ -20,7 +20,7 @@
 // Definições de pinos
 #define DHT_PIN 4
 #define VIBRATION_PIN 2
-#define LDR_PIN 36  // GPIO36 para ADC no ESP32
+#define LDR_PIN 34  // GPIO36 para ADC no ESP32
 
 // Configuração do sensor DHT22
 #define DHT_TYPE DHT22
