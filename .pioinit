@@ -1,0 +1,14 @@
+# PlatformIO Debug Configuration
+# PROJETO DE SIMULAÇÃO - DEBUG DESABILITADO
+
+# Não conectar com GDB
+set confirm off
+set verbose off
+set auto-load safe-path /
+
+# Mensagem informativa
+echo Projeto configurado para SIMULAÇÃO apenas.\n
+echo Use Wokwi.com para executar o código.\n
+echo Debug físico desabilitado.\n
+
+quit 

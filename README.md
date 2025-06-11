@@ -10,17 +10,27 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 
 ## Estrutura do Projeto
 ```
-├── README.md              # Este arquivo
-├── diagram.json           # Configuração do circuito Wokwi
-├── wokwi.toml            # Configuração do projeto Wokwi
+├── README.md                          # Este arquivo
+├── diagram.json                       # Configuração do circuito Wokwi
+├── wokwi.toml                        # Configuração do projeto Wokwi
+├── platformio.ini                    # Configuração PlatformIO
 ├── src/
-│   └── main.cpp          # Código principal Arduino
+│   └── main.cpp                      # Código principal Arduino/ESP32
+├── sensor.ingest.local/
+│   ├── servidor.py                   # Servidor Flask para ingestão de dados
+│   └── config.py                     # Configurações centralizadas
+├── scripts/
+│   └── setup-oracle-docker.sh       # Script para configurar Oracle no Docker
 ├── data/
-│   └── sensor_data.csv   # Dados coletados dos sensores
+│   └── sensor_data.csv              # Dados coletados dos sensores
 ├── analysis/
-│   └── data_visualization.py  # Script para gerar gráficos
-└── docs/
-    └── images/           # Prints do circuito e gráficos
+│   └── data_visualization.py        # Script para gerar gráficos
+├── docs/
+│   ├── images/                      # Prints do circuito e gráficos
+│   └── TROUBLESHOOTING.md           # Guia de solução de problemas
+└── .vscode/                         # Configurações do VS Code
+    ├── settings.json
+    └── launch.json
 ```
 
 ## Como Executar
@@ -42,16 +52,227 @@ cd analysis
 python3 data_visualization.py
 ```
 
-### 3. Resultados Obtidos
+### 3. Banco de Dados Oracle (Opcional)
+Para usar o sistema completo com persistência de dados:
+
+#### **🐳 Subir Oracle Free no Docker**
+
+**Pré-requisitos:**
+- Docker instalado ([Docker Desktop](https://www.docker.com/products/docker-desktop/))
+- 8GB+ de RAM disponível
+
+**Passo a passo:**
+
+#### **🤖 Opção Automática (Recomendada)**
+```bash
+# Execute o script automatizado
+./scripts/setup-oracle-docker.sh
+```
+
+#### **📋 Opção Manual**
+```bash
+# 1. Baixar e executar Oracle Database 23c Free
+docker run -d \
+  --name oracle-free \
+  -p 1521:1521 \
+  -p 5500:5500 \
+  -e ORACLE_PWD=123456 \
+  -e ORACLE_CHARACTERSET=AL32UTF8 \
+  -v oracle-data:/opt/oracle/oradata \
+  container-registry.oracle.com/database/free:latest
+
+# 2. Aguardar inicialização (pode levar 5-10 minutos)
+echo "⏳ Aguardando Oracle inicializar..."
+docker logs -f oracle-free
+
+# 3. Verificar se está rodando
+docker ps | grep oracle-free
+```
+
+**Aguarde ver esta mensagem:**
+```
+DATABASE IS READY TO USE!
+```
+
+#### **🔧 Conectar ao Banco**
+
+```bash
+# Conectar via SQL*Plus (opcional, para testes)
+docker exec -it oracle-free sqlplus sys/123456@FREEPDB1 as sysdba
+
+# Ou conectar como usuário FIAP
+docker exec -it oracle-free sqlplus fiap/123456@FREEPDB1
+```
+
+#### **📋 Configurações para o Servidor Python**
+
+Edite as configurações no `sensor.ingest.local/servidor.py`:
+
+```python
+# Configurações do Banco Oracle no Docker
+DB_USER = "fiap"
+DB_PASSWORD = "123456"  
+DB_DSN = "localhost:1521/FREEPDB1"  # Porta mapeada do Docker
+```
+
+#### **🛑 Comandos Úteis do Docker**
+
+```bash
+# Parar o banco
+docker stop oracle-free
+
+# Iniciar novamente 
+docker start oracle-free
+
+# Ver logs
+docker logs oracle-free
+
+# Remover completamente (CUIDADO: perde dados!)
+docker rm -f oracle-free
+docker volume rm oracle-data
+```
+
+### 4. Servidor de Ingestão (Opcional)
+Para receber dados em tempo real do ESP32 e armazenar no Oracle:
+
+```bash
+# Pré-requisitos
+pip3 install flask oracledb
+
+# As configurações estão centralizadas em config.py
+# Para Oracle local, edite o arquivo sensor.ingest.local/config.py
+
+# Iniciar servidor
+cd sensor.ingest.local
+python3 servidor.py
+```
+
+**💡 Dica**: Se o Oracle estiver no Docker, o servidor se conectará automaticamente!
+
+#### **⚙️ Configurações Personalizadas**
+
+Todas as configurações estão centralizadas em `sensor.ingest.local/config.py`:
+
+```python
+# Banco de dados
+DB_CONFIG = {
+    "user": "fiap",
+    "password": "123456", 
+    "dsn": "localhost:1521/FREEPDB1",
+    "table_name": "sensor_readings"
+}
+
+# Servidor
+SERVER_CONFIG = {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "debug": True
+}
+
+# Sensores válidos
+SENSOR_CONFIG = {
+    "valid_types": ["temperature", "humidity", "vibration", "luminosity"]
+}
+```
+
+#### **Endpoints Disponíveis:**
+- `GET /data` - Recebe dados dos sensores
+- `GET /get_all_data` - Lista todas as leituras
+- `GET /health` - Status do servidor
+
+#### **Como o ESP32 envia dados:**
+```cpp
+// Exemplo de URL para envio
+http://servidor:8000/data?dateTimeRead=1234567890&typeSensor=1&valueSensor=25.5
+```
+
+#### **O que o Servidor Faz:**
+1. **🔍 Verificação Automática**: Cria tabela Oracle se não existir
+2. **📥 Ingestão de Dados**: Recebe dados via HTTP GET
+3. **✅ Validação**: Verifica parâmetros e tipos de dados
+4. **🗄️ Persistência**: Armazena no Oracle Database
+5. **📋 Consultas**: API para listar dados históricos
+6. **🏥 Monitoramento**: Health check do sistema
+
+#### **Características Técnicas:**
+- **Porta**: 8000 (configurável)
+- **Protocolo**: HTTP REST API
+- **Banco**: Oracle Database (com auto-criação de tabelas)
+- **Formato**: Dados em JSON/texto plano
+- **Log**: Console com timestamps
+- **Tratamento**: Rollback automático em caso de erro
+
+### 5. Análise dos Dados
+```bash
+# Instalar dependências Python
+pip3 install -r requirements.txt
+
+# Executar visualização
+cd analysis
+python3 data_visualization.py
+```
+
+### 6. Verificação do Sistema Completo
+
+#### **🔍 Testar se tudo está funcionando:**
+
+```bash
+# 1. Verificar Oracle
+docker ps | grep oracle-free  # Deve mostrar container rodando
+
+# 2. Testar servidor Flask
+curl http://localhost:8000/health
+# Resposta esperada: {"status": "ok", "database": "ok", ...}
+
+# 3. Simular dados do ESP32
+curl "http://localhost:8000/data?dateTimeRead=1234567890&typeSensor=1&valueSensor=25.5"
+# Resposta: "Dados recebidos com sucesso"
+
+# 4. Consultar dados salvos
+curl http://localhost:8000/get_all_data
+# Deve retornar JSON com os dados inseridos
+```
+
+### 7. Resultados Obtidos
 O sistema gera automaticamente:
 - 📊 **Gráfico de análise**: `docs/images/sensor_analysis.png`
 - 📈 **Estatísticas detalhadas** no terminal
 - 📄 **Dados CSV** prontos para análise
+- 🗄️ **Dados no Oracle** (se usar servidor)
+- 🐳 **Banco Oracle** rodando no Docker
+
+## Casos de Uso
+
+### 🎯 **Simulação Simples (Wokwi)**
+**Para:** Demonstrações, aprendizado, prototipagem
+```
+1. Use apenas: Wokwi + Análise Python
+2. Dados: CSV estático
+3. Tempo: 5-10 minutos para configurar
+```
+
+### 🏗️ **Sistema Completo (Produção)**
+**Para:** Projetos reais, IoT em escala, monitoramento contínuo
+```
+1. Use: Docker Oracle + ESP32 + Servidor Flask + Análise
+2. Dados: Tempo real no banco
+3. Tempo: 30-60 minutos para configurar
+4. Passos: Seções 3 → 4 → 5 do README
+```
+
+### 📊 **Apenas Análise (Offline)**
+**Para:** Análise de dados existentes
+```
+1. Use apenas: Python + CSV
+2. Dados: Arquivo estático
+3. Tempo: 2-5 minutos
+```
 
 ## Funcionalidades Implementadas
 - ✅ **Simulação ESP32**: Circuito virtual com 3 sensores no Wokwi
 - ✅ **Sensores Configurados**: DHT22, SW-420, LDR com valores realistas
 - ✅ **Código Arduino**: Leitura a cada 2 segundos com simulação de padrões
+- ✅ **Servidor de Ingestão**: Flask + Oracle para dados em tempo real
 - ✅ **Saída CSV**: Formato padronizado para análise
 - ✅ **Visualização**: Gráficos automáticos com estatísticas
 - ✅ **Documentação**: Instruções completas de reprodução
@@ -61,20 +282,47 @@ O sistema gera automaticamente:
 - **Vibração**: 0-1023 (digital com ruído simulado)
 - **Luminosidade**: 0-4095 (variação dia/noite)
 
-## Tecnologias
+## Componentes do Sistema
+
+### 🔧 **ESP32 + Sensores (IoT)**
 - **Hardware**: ESP32-DevKitC V4
 - **Plataforma**: Wokwi Simulator
 - **Linguagem**: C++ (Arduino Framework)
-- **Visualização**: Python + Matplotlib
-- **Dados**: CSV Export
+- **Sensores**: DHT22, SW-420, LDR
+
+### 🖥️ **Servidor de Ingestão (Backend)**
+- **Framework**: Flask (Python)
+- **Banco de Dados**: Oracle Database
+- **API**: REST endpoints para receber dados dos sensores
+- **Funcionalidades**:
+  - Recebe dados dos sensores ESP32 via HTTP
+  - Armazena no Oracle Database
+  - Valida e processa dados em tempo real
+  - Endpoints para consulta e monitoramento
+
+### 📊 **Análise de Dados (Analytics)**
+- **Linguagem**: Python
+- **Bibliotecas**: Matplotlib, Pandas, NumPy
+- **Saída**: Gráficos e estatísticas detalhadas
 
 ## Solução de Problemas
 Se encontrar erros de compilação ou execução, consulte o [Guia de Troubleshooting](docs/TROUBLESHOOTING.md).
 
+## Fluxo de Dados Completo
+
+```
+🔧 ESP32 Sensors → 📡 HTTP Request → 🖥️ Flask Server → 🐳 Docker Oracle
+                                           ↓              ↓
+📊 Python Analysis ← 📄 CSV Export ← 🔍 Data Query ← 🗄️ Oracle DB
+```
+
 ## Arquivos Importantes
 - 🔧 `platformio.ini`: Configuração do PlatformIO
+- 🖥️ `sensor.ingest.local/servidor.py`: Servidor de ingestão de dados
+- 🐳 `scripts/setup-oracle-docker.sh`: Setup automático do Oracle
 - 📋 `docs/TROUBLESHOOTING.md`: Guia de solução de problemas
 - 🖼️ `docs/images/sensor_analysis.png`: Gráfico gerado
+- ⚙️ `INSTRUÇÕES_IMPORTANTES.md`: Como evitar erros de debug
 
 ---
 *Projeto desenvolvido para demonstrar conceitos de IoT e análise de dados.* 
