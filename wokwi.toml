@@ -1,12 +1,28 @@
 [wokwi]
 version = 1
-firmware = 'src/main.cpp'
-elf = ''
+firmware = '.pio/build/esp32dev/firmware.bin'
+elf = '.pio/build/esp32dev/firmware.elf'
 
-[[wokwi.libraries]]
-name = 'DHT sensor library'
-version = '1.4.4'
+[[parts]]
+type = "wokwi-esp32-devkit-v1"
+id = "esp"
+top = 50
+left = 100
 
-[[wokwi.libraries]]
-name = 'Adafruit Unified Sensor'
-version = '1.1.14' 
+[[parts]]
+type = "wokwi-dht22"
+id = "dht"
+top = 70
+left = 350
+
+[[parts]]
+type = "wokwi-slide-switch"
+id = "vibration"
+top = 170
+left = 350
+
+[[parts]]
+type = "wokwi-photoresistor-sensor"
+id = "ldr"
+top = 270
+left = 350 

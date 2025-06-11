@@ -1,5 +1,50 @@
 # Changelog - Sistema de Monitoramento IoT
 
+## [v3.1] - 2024-12-XX
+
+### 🔘 **NOVA FUNCIONALIDADE: Botão de Envio Manual**
+
+#### **Principais Adições:**
+- ✅ **Botão físico** no pino D5 para controle manual de envio
+- ✅ **Monitoramento contínuo** dos sensores (leitura a cada 2s)
+- ✅ **Envio sob demanda** apenas quando botão for pressionado
+- ✅ **Sistema de debounce** (50ms) para evitar múltiplos envios
+- ✅ **Contador de envios** bem-sucedidos
+- ✅ **Feedback visual** detalhado no monitor serial
+- ✅ **Configuração Wokwi** completa com botão vermelho
+- ✅ **Documentação específica** (`docs/BUTTON_USAGE.md`)
+
+#### **⚠️ BREAKING CHANGE:**
+**Comportamento alterado**: Sistema agora **não envia automaticamente** a cada 10s. É necessário **pressionar o botão** para enviar dados.
+
+#### **Melhorias Técnicas:**
+- 🔧 **Função `isButtonPressed()`**: Detecção robusta com debounce
+- 🔧 **Pull-up interno**: Resistor pull-up do ESP32 ativado
+- 🔧 **Anti-bounce**: Delay de 1s após envio para evitar duplicatas
+- 🔧 **Interface melhorada**: Monitor serial com emojis e status claros
+- 🔧 **Gestão de estado**: Controle preciso do estado do botão
+
+#### **Vantagens:**
+- 🎯 **Controle total** sobre quando enviar dados
+- 🔋 **Economia de bateria** e dados em sistemas portáteis
+- 🐛 **Debugging facilitado** com logs detalhados por ação
+- 🎮 **Interatividade** para demonstrações e testes
+- 📊 **Monitoramento em tempo real** com envio programado
+
+#### **Arquivos Modificados:**
+- `src/main.cpp` - Adicionado sistema de botão completo
+- `wokwi.toml` - Configuração com botão e resistor
+- `docs/BUTTON_USAGE.md` - Documentação específica
+- `CHANGELOG.md` - Documentação das mudanças
+
+#### **Como Usar:**
+1. 🔌 Conecte um botão no pino D5 e GND
+2. 📊 Sistema monitora sensores continuamente
+3. 🔘 Pressione o botão para enviar dados atuais
+4. ✅ Aguarde confirmação no monitor serial
+
+---
+
 ## [v3.0] - 2024-06-10
 
 ### ⚠️ **BREAKING CHANGES**

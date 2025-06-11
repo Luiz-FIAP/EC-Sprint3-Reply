@@ -7,9 +7,9 @@
  * - LDR: Sensor de luminosidade (pino A0)
  * 
  * Funcionalidades:
- * - Leitura de sensores a cada 10 segundos
- * - Simulação de valores realistas
+ * - Leitura e envio automático a cada 3 segundos
  * - Envio via HTTP POST para servidor Flask
+ * - Simulação de valores realistas
  * - Fallback para saída CSV se não conectar WiFi
  */
 
@@ -28,31 +28,27 @@ const char* password = "";              // Sem senha no Wokwi
 // const char* password = "SUA_SENHA_WIFI";
 
 // *** Configurações do Servidor ***
-const char* serverURL = "http://localhost:8000/data";  // URL do servidor Flask
-// Para teste local, use: "http://192.168.1.100:8000/data" (IP do seu computador)
+const char* serverURL = "http://192.168.2.126:8000/data";  // URL do servidor Flask
+// IP local detectado automaticamente para conexão do Wokwi
 
 // Definições de pinos
 #define DHT_PIN 4
 #define VIBRATION_PIN 2
-#define LDR_PIN 36  // GPIO36 para ADC no ESP32
+#define LDR_PIN 34       // GPIO34 para ADC no ESP32
 
 // Configuração do sensor DHT22
 #define DHT_TYPE DHT22
 DHT dht(DHT_PIN, DHT_TYPE);
 
 // Variáveis para controle de tempo
-unsigned long lastReadTime = 0;
-const unsigned long READ_INTERVAL = 10000; // 10 segundos (mais adequado para IoT)
+unsigned long lastSendTime = 0;
+const unsigned long SEND_INTERVAL = 3000;    // Envia dados a cada 3 segundos
 
 // Variáveis para geração de dados realísticos
 float baseTemperature = 25.0;
 int baseLuminosity = 2000;
 unsigned long startTime;
 int measurementCount = 0;
-
-// Controle de conexão
-bool wifiConnected = false;
-bool csvHeaderPrinted = false;
 
 // Declaração da estrutura de dados dos sensores
 struct SensorData {
@@ -62,6 +58,10 @@ struct SensorData {
   int luminosity;
   unsigned long timestamp;
 };
+
+// Controle de conexão
+bool wifiConnected = false;
+bool csvHeaderPrinted = false;
 
 // Declarações das funções
 void setupWiFi();
@@ -80,39 +80,48 @@ void setup() {
   
   startTime = millis();
   
-  Serial.println("=== Sistema de Monitoramento IoT ===");
-  Serial.println("ESP32 com 3 sensores + conectividade WiFi");
+  Serial.println("=== Sistema de Monitoramento IoT Automático ===");
+  Serial.println("ESP32 com 3 sensores + envio automático a cada 3s");
+  Serial.println("📡 Dados enviados automaticamente para o servidor!");
   Serial.println();
   
   // Configurar WiFi
   setupWiFi();
   
-  Serial.println("Iniciando coleta e envio de dados...\n");
+  Serial.println("Iniciando coleta e envio automático de dados...");
+  Serial.printf("⏰ Intervalo de envio: %d segundos\n", SEND_INTERVAL / 1000);
+  Serial.println();
   delay(2000); // Aguarda estabilização dos sensores
 }
 
 void loop() {
   unsigned long currentTime = millis();
   
-  if (currentTime - lastReadTime >= READ_INTERVAL) {
-    lastReadTime = currentTime;
+  // Envio automático a cada 3 segundos
+  if (currentTime - lastSendTime >= SEND_INTERVAL) {
+    lastSendTime = currentTime;
     measurementCount++;
     
     // Leitura dos sensores
     SensorData data = readSensors();
     
+    Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
+    
     // Tentar enviar para o servidor se conectado
     bool dataSent = false;
     if (wifiConnected && WiFi.status() == WL_CONNECTED) {
+      Serial.println("📡 Enviando dados para servidor...");
       dataSent = sendDataToServer(data);
       
       if (dataSent) {
-        Serial.printf("✅ [%d] Dados enviados com sucesso!\n", measurementCount);
+        Serial.printf("✅ [#%d] Dados enviados com SUCESSO!\n", measurementCount);
+        Serial.println("🎉 Todos os sensores enviados ao servidor!");
       } else {
-        Serial.printf("❌ [%d] Falha ao enviar dados\n", measurementCount);
+        Serial.printf("❌ [#%d] Falha ao enviar dados para servidor\n", measurementCount);
+        Serial.println("💾 Salvando dados localmente...");
       }
     } else {
-      Serial.printf("📶 [%d] WiFi desconectado - salvando localmente\n", measurementCount);
+      Serial.printf("📶 [#%d] WiFi desconectado - salvando localmente\n", measurementCount);
     }
     
     // Fallback: salvar em formato CSV se não conseguir enviar
@@ -125,21 +134,10 @@ void loop() {
       printCSVData(data);
     }
     
-    // Debug a cada 5 medições
-    if (measurementCount % 5 == 0) {
-      printDebugData(data);
-    }
+    // Debug a cada medição
+    printDebugData(data);
     
-    // Para simulação infinita, comente as linhas abaixo
-    if (measurementCount >= 100) {
-      Serial.println("\n=== Simulação finalizada ===");
-      Serial.println("100 medições processadas!");
-      Serial.println("Sistema entrando em modo de espera...");
-      
-      // Continua enviando dados em intervalo maior
-      delay(30000); // 30 segundos
-      measurementCount = 0; // Reinicia contador
-    }
+    Serial.println("⏳ Aguardando próximo envio em 3 segundos...\n");
   }
   
   // Verificar reconexão WiFi se perdeu conexão
@@ -147,6 +145,9 @@ void loop() {
     Serial.println("⚠️  Conexão WiFi perdida, tentando reconectar...");
     setupWiFi();
   }
+  
+  // Pequeno delay para não sobrecarregar o sistema
+  delay(100);
 }
 
 void setupWiFi() {
@@ -183,7 +184,7 @@ bool sendDataToServer(SensorData data) {
   http.addHeader("Content-Type", "application/json");
   
   // Criar JSON com os dados
-  DynamicJsonDocument jsonDoc(200);
+  JsonDocument jsonDoc;
   jsonDoc["timestamp"] = data.timestamp;
   jsonDoc["sensor_type"] = "temperature";
   jsonDoc["sensor_value"] = data.temperature;
@@ -294,7 +295,7 @@ void printCSVData(SensorData data) {
 }
 
 void printDebugData(SensorData data) {
-  Serial.println("\n--- Status dos Sensores ---");
+  Serial.println("--- Status dos Sensores ---");
   Serial.printf("📊 Medição #%d | ⏰ %lus\n", measurementCount, data.timestamp / 1000);
   Serial.printf("🌡️  Temperatura: %.1f°C\n", data.temperature);
   Serial.printf("💧 Umidade: %.1f%%\n", data.humidity);
@@ -303,5 +304,5 @@ void printDebugData(SensorData data) {
   Serial.printf("📶 WiFi: %s | 📡 RSSI: %ddBm\n", 
                 wifiConnected ? "Conectado" : "Desconectado", 
                 wifiConnected ? WiFi.RSSI() : 0);
-  Serial.println("---------------------------\n");
+  Serial.println("---------------------------");
 } 
