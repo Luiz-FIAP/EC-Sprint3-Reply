@@ -29,12 +29,19 @@
 - ✅ **Script de teste**: `test_api.py` para validar API
 - ✅ **Documentação atualizada**: Exemplos com POST e JSON
 
+#### **Compatibilidade Windows:**
+- ✅ **Script Batch**: `setup-oracle-docker.bat` para Command Prompt
+- ✅ **Script PowerShell**: `setup-oracle-docker.ps1` com cores e parâmetros avançados
+- ✅ **Documentação atualizada**: Instruções específicas por SO
+
 #### **Arquivos Modificados:**
 - `sensor.ingest.local/servidor.py` - Rota POST com JSON
 - `src/main.cpp` - WiFi + HTTP POST completo
 - `platformio.ini` - ArduinoJson adicionado
 - `README.md` - Documentação atualizada
 - `test_api.py` - Novo script de teste
+- `scripts/setup-oracle-docker.bat` - Novo script Windows Batch
+- `scripts/setup-oracle-docker.ps1` - Novo script Windows PowerShell
 
 #### **Exemplo de Uso:**
 ```bash
