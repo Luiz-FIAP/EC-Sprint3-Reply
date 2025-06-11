@@ -1,12 +1,11 @@
 [wokwi]
-version = 1
-firmware = 'src/main.cpp'
-elf = ''
+version = "1"
+firmware = ".pio/build/esp32dev/firmware.bin"
+elf = ".pio/build/esp32dev/firmware.elf"
 
-[[wokwi.libraries]]
-name = 'DHT sensor library'
-version = '1.4.4'
+[env.esp32]
+platform = "espressif32"
+board = "esp32dev"
+framework = "arduino"
 
-[[wokwi.libraries]]
-name = 'Adafruit Unified Sensor'
-version = '1.1.14' 
+

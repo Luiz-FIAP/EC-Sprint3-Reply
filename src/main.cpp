@@ -1,172 +1,74 @@
-/*
- * Sistema de Monitoramento IoT com ESP32
- * 
- * Sensores utilizados:
- * - DHT22: Temperatura e umidade (pino D4)
- * - SW-420: Sensor de vibração (pino D2)
- * - LDR: Sensor de luminosidade (pino A0)
- * 
- * Funcionalidades:
- * - Leitura de sensores a cada 2 segundos
- * - Simulação de valores realistas
- * - Saída formatada para CSV
- * - Monitor Serial para debug
- */
-
+// --- Bibliotecas ---
 #include <Arduino.h>
-#include <DHT.h>
-#include <math.h>
+#include "DHT.h" // Biblioteca para o sensor DHT
 
-// Definições de pinos
-#define DHT_PIN 4
-#define VIBRATION_PIN 2
-#define LDR_PIN 34  // GPIO36 para ADC no ESP32
+// --- Definição de Pinos ---
+#define DHT_PIN 4         // Pino de dados do sensor DHT22
+#define VIBRATION_PIN 2   // Pino do botão para simular vibração
+#define LDR_PIN 34        // Pino do sensor de luminosidade LDR
 
-// Configuração do sensor DHT22
-#define DHT_TYPE DHT22
+// --- Configurações dos Sensores ---
+#define DHT_TYPE DHT22    // Define o tipo de sensor DHT como DHT22
 DHT dht(DHT_PIN, DHT_TYPE);
 
-// Variáveis para simulação realística
-unsigned long lastReadTime = 0;
-const unsigned long READ_INTERVAL = 2000; // 2 segundos
-
-// Variáveis para geração de dados realísticos
-float baseTemperature = 25.0;
-int baseLuminosity = 2000;
-unsigned long startTime;
-int measurementCount = 0;
-
-// Header CSV já impresso
-bool csvHeaderPrinted = false;
-
-// Declaração da estrutura de dados dos sensores
-struct SensorData {
-  float temperature;
-  float humidity;
-  int vibration;
-  int luminosity;
-  unsigned long timestamp;
-};
-
-// Declarações das funções
-SensorData readSensors();
-void printCSVData(SensorData data);
-void printDebugData(SensorData data);
-
+// --- Função de Inicialização ---
 void setup() {
+  // Inicia a comunicação serial
   Serial.begin(115200);
-  
-  // Inicialização dos sensores
+  Serial.println("Iniciando sistema de monitoramento...");
+
+  // Configura o pino do botão/vibração como entrada com pull-up interno
+  // O pino do LDR (analógico) não precisa de pinMode
+  pinMode(VIBRATION_PIN, INPUT_PULLUP);
+
+  // Inicia o sensor DHT
   dht.begin();
-  pinMode(VIBRATION_PIN, INPUT);
-  pinMode(LDR_PIN, INPUT);
-  
-  startTime = millis();
-  
-  Serial.println("=== Sistema de Monitoramento IoT ===");
-  Serial.println("ESP32 com 3 sensores virtuais");
-  Serial.println("Iniciando coleta de dados...\n");
-  
-  delay(2000); // Aguarda estabilização dos sensores
 }
 
+// --- Loop Principal ---
 void loop() {
-  unsigned long currentTime = millis();
-  
-  if (currentTime - lastReadTime >= READ_INTERVAL) {
-    lastReadTime = currentTime;
-    measurementCount++;
-    
-    // Imprime header CSV apenas uma vez
-    if (!csvHeaderPrinted) {
-      Serial.println("\n=== DADOS CSV ===");
-      Serial.println("timestamp,temperatura_c,umidade_pct,vibração_digital,luminosidade_analogica");
-      csvHeaderPrinted = true;
-    }
-    
-    // Leitura e simulação dos sensores
-    SensorData data = readSensors();
-    
-    // Saída formatada para CSV
-    printCSVData(data);
-    
-    // Saída formatada para debug (opcional)
-    if (measurementCount % 10 == 0) { // A cada 10 medições
-      printDebugData(data);
-    }
-    
-    // Para simulação, limita a 50 medições
-    if (measurementCount >= 50) {
-      Serial.println("\n=== Simulação finalizada ===");
-      Serial.println("50 medições coletadas com sucesso!");
-      Serial.println("Dados prontos para análise.");
-      while(true) { delay(1000); } // Para a execução
-    }
-  }
-}
+  // --- Leitura dos Sensores ---
 
-SensorData readSensors() {
-  SensorData data;
-  data.timestamp = millis();
-  
-  // === SENSOR DHT22 (Temperatura e Umidade) ===
-  // Simula variação diária realística
-  float timeHours = (millis() - startTime) / 3600000.0;
-  
-  // Temperatura: varia entre 18°C e 32°C com padrão senoidal
-  data.temperature = baseTemperature + 
-                    7.0 * sin(timeHours * 0.5) + 
-                    random(-200, 200) / 100.0; // Ruído
-  
-  // Umidade: inversamente relacionada à temperatura
-  data.humidity = 70.0 - (data.temperature - 20.0) * 1.5 + 
-                  random(-300, 300) / 100.0;
-  
-  // Limita os valores dentro de faixas realísticas
-  data.temperature = constrain(data.temperature, 15.0, 35.0);
-  data.humidity = constrain(data.humidity, 30.0, 90.0);
-  
-  // === SENSOR SW-420 (Vibração) ===
-  // Simula detecção esporádica de vibração
-  int vibrationChance = random(0, 100);
-  if (vibrationChance < 15) { // 15% de chance de vibração
-    data.vibration = 1; // Vibração detectada
+  // Lê a umidade do sensor DHT22
+  float humidity = dht.readHumidity();
+  // Lê a temperatura em Celsius do sensor DHT22
+  float temperature = dht.readTemperature();
+
+  // Lê o valor analógico do LDR (0-4095)
+  int ldrValue = analogRead(LDR_PIN);
+
+  // Lê o estado do sensor de vibração (botão)
+  // INPUT_PULLUP: LOW significa que o botão foi pressionado (vibração detectada)
+  int vibrationStatus = digitalRead(VIBRATION_PIN);
+
+  // --- Exibição dos Dados no Monitor Serial ---
+
+  // Verifica se a leitura do DHT falhou e exibe uma mensagem de erro
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Falha ao ler do sensor DHT!");
   } else {
-    data.vibration = 0; // Sem vibração
+    Serial.print("Umidade: ");
+    Serial.print(humidity);
+    Serial.print("%\t"); // Tabulação para formatar a saída
+    Serial.print("Temperatura: ");
+    Serial.print(temperature);
+    Serial.println(" *C");
   }
-  
-  // === SENSOR LDR (Luminosidade) ===
-  // Simula variação dia/noite
-  float dayNightCycle = sin(timeHours * 0.3); // Ciclo mais lento
-  data.luminosity = baseLuminosity + 
-                   1500 * dayNightCycle + 
-                   random(-200, 200); // Ruído
-  
-  // Limita valores do ADC (0-4095 para ESP32)
-  data.luminosity = constrain(data.luminosity, 0, 4095);
-  
-  return data;
-}
 
-void printCSVData(SensorData data) {
-  Serial.print(data.timestamp);
-  Serial.print(",");
-  Serial.print(data.temperature, 2);
-  Serial.print(",");
-  Serial.print(data.humidity, 1);
-  Serial.print(",");
-  Serial.print(data.vibration);
-  Serial.print(",");
-  Serial.println(data.luminosity);
-}
+  // Exibe o valor do LDR
+  Serial.print("Luminosidade (LDR): ");
+  Serial.println(ldrValue);
 
-void printDebugData(SensorData data) {
-  Serial.println("\n--- Debug Info ---");
-  Serial.print("Medição #"); Serial.println(measurementCount);
-  Serial.print("Tempo: "); Serial.print(data.timestamp / 1000.0); Serial.println("s");
-  Serial.print("Temperatura: "); Serial.print(data.temperature); Serial.println("°C");
-  Serial.print("Umidade: "); Serial.print(data.humidity); Serial.println("%");
-  Serial.print("Vibração: "); Serial.println(data.vibration ? "DETECTADA" : "Normal");
-  Serial.print("Luminosidade: "); Serial.print(data.luminosity); Serial.println(" (0-4095)");
-  Serial.println("------------------\n");
-} 
+  // Exibe o status da vibração
+  Serial.print("Status de Vibracao: ");
+  if (vibrationStatus == LOW) {
+    Serial.println("Vibracao Detectada!");
+  } else {
+    Serial.println("Normal");
+  }
+
+  Serial.println("---------------------------------------");
+
+  // Aguarda 2 segundos antes da próxima leitura
+  delay(2000);
+}
