@@ -183,12 +183,18 @@ SENSOR_CONFIG = {
 #### **Como o ESP32 envia dados:**
 ```cpp
 // Exemplo de URL para envio
-http://servidor:8000/data?dateTimeRead=1234567890&typeSensor=1&valueSensor=25.5
+POST http://servidor:8000/data
+Content-Type: application/json
+{
+  "timestamp": 1234567890,
+  "sensor_type": "temperature",
+  "sensor_value": 25.5
+}
 ```
 
 #### **O que o Servidor Faz:**
 1. **🔍 Verificação Automática**: Cria tabela Oracle se não existir
-2. **📥 Ingestão de Dados**: Recebe dados via HTTP GET
+2. **📥 Ingestão de Dados**: Recebe dados via HTTP POST (JSON)
 3. **✅ Validação**: Verifica parâmetros e tipos de dados
 4. **🗄️ Persistência**: Armazena no Oracle Database
 5. **📋 Consultas**: API para listar dados históricos
@@ -225,7 +231,9 @@ curl http://localhost:8000/health
 # Resposta esperada: {"status": "ok", "database": "ok", ...}
 
 # 3. Simular dados do ESP32
-curl "http://localhost:8000/data?dateTimeRead=1234567890&typeSensor=1&valueSensor=25.5"
+curl -X POST http://localhost:8000/data \
+  -H "Content-Type: application/json" \
+  -d '{"timestamp": 1234567890, "sensor_type": "temperature", "sensor_value": 25.5}'
 # Resposta: "Dados recebidos com sucesso"
 
 # 4. Consultar dados salvos

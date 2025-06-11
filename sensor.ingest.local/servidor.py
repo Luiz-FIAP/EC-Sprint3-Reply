@@ -91,13 +91,21 @@ def inserir_dados_sensor(sensor_type, sensor_value, timestamp_read=None):
                 conn.close()
     return False
 
-@app.route('/data', methods=['GET'])
+@app.route('/data', methods=['POST'])
 def receive_data():
-    """Endpoint para receber dados dos sensores."""
+    """Endpoint para receber dados dos sensores via POST."""
     try:
-        timestamp_param = request.args.get('timestamp')  # timestamp em millis
-        sensor_type = request.args.get('sensor_type')    # tipo do sensor
-        sensor_value = request.args.get('sensor_value')  # valor lido
+        # Recebe dados do corpo da requisição (JSON)
+        if not request.is_json:
+            return jsonify({
+                "error": "Content-Type deve ser application/json"
+            }), 400
+            
+        data = request.get_json()
+        
+        timestamp_param = data.get('timestamp')  # timestamp em millis
+        sensor_type = data.get('sensor_type')    # tipo do sensor
+        sensor_value = data.get('sensor_value')  # valor lido
 
         if None in [sensor_type, sensor_value]:
             return jsonify({

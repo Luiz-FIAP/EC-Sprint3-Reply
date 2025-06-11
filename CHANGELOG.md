@@ -1,5 +1,54 @@
 # Changelog - Sistema de Monitoramento IoT
 
+## [v3.0] - 2024-06-10
+
+### ⚠️ **BREAKING CHANGES**
+- **Protocolo de comunicação**: GET → POST com JSON
+- **Endpoint `/data`**: Agora aceita apenas POST com `Content-Type: application/json`
+- **Formato de dados**: Query parameters → JSON body
+
+### 🔄 **Principais Alterações**
+
+#### **Protocolo HTTP Correto para IoT:**
+- ✅ **Servidor Flask**: Rota `/data` agora usa POST
+- ✅ **Validação JSON**: Verificação de Content-Type obrigatória
+- ✅ **Dados no corpo**: JSON em vez de query parameters
+- ✅ **Segurança**: Dados não expostos na URL
+
+#### **ESP32 com Conectividade WiFi:**
+- ✅ **WiFi integrado**: Conexão automática com fallback
+- ✅ **HTTP POST**: Envio correto via requisições POST
+- ✅ **Formato JSON**: Dados estruturados corretamente
+- ✅ **Múltiplos sensores**: Envio de todos os tipos de sensor
+- ✅ **Reconexão automática**: Recuperação de falhas de rede
+- ✅ **Backup CSV**: Dados salvos localmente se offline
+
+#### **Melhorias Técnicas:**
+- ✅ **ArduinoJson**: Biblioteca para manipulação JSON no ESP32
+- ✅ **Validações robustas**: Verificação de dados no servidor
+- ✅ **Script de teste**: `test_api.py` para validar API
+- ✅ **Documentação atualizada**: Exemplos com POST e JSON
+
+#### **Arquivos Modificados:**
+- `sensor.ingest.local/servidor.py` - Rota POST com JSON
+- `src/main.cpp` - WiFi + HTTP POST completo
+- `platformio.ini` - ArduinoJson adicionado
+- `README.md` - Documentação atualizada
+- `test_api.py` - Novo script de teste
+
+#### **Exemplo de Uso:**
+```bash
+# Antes (GET - INCORRETO):
+curl "http://localhost:8000/data?sensor_type=temperature&sensor_value=25.5"
+
+# Agora (POST - CORRETO):
+curl -X POST http://localhost:8000/data \
+  -H "Content-Type: application/json" \
+  -d '{"sensor_type": "temperature", "sensor_value": 25.5}'
+```
+
+---
+
 ## [v2.0] - 2024-06-10
 
 ### 🔄 Mudanças nas Configurações do Banco de Dados
