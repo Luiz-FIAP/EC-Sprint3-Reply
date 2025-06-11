@@ -30,6 +30,7 @@ const char* password = "";              // Sem senha no Wokwi
 // *** Configurações do Servidor ***
 const char* serverURL = "http://192.168.2.126:8000/data";  // URL do servidor Flask
 // IP local detectado automaticamente para conexão do Wokwi
+// Para teste local com localhost: "http://localhost:8000/data"
 
 // Definições de pinos
 #define DHT_PIN 4

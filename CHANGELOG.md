@@ -18,6 +18,8 @@
 - 🔧 **Performance**: Menos verificações de estado por loop
 - 🔧 **Logs otimizados**: Mensagens mais diretas sobre o envio automático
 - 🔧 **Wokwi reduzido**: Apenas 4 componentes essenciais
+- 🔧 **Precisão aprimorada**: Servidor aceita até 6 casas decimais (era 2)
+- 🔧 **Banco atualizado**: Coluna sensor_value alterada para NUMBER(15,6)
 
 #### **Vantagens:**
 - 🎯 **Demonstração contínua** ideal para apresentações
