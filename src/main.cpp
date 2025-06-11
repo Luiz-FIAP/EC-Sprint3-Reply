@@ -7,15 +7,29 @@
  * - LDR: Sensor de luminosidade (pino A0)
  * 
  * Funcionalidades:
- * - Leitura de sensores a cada 2 segundos
+ * - Leitura de sensores a cada 10 segundos
  * - Simulação de valores realistas
- * - Saída formatada para CSV
- * - Monitor Serial para debug
+ * - Envio via HTTP POST para servidor Flask
+ * - Fallback para saída CSV se não conectar WiFi
  */
 
 #include <Arduino.h>
 #include <DHT.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 #include <math.h>
+
+// *** Configurações WiFi ***
+const char* ssid = "Wokwi-GUEST";      // Para simulação Wokwi
+const char* password = "";              // Sem senha no Wokwi
+// Para uso real, substitua por suas credenciais:
+// const char* ssid = "SUA_REDE_WIFI";
+// const char* password = "SUA_SENHA_WIFI";
+
+// *** Configurações do Servidor ***
+const char* serverURL = "http://localhost:8000/data";  // URL do servidor Flask
+// Para teste local, use: "http://192.168.1.100:8000/data" (IP do seu computador)
 
 // Definições de pinos
 #define DHT_PIN 4
@@ -26,9 +40,9 @@
 #define DHT_TYPE DHT22
 DHT dht(DHT_PIN, DHT_TYPE);
 
-// Variáveis para simulação realística
+// Variáveis para controle de tempo
 unsigned long lastReadTime = 0;
-const unsigned long READ_INTERVAL = 2000; // 2 segundos
+const unsigned long READ_INTERVAL = 10000; // 10 segundos (mais adequado para IoT)
 
 // Variáveis para geração de dados realísticos
 float baseTemperature = 25.0;
@@ -36,7 +50,8 @@ int baseLuminosity = 2000;
 unsigned long startTime;
 int measurementCount = 0;
 
-// Header CSV já impresso
+// Controle de conexão
+bool wifiConnected = false;
 bool csvHeaderPrinted = false;
 
 // Declaração da estrutura de dados dos sensores
@@ -49,7 +64,9 @@ struct SensorData {
 };
 
 // Declarações das funções
+void setupWiFi();
 SensorData readSensors();
+bool sendDataToServer(SensorData data);
 void printCSVData(SensorData data);
 void printDebugData(SensorData data);
 
@@ -64,9 +81,13 @@ void setup() {
   startTime = millis();
   
   Serial.println("=== Sistema de Monitoramento IoT ===");
-  Serial.println("ESP32 com 3 sensores virtuais");
-  Serial.println("Iniciando coleta de dados...\n");
+  Serial.println("ESP32 com 3 sensores + conectividade WiFi");
+  Serial.println();
   
+  // Configurar WiFi
+  setupWiFi();
+  
+  Serial.println("Iniciando coleta e envio de dados...\n");
   delay(2000); // Aguarda estabilização dos sensores
 }
 
@@ -77,32 +98,144 @@ void loop() {
     lastReadTime = currentTime;
     measurementCount++;
     
-    // Imprime header CSV apenas uma vez
-    if (!csvHeaderPrinted) {
-      Serial.println("\n=== DADOS CSV ===");
-      Serial.println("timestamp,temperatura_c,umidade_pct,vibração_digital,luminosidade_analogica");
-      csvHeaderPrinted = true;
-    }
-    
-    // Leitura e simulação dos sensores
+    // Leitura dos sensores
     SensorData data = readSensors();
     
-    // Saída formatada para CSV
-    printCSVData(data);
+    // Tentar enviar para o servidor se conectado
+    bool dataSent = false;
+    if (wifiConnected && WiFi.status() == WL_CONNECTED) {
+      dataSent = sendDataToServer(data);
+      
+      if (dataSent) {
+        Serial.printf("✅ [%d] Dados enviados com sucesso!\n", measurementCount);
+      } else {
+        Serial.printf("❌ [%d] Falha ao enviar dados\n", measurementCount);
+      }
+    } else {
+      Serial.printf("📶 [%d] WiFi desconectado - salvando localmente\n", measurementCount);
+    }
     
-    // Saída formatada para debug (opcional)
-    if (measurementCount % 10 == 0) { // A cada 10 medições
+    // Fallback: salvar em formato CSV se não conseguir enviar
+    if (!dataSent) {
+      if (!csvHeaderPrinted) {
+        Serial.println("\n=== DADOS CSV (BACKUP) ===");
+        Serial.println("timestamp,temperatura_c,umidade_pct,vibracao_digital,luminosidade_analogica");
+        csvHeaderPrinted = true;
+      }
+      printCSVData(data);
+    }
+    
+    // Debug a cada 5 medições
+    if (measurementCount % 5 == 0) {
       printDebugData(data);
     }
     
-    // Para simulação, limita a 50 medições
-    if (measurementCount >= 50) {
+    // Para simulação infinita, comente as linhas abaixo
+    if (measurementCount >= 100) {
       Serial.println("\n=== Simulação finalizada ===");
-      Serial.println("50 medições coletadas com sucesso!");
-      Serial.println("Dados prontos para análise.");
-      while(true) { delay(1000); } // Para a execução
+      Serial.println("100 medições processadas!");
+      Serial.println("Sistema entrando em modo de espera...");
+      
+      // Continua enviando dados em intervalo maior
+      delay(30000); // 30 segundos
+      measurementCount = 0; // Reinicia contador
     }
   }
+  
+  // Verificar reconexão WiFi se perdeu conexão
+  if (wifiConnected && WiFi.status() != WL_CONNECTED) {
+    Serial.println("⚠️  Conexão WiFi perdida, tentando reconectar...");
+    setupWiFi();
+  }
+}
+
+void setupWiFi() {
+  Serial.print("🔌 Conectando ao WiFi");
+  WiFi.begin(ssid, password);
+  
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    delay(500);
+    Serial.print(".");
+    attempts++;
+  }
+  
+  if (WiFi.status() == WL_CONNECTED) {
+    wifiConnected = true;
+    Serial.println();
+    Serial.println("✅ WiFi conectado com sucesso!");
+    Serial.print("📍 IP: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("📡 Servidor: ");
+    Serial.println(serverURL);
+  } else {
+    wifiConnected = false;
+    Serial.println();
+    Serial.println("❌ Falha na conexão WiFi");
+    Serial.println("📝 Modo offline: dados serão salvos em CSV");
+  }
+  Serial.println();
+}
+
+bool sendDataToServer(SensorData data) {
+  HTTPClient http;
+  http.begin(serverURL);
+  http.addHeader("Content-Type", "application/json");
+  
+  // Criar JSON com os dados
+  DynamicJsonDocument jsonDoc(200);
+  jsonDoc["timestamp"] = data.timestamp;
+  jsonDoc["sensor_type"] = "temperature";
+  jsonDoc["sensor_value"] = data.temperature;
+  
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
+  // Enviar temperatura
+  int httpResponseCode = http.POST(jsonString);
+  bool success = (httpResponseCode == 200);
+  
+  if (!success) {
+    Serial.printf("⚠️  Erro HTTP: %d\n", httpResponseCode);
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println("Resposta: " + response);
+    }
+  }
+  
+  http.end();
+  
+  // Enviar dados adicionais (umidade, vibração, luminosidade)
+  if (success) {
+    // Umidade
+    jsonDoc["sensor_type"] = "humidity";
+    jsonDoc["sensor_value"] = data.humidity;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+    
+    // Vibração
+    jsonDoc["sensor_type"] = "vibration";
+    jsonDoc["sensor_value"] = data.vibration;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+    
+    // Luminosidade
+    jsonDoc["sensor_type"] = "luminosity";
+    jsonDoc["sensor_value"] = data.luminosity;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+  }
+  
+  return success;
 }
 
 SensorData readSensors() {
@@ -161,12 +294,14 @@ void printCSVData(SensorData data) {
 }
 
 void printDebugData(SensorData data) {
-  Serial.println("\n--- Debug Info ---");
-  Serial.print("Medição #"); Serial.println(measurementCount);
-  Serial.print("Tempo: "); Serial.print(data.timestamp / 1000.0); Serial.println("s");
-  Serial.print("Temperatura: "); Serial.print(data.temperature); Serial.println("°C");
-  Serial.print("Umidade: "); Serial.print(data.humidity); Serial.println("%");
-  Serial.print("Vibração: "); Serial.println(data.vibration ? "DETECTADA" : "Normal");
-  Serial.print("Luminosidade: "); Serial.print(data.luminosity); Serial.println(" (0-4095)");
-  Serial.println("------------------\n");
+  Serial.println("\n--- Status dos Sensores ---");
+  Serial.printf("📊 Medição #%d | ⏰ %lus\n", measurementCount, data.timestamp / 1000);
+  Serial.printf("🌡️  Temperatura: %.1f°C\n", data.temperature);
+  Serial.printf("💧 Umidade: %.1f%%\n", data.humidity);
+  Serial.printf("📳 Vibração: %s\n", data.vibration ? "DETECTADA" : "Normal");
+  Serial.printf("💡 Luminosidade: %d (0-4095)\n", data.luminosity);
+  Serial.printf("📶 WiFi: %s | 📡 RSSI: %ddBm\n", 
+                wifiConnected ? "Conectado" : "Desconectado", 
+                wifiConnected ? WiFi.RSSI() : 0);
+  Serial.println("---------------------------\n");
 } 

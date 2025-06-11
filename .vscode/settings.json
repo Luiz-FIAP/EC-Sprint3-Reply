@@ -1,0 +1,22 @@
+{
+    "platformio-ide.autoRebuildAutocompleteIndex": false,
+    "platformio-ide.disablePIOHomeStartup": true,
+    "platformio-ide.useBuiltinPIOCore": false,
+    "platformio-ide.activateOnlyOnPlatformIOProject": true,
+    
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.default.compilerPath": "",
+    
+    "debug.allowBreakpointsEverywhere": false,
+    "debug.autoExpandLazyVariables": false,
+    "debug.focusEditorOnBreak": false,
+    
+    "files.associations": {
+        "*.ino": "cpp",
+        "*.h": "c"
+    },
+    
+    "terminal.integrated.env.osx": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin"
+    }
+} 
