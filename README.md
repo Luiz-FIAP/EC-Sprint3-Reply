@@ -144,7 +144,8 @@ pip3 install flask oracledb
 
 # Iniciar servidor
 cd sensor.ingest.local
-python3 servidor.py
+python3 servidor.py (mac)
+python -m servidor.py (windows)
 ```
 
 **💡 Dica**: Se o Oracle estiver no Docker, o servidor se conectará automaticamente!
