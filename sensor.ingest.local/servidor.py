@@ -91,25 +91,98 @@ def inserir_dados_sensor(sensor_type, sensor_value, timestamp_read=None):
                 conn.close()
     return False
 
+def validate_sensor_data(sensor_type, sensor_value):
+    """
+    Valida dados do sensor ANTES de tentar inserir no banco.
+    Retorna (is_valid, error_message, http_code)
+    """
+    # 1. Validar se o tipo de sensor é suportado
+    valid_types = SENSOR_CONFIG["valid_types"]
+    if sensor_type not in valid_types:
+        return False, f"Tipo de sensor inválido. Tipos suportados: {valid_types}", 400
+    
+    # 2. Validar faixa de valores para cada tipo de sensor
+    value_ranges = SENSOR_CONFIG["max_value_range"]
+    if sensor_type in value_ranges:
+        min_val, max_val = value_ranges[sensor_type]
+        if not (min_val <= sensor_value <= max_val):
+            return False, f"Valor fora da faixa válida para {sensor_type}. Esperado: {min_val} - {max_val}, recebido: {sensor_value}", 400
+    
+    # 3. Validações específicas por tipo de sensor
+    if sensor_type == "vibration":
+        # Vibração deve ser 0 ou 1 (digital)
+        if sensor_value not in [0, 1]:
+            return False, f"Sensor de vibração deve ser 0 (sem vibração) ou 1 (com vibração). Recebido: {sensor_value}", 400
+    
+    elif sensor_type == "luminosity":
+        # Luminosidade deve ser inteiro (ADC)
+        if not isinstance(sensor_value, (int, float)) or sensor_value < 0:
+            return False, f"Sensor de luminosidade deve ser valor não-negativo. Recebido: {sensor_value}", 400
+        # Verificar se é valor ADC válido (0-4095 para ESP32)
+        if sensor_value > 4095:
+            return False, f"Valor de luminosidade muito alto (máximo 4095 para ESP32). Recebido: {sensor_value}", 400
+    
+    elif sensor_type in ["temperature", "humidity"]:
+        # Verificar precisão (não mais que 2 casas decimais)
+        if round(sensor_value, SENSOR_CONFIG["data_precision"]) != sensor_value:
+            return False, f"Sensor {sensor_type} deve ter no máximo {SENSOR_CONFIG['data_precision']} casas decimais", 400
+    
+    return True, None, None
+
 @app.route('/data', methods=['POST'])
 def receive_data():
     """Endpoint para receber dados dos sensores via POST."""
     try:
-        # Recebe dados do corpo da requisição (JSON)
+        # 1. Validar Content-Type
         if not request.is_json:
             return jsonify({
-                "error": "Content-Type deve ser application/json"
+                "error": "Content-Type deve ser application/json",
+                "details": "Envie dados no formato JSON com header 'Content-Type: application/json'"
             }), 400
-            
-        data = request.get_json()
         
+        # 2. Validar se JSON é válido
+        try:
+            data = request.get_json()
+        except Exception as e:
+            return jsonify({
+                "error": "JSON inválido",
+                "details": f"Erro ao interpretar JSON: {str(e)}"
+            }), 400
+        
+        if not data:
+            return jsonify({
+                "error": "JSON vazio",
+                "details": "Envie um objeto JSON com sensor_type e sensor_value"
+            }), 400
+        
+        # 3. Extrair dados
         timestamp_param = data.get('timestamp')  # timestamp em millis
         sensor_type = data.get('sensor_type')    # tipo do sensor
         sensor_value = data.get('sensor_value')  # valor lido
 
+        # 4. Validar campos obrigatórios
         if None in [sensor_type, sensor_value]:
+            missing_fields = []
+            if sensor_type is None:
+                missing_fields.append("sensor_type")
+            if sensor_value is None:
+                missing_fields.append("sensor_value")
+            
             return jsonify({
-                "error": "Parâmetros obrigatórios: sensor_type, sensor_value"
+                "error": "Campos obrigatórios ausentes",
+                "missing_fields": missing_fields,
+                "example": {
+                    "sensor_type": "temperature",
+                    "sensor_value": 25.5,
+                    "timestamp": 1234567890
+                }
+            }), 400
+
+        # 5. Validar tipos de dados
+        if not isinstance(sensor_type, str):
+            return jsonify({
+                "error": "sensor_type deve ser string",
+                "received_type": str(type(sensor_type).__name__)
             }), 400
 
         try:
@@ -117,16 +190,25 @@ def receive_data():
             timestamp_ms = float(timestamp_param) if timestamp_param else None
         except (ValueError, TypeError):
             return jsonify({
-                "error": "sensor_value deve ser numérico, timestamp deve ser numérico (opcional)"
+                "error": "Tipos de dados inválidos",
+                "details": "sensor_value deve ser numérico, timestamp deve ser numérico (opcional)"
             }), 400
 
-        valid_types = SENSOR_CONFIG["valid_types"]
-        if sensor_type not in valid_types:
+        # 6. ⭐ VALIDAÇÃO PRINCIPAL DO SENSOR (ANTES DO BANCO!)
+        is_valid, error_msg, error_code = validate_sensor_data(sensor_type, sensor_value)
+        if not is_valid:
+            print(f"❌ Validação falhou: {error_msg}")
             return jsonify({
-                "error": f"sensor_type deve ser um de: {valid_types}"
-            }), 400
+                "error": "Dados do sensor inválidos",
+                "details": error_msg,
+                "received_data": {
+                    "sensor_type": sensor_type,
+                    "sensor_value": sensor_value
+                }
+            }), error_code
 
-        print(f"📡 Dados recebidos: {sensor_type} = {sensor_value}")
+        # 7. Se chegou aqui, dados são válidos - pode inserir no banco
+        print(f"✅ Dados válidos: {sensor_type} = {sensor_value}")
 
         if inserir_dados_sensor(sensor_type, sensor_value, timestamp_ms):
             return jsonify({
@@ -141,12 +223,16 @@ def receive_data():
         else:
             return jsonify({
                 "status": "partial_success", 
-                "message": "Dados recebidos mas falha ao armazenar no banco"
+                "message": "Dados válidos recebidos mas falha ao armazenar no banco de dados",
+                "details": "Verifique logs do servidor e conexão com Oracle"
             }), 202
 
     except Exception as e:
-        print(f"❌ Erro inesperado: {e}")
-        return jsonify({"error": f"Erro interno: {str(e)}"}), 500
+        print(f"❌ Erro inesperado no endpoint /data: {e}")
+        return jsonify({
+            "error": "Erro interno do servidor",
+            "details": "Verifique logs do servidor para mais informações"
+        }), 500
 
 @app.route('/sensors', methods=['GET'])
 def get_sensor_data():

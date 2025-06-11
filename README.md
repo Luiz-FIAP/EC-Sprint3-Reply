@@ -237,7 +237,7 @@ curl -X POST http://localhost:8000/data \
 # Resposta: "Dados recebidos com sucesso"
 
 # 4. Consultar dados salvos
-curl http://localhost:8000/get_all_data
+curl http://localhost:8000/sensors
 # Deve retornar JSON com os dados inseridos
 ```
 
