@@ -1,8 +1,41 @@
 # Changelog - Sistema de Monitoramento IoT
 
+## [v3.2] - 2024-12-XX
+
+### 🔄 **RETORNO AO ENVIO AUTOMÁTICO**
+
+#### **Principais Alterações:**
+- ✅ **Removido botão manual** - Sistema mais simples e automático
+- ✅ **Envio automático a cada 3 segundos** - Frequência otimizada para demonstrações
+- ✅ **Interface simplificada** - Logs mais limpos e diretos
+- ✅ **Wokwi otimizado** - Menos componentes, foco nos sensores essenciais
+
+#### **⚠️ BREAKING CHANGE:**
+**Comportamento alterado**: Sistema agora **envia automaticamente** a cada 3 segundos, **sem necessidade de interação manual**.
+
+#### **Melhorias Técnicas:**
+- 🔧 **Código simplificado**: Removida toda lógica de botão e debounce
+- 🔧 **Performance**: Menos verificações de estado por loop
+- 🔧 **Logs otimizados**: Mensagens mais diretas sobre o envio automático
+- 🔧 **Wokwi reduzido**: Apenas 4 componentes essenciais
+
+#### **Vantagens:**
+- 🎯 **Demonstração contínua** ideal para apresentações
+- 🔋 **Simplicidade** sem necessidade de interação
+- 🎪 **Fluxo constante** de dados para análise
+- 📊 **Monitoramento automático** perfeito para IoT real
+
+#### **Como Usar:**
+1. 🔌 Carregue no Wokwi (apenas sensores + ESP32)
+2. ▶️ Inicie a simulação
+3. 👀 Observe o envio automático a cada 3s
+4. 📊 Dados aparecem continuamente no servidor
+
+---
+
 ## [v3.1] - 2024-12-XX
 
-### 🔘 **NOVA FUNCIONALIDADE: Botão de Envio Manual**
+### 🔘 **FUNCIONALIDADE: Botão de Envio Manual (Removida em v3.2)**
 
 #### **Principais Adições:**
 - ✅ **Botão físico** no pino D5 para controle manual de envio
