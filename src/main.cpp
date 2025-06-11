@@ -107,7 +107,7 @@ void loop() {
     SensorData data = readSensors();
     
     Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
-    
+
     // Tentar enviar para o servidor se conectado
     bool dataSent = false;
     if (wifiConnected && WiFi.status() == WL_CONNECTED) {
@@ -146,7 +146,7 @@ void loop() {
     Serial.println("⚠️  Conexão WiFi perdida, tentando reconectar...");
     setupWiFi();
   }
-  
+
   // Pequeno delay para não sobrecarregar o sistema
   delay(100);
 }

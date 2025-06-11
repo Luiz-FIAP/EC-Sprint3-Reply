@@ -8,7 +8,7 @@
     "C_Cpp.default.compilerPath": "",
     
     "debug.allowBreakpointsEverywhere": false,
-    "debug.autoExpandLazyVariables": false,
+    "debug.autoExpandLazyVariables": "off",
     "debug.focusEditorOnBreak": false,
     
     "files.associations": {
