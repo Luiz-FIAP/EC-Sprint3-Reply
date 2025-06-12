@@ -226,9 +226,12 @@ bool sendDataToServer(SensorData data) {
   
   // Criar JSON com os dados
   JsonDocument jsonDoc;
-  jsonDoc["timestamp"] = data.timestamp;
+  uint64_t timestamp_ms = static_cast<uint64_t>(data.timestamp) * 1000ULL;
+  jsonDoc["timestamp"] = timestamp_ms; // Enviar em milissegundos
   jsonDoc["sensor_type"] = "temperature";
   jsonDoc["sensor_value"] = data.temperature;
+  
+  Serial.printf("DEBUG: Enviando timestamp %llu (JSON) e %lu (CSV)\n", timestamp_ms, data.timestamp);
   
   String jsonString;
   serializeJson(jsonDoc, jsonString);
