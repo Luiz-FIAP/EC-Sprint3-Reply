@@ -39,7 +39,6 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 - **LDR**: Sensor de luminosidade (fotorresistor)
 
 ### 🎮 **Interação com Sensores Virtuais**
-> ✅ **CORREÇÃO APLICADA**: O código agora lê sensores **REAIS** ao invés de simular dados!
 
 **Como testar no Wokwi:**
 - **DHT22**: Clique no sensor e ajuste temperatura/umidade manualmente
