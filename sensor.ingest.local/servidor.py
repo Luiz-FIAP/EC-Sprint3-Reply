@@ -43,65 +43,65 @@ def criar_tabela_se_nao_existir():
             print(f"Tabela '{TABLE_NAME}' criada com sucesso!")
             print("📥 Inserindo dados iniciais...")
             
-            # Dados iniciais do arquivo initial_data.sql
+            # Dados iniciais do arquivo initial_data.sql (sem IDs - Oracle gerará automaticamente)
             initial_data = [
-                (1, 'TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.82273, 'TO_TIMESTAMP(\'11/06/25 20:49:49.117548\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (2, 'TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 64.0259, 'TO_TIMESTAMP(\'11/06/25 20:49:49.261326\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (3, 'TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:49.402366\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (4, 'TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1925, 'TO_TIMESTAMP(\'11/06/25 20:49:49.555663\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (5, 'TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.40572, 'TO_TIMESTAMP(\'11/06/25 20:49:52.157367\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (6, 'TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.95142, 'TO_TIMESTAMP(\'11/06/25 20:49:52.271569\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (7, 'TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:52.384481\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (8, 'TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2037, 'TO_TIMESTAMP(\'11/06/25 20:49:52.506132\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (9, 'TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.06869, 'TO_TIMESTAMP(\'11/06/25 20:49:55.315371\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (10, 'TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 62.15697, 'TO_TIMESTAMP(\'11/06/25 20:49:55.496412\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (11, 'TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:55.659210\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (12, 'TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1897, 'TO_TIMESTAMP(\'11/06/25 20:49:55.805156\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (13, 'TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.86161, 'TO_TIMESTAMP(\'11/06/25 20:49:58.191191\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (14, 'TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 62.24759, 'TO_TIMESTAMP(\'11/06/25 20:49:58.376402\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (15, 'TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:58.511941\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (16, 'TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1955, 'TO_TIMESTAMP(\'11/06/25 20:49:58.641018\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (17, 'TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.46455, 'TO_TIMESTAMP(\'11/06/25 20:50:01.218908\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (18, 'TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 61.94318, 'TO_TIMESTAMP(\'11/06/25 20:50:01.350483\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (19, 'TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:01.479273\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (20, 'TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1968, 'TO_TIMESTAMP(\'11/06/25 20:50:01.594888\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (21, 'TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 24.52751, 'TO_TIMESTAMP(\'11/06/25 20:50:04.244060\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (22, 'TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.39873, 'TO_TIMESTAMP(\'11/06/25 20:50:04.384001\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (23, 'TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:04.639264\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (24, 'TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1892, 'TO_TIMESTAMP(\'11/06/25 20:50:05.062563\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (25, 'TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.01051, 'TO_TIMESTAMP(\'11/06/25 20:50:07.711273\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (26, 'TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.05423, 'TO_TIMESTAMP(\'11/06/25 20:50:07.911586\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (27, 'TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:08.033813\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (28, 'TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2219, 'TO_TIMESTAMP(\'11/06/25 20:50:08.176767\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (29, 'TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 26.84347, 'TO_TIMESTAMP(\'11/06/25 20:50:10.519060\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (30, 'TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 61.33479, 'TO_TIMESTAMP(\'11/06/25 20:50:10.650889\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (31, 'TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:10.761398\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (32, 'TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2151, 'TO_TIMESTAMP(\'11/06/25 20:50:10.881533\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (33, 'TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.3664, 'TO_TIMESTAMP(\'11/06/25 20:50:13.545246\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (34, 'TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.4604, 'TO_TIMESTAMP(\'11/06/25 20:50:13.685252\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (35, 'TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:13.800108\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (36, 'TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2147, 'TO_TIMESTAMP(\'11/06/25 20:50:13.914861\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (37, 'TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.44935, 'TO_TIMESTAMP(\'11/06/25 20:50:16.639072\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (38, 'TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.81597, 'TO_TIMESTAMP(\'11/06/25 20:50:16.788579\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (39, 'TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:16.917787\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (40, 'TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2034, 'TO_TIMESTAMP(\'11/06/25 20:50:17.237771\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (41, 'TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.53227, 'TO_TIMESTAMP(\'11/06/25 20:50:19.610831\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (42, 'TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 66.9216, 'TO_TIMESTAMP(\'11/06/25 20:50:19.735842\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (43, 'TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:19.848380\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (44, 'TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2157, 'TO_TIMESTAMP(\'11/06/25 20:50:19.968136\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (45, 'TO_TIMESTAMP(\'11/06/25 20:50:22\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.91521, 'TO_TIMESTAMP(\'11/06/25 20:50:22.614770\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (46, 'TO_TIMESTAMP(\'11/06/25 20:50:22\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 65.60718, 'TO_TIMESTAMP(\'11/06/25 20:50:22.741326\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (47, 'TO_TIMESTAMP(\'11/06/25 20:50:43\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2220, 'TO_TIMESTAMP(\'11/06/25 20:50:44.386715\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (48, 'TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.00879, 'TO_TIMESTAMP(\'11/06/25 20:50:46.997870\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (49, 'TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.21681, 'TO_TIMESTAMP(\'11/06/25 20:50:47.128453\', \'DD/MM/YY HH24:MI:SS.FF\')'),
-                (50, 'TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:47.248652\', \'DD/MM/YY HH24:MI:SS.FF\')')
+                ('TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.82273, 'TO_TIMESTAMP(\'11/06/25 20:49:49.117548\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 64.0259, 'TO_TIMESTAMP(\'11/06/25 20:49:49.261326\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:49.402366\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:48\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1925, 'TO_TIMESTAMP(\'11/06/25 20:49:49.555663\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.40572, 'TO_TIMESTAMP(\'11/06/25 20:49:52.157367\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.95142, 'TO_TIMESTAMP(\'11/06/25 20:49:52.271569\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:52.384481\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:51\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2037, 'TO_TIMESTAMP(\'11/06/25 20:49:52.506132\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.06869, 'TO_TIMESTAMP(\'11/06/25 20:49:55.315371\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 62.15697, 'TO_TIMESTAMP(\'11/06/25 20:49:55.496412\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:55.659210\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:54\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1897, 'TO_TIMESTAMP(\'11/06/25 20:49:55.805156\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.86161, 'TO_TIMESTAMP(\'11/06/25 20:49:58.191191\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 62.24759, 'TO_TIMESTAMP(\'11/06/25 20:49:58.376402\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:49:58.511941\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:49:57\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1955, 'TO_TIMESTAMP(\'11/06/25 20:49:58.641018\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.46455, 'TO_TIMESTAMP(\'11/06/25 20:50:01.218908\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 61.94318, 'TO_TIMESTAMP(\'11/06/25 20:50:01.350483\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:01.479273\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:01\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1968, 'TO_TIMESTAMP(\'11/06/25 20:50:01.594888\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 24.52751, 'TO_TIMESTAMP(\'11/06/25 20:50:04.244060\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.39873, 'TO_TIMESTAMP(\'11/06/25 20:50:04.384001\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:04.639264\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:04\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 1892, 'TO_TIMESTAMP(\'11/06/25 20:50:05.062563\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.01051, 'TO_TIMESTAMP(\'11/06/25 20:50:07.711273\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 63.05423, 'TO_TIMESTAMP(\'11/06/25 20:50:07.911586\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:08.033813\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:07\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2219, 'TO_TIMESTAMP(\'11/06/25 20:50:08.176767\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 26.84347, 'TO_TIMESTAMP(\'11/06/25 20:50:10.519060\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 61.33479, 'TO_TIMESTAMP(\'11/06/25 20:50:10.650889\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:10.761398\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:10\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2151, 'TO_TIMESTAMP(\'11/06/25 20:50:10.881533\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.3664, 'TO_TIMESTAMP(\'11/06/25 20:50:13.545246\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.4604, 'TO_TIMESTAMP(\'11/06/25 20:50:13.685252\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:13.800108\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:13\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2147, 'TO_TIMESTAMP(\'11/06/25 20:50:13.914861\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.44935, 'TO_TIMESTAMP(\'11/06/25 20:50:16.639072\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.81597, 'TO_TIMESTAMP(\'11/06/25 20:50:16.788579\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:16.917787\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:16\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2034, 'TO_TIMESTAMP(\'11/06/25 20:50:17.237771\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.53227, 'TO_TIMESTAMP(\'11/06/25 20:50:19.610831\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 66.9216, 'TO_TIMESTAMP(\'11/06/25 20:50:19.735842\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:19.848380\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:19\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2157, 'TO_TIMESTAMP(\'11/06/25 20:50:19.968136\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:22\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 23.91521, 'TO_TIMESTAMP(\'11/06/25 20:50:22.614770\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:22\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 65.60718, 'TO_TIMESTAMP(\'11/06/25 20:50:22.741326\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:43\', \'DD/MM/YY HH24:MI:SS\')', 'luminosity', 2220, 'TO_TIMESTAMP(\'11/06/25 20:50:44.386715\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'temperature', 25.00879, 'TO_TIMESTAMP(\'11/06/25 20:50:46.997870\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'humidity', 60.21681, 'TO_TIMESTAMP(\'11/06/25 20:50:47.128453\', \'DD/MM/YY HH24:MI:SS.FF\')'),
+                ('TO_TIMESTAMP(\'11/06/25 20:50:46\', \'DD/MM/YY HH24:MI:SS\')', 'vibration', 0, 'TO_TIMESTAMP(\'11/06/25 20:50:47.248652\', \'DD/MM/YY HH24:MI:SS.FF\')')
             ]
             
-            # Insere os dados iniciais
+            # Insere os dados iniciais (sem especificar ID - deixa o Oracle gerar automaticamente)
             for data_row in initial_data:
                 cursor.execute(f"""
-                    INSERT INTO {TABLE_NAME} (id, timestamp_read, sensor_type, sensor_value, created_at)
-                    VALUES ({data_row[0]}, {data_row[1]}, '{data_row[2]}', {data_row[3]}, {data_row[4]})
+                    INSERT INTO {TABLE_NAME} (timestamp_read, sensor_type, sensor_value, created_at)
+                    VALUES ({data_row[1]}, '{data_row[2]}', {data_row[3]}, {data_row[4]})
                 """)
             
             # Verifica quantos registros foram inseridos
@@ -151,8 +151,8 @@ def inserir_dados_sensor(sensor_type, sensor_value, timestamp_read=None):
                     VALUES (:sensor_type, :sensor_value)
                 """, sensor_type=sensor_type, sensor_value=sensor_value)
             else:
-                # Converte timestamp Unix para datetime
-                timestamp_dt = datetime.fromtimestamp(timestamp_read)
+                # Converte timestamp de milissegundos para datetime
+                timestamp_dt = datetime.fromtimestamp(timestamp_read/1000)
                 cursor.execute(f"""
                     INSERT INTO {TABLE_NAME} (sensor_type, sensor_value, timestamp_read)
                     VALUES (:sensor_type, :sensor_value, :timestamp_read)
@@ -160,10 +160,10 @@ def inserir_dados_sensor(sensor_type, sensor_value, timestamp_read=None):
                     timestamp_read=timestamp_dt)
             
             conn.commit()
-            print(f"Dados inseridos: {sensor_type} = {sensor_value} @ {timestamp_dt if timestamp_read else 'now'}")
+            print(f"✅ Dados inseridos: {sensor_type} = {sensor_value} @ {timestamp_dt if timestamp_read else 'now'}")
             return True
         except oracledb.Error as error:
-            print(f"Erro ao inserir dados: {error}")
+            print(f"❌ Erro ao inserir dados: {error}")
             if conn:
                 conn.rollback()
             return False
@@ -184,6 +184,9 @@ def validate_sensor_data(sensor_type, sensor_value, timestamp=None):
         try:
             # Verifica se o timestamp é um número válido
             timestamp_float = float(timestamp)
+            # Converte de milissegundos para segundos se necessário
+            if timestamp_float > 1e12:  # Se for em milissegundos
+                timestamp_float = timestamp_float / 1000
             # Verifica se o timestamp está em um intervalo razoável (entre 2024 e 2030)
             timestamp_dt = datetime.fromtimestamp(timestamp_float)
             min_date = datetime(2024, 1, 1)
@@ -253,7 +256,7 @@ def receive_data():
             }), 400
         
         # 3. Extrair dados
-        timestamp_param = data.get('timestamp')  # timestamp em segundos
+        timestamp_param = data.get('timestamp')  # timestamp em milissegundos
         sensor_type = data.get('sensor_type')    # tipo do sensor
         sensor_value = data.get('sensor_value')  # valor lido
 
@@ -271,7 +274,7 @@ def receive_data():
                 "example": {
                     "sensor_type": "temperature",
                     "sensor_value": 25.5,
-                    "timestamp": int(datetime.now().timestamp())
+                    "timestamp": int(datetime.now().timestamp() * 1000)
                 }
             }), 400
 
@@ -316,7 +319,7 @@ def receive_data():
                     "sensor_type": sensor_type,
                     "sensor_value": sensor_value,
                     "timestamp": timestamp,
-                    "datetime": datetime.fromtimestamp(timestamp).isoformat() if timestamp else None
+                    "datetime": datetime.fromtimestamp(timestamp/1000).isoformat() if timestamp else None
                 }
             }), 200
         else:
