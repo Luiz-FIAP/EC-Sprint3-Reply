@@ -19,6 +19,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <math.h>
+#include <time.h>  // Adicionado para suporte a NTP
 
 // *** Configurações WiFi ***
 const char* ssid = "Wokwi-GUEST";      // Para simulação Wokwi
@@ -31,6 +32,12 @@ const char* password = "";              // Sem senha no Wokwi
 const char* serverURL = "http://192.168.2.126:8000/data";  // URL do servidor Flask
 // IP local detectado automaticamente para conexão do Wokwi
 // Para teste local com localhost: "http://localhost:8000/data"
+
+// *** Configurações NTP ***
+const char* ntpServer = "pool.ntp.org";
+const char* ntpServer2 = "time.google.com";  // Servidor backup
+const long  gmtOffset_sec = -3 * 3600;  // GMT-3 para Brasil
+const int   daylightOffset_sec = 0;
 
 // Definições de pinos
 #define DHT_PIN 4
@@ -51,21 +58,24 @@ int baseLuminosity = 2000;
 unsigned long startTime;
 int measurementCount = 0;
 
+// Controle de conexão e NTP
+bool wifiConnected = false;
+bool ntpSynced = false;
+bool csvHeaderPrinted = false;
+
 // Declaração da estrutura de dados dos sensores
 struct SensorData {
+  time_t timestamp;  // Alterado para time_t
   float temperature;
   float humidity;
   int vibration;
   int luminosity;
-  unsigned long timestamp;
 };
-
-// Controle de conexão
-bool wifiConnected = false;
-bool csvHeaderPrinted = false;
 
 // Declarações das funções
 void setupWiFi();
+void setupNTP();
+bool syncNTP();
 SensorData readSensors();
 bool sendDataToServer(SensorData data);
 void printCSVData(SensorData data);
@@ -89,6 +99,24 @@ void setup() {
   // Configurar WiFi
   setupWiFi();
   
+  // Configurar NTP após conectar WiFi
+  if (wifiConnected) {
+    setupNTP();
+  }
+  
+  // Aguardar sincronização NTP antes de continuar
+  int ntpRetries = 0;
+  while (!ntpSynced && ntpRetries < 5) {
+    Serial.println("🔄 Tentando sincronizar NTP novamente...");
+    setupNTP();
+    ntpRetries++;
+    delay(1000);
+  }
+  
+  if (!ntpSynced) {
+    Serial.println("⚠️ AVISO: NTP não sincronizado. Timestamps podem estar incorretos!");
+  }
+  
   Serial.println("Iniciando coleta e envio automático de dados...");
   Serial.printf("⏰ Intervalo de envio: %d segundos\n", SEND_INTERVAL / 1000);
   Serial.println();
@@ -98,56 +126,70 @@ void setup() {
 void loop() {
   unsigned long currentTime = millis();
   
+  // Tentar sincronizar NTP periodicamente se não estiver sincronizado
+  static unsigned long lastNTPSync = 0;
+  if (!ntpSynced && (currentTime - lastNTPSync >= 30000)) {  // Tenta a cada 30 segundos
+    lastNTPSync = currentTime;
+    setupNTP();
+  }
+  
   // Envio automático a cada 3 segundos
   if (currentTime - lastSendTime >= SEND_INTERVAL) {
     lastSendTime = currentTime;
     measurementCount++;
     
-    // Leitura dos sensores
-    SensorData data = readSensors();
-    
-    Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
-
-    // Tentar enviar para o servidor se conectado
-    bool dataSent = false;
-    if (wifiConnected && WiFi.status() == WL_CONNECTED) {
-      Serial.println("📡 Enviando dados para servidor...");
-      dataSent = sendDataToServer(data);
+    // Só envia dados se o NTP estiver sincronizado
+    if (ntpSynced) {
+      // Leitura dos sensores
+      SensorData data = readSensors();
       
-      if (dataSent) {
-        Serial.printf("✅ [#%d] Dados enviados com SUCESSO!\n", measurementCount);
-        Serial.println("🎉 Todos os sensores enviados ao servidor!");
+      Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
+      
+      // Tentar enviar para o servidor se conectado
+      bool dataSent = false;
+      if (wifiConnected && WiFi.status() == WL_CONNECTED) {
+        Serial.println("📡 Enviando dados para servidor...");
+        dataSent = sendDataToServer(data);
+        
+        if (dataSent) {
+          Serial.printf("✅ [#%d] Dados enviados com SUCESSO!\n", measurementCount);
+          Serial.println("🎉 Todos os sensores enviados ao servidor!");
+        } else {
+          Serial.printf("❌ [#%d] Falha ao enviar dados para servidor\n", measurementCount);
+          Serial.println("💾 Salvando dados localmente...");
+        }
       } else {
-        Serial.printf("❌ [#%d] Falha ao enviar dados para servidor\n", measurementCount);
-        Serial.println("💾 Salvando dados localmente...");
+        Serial.printf("📶 [#%d] WiFi desconectado - salvando localmente\n", measurementCount);
       }
+      
+      // Fallback: salvar em formato CSV se não conseguir enviar
+      if (!dataSent) {
+        if (!csvHeaderPrinted) {
+          Serial.println("\n=== DADOS CSV (BACKUP) ===");
+          Serial.println("timestamp,temperatura_c,umidade_pct,vibracao_digital,luminosidade_analogica");
+          csvHeaderPrinted = true;
+        }
+        printCSVData(data);
+      }
+      
+      // Debug a cada medição
+      printDebugData(data);
+      
+      Serial.println("⏳ Aguardando próximo envio em 3 segundos...\n");
     } else {
-      Serial.printf("📶 [#%d] WiFi desconectado - salvando localmente\n", measurementCount);
+      Serial.println("⚠️ Aguardando sincronização NTP antes de enviar dados...");
     }
-    
-    // Fallback: salvar em formato CSV se não conseguir enviar
-    if (!dataSent) {
-      if (!csvHeaderPrinted) {
-        Serial.println("\n=== DADOS CSV (BACKUP) ===");
-        Serial.println("timestamp,temperatura_c,umidade_pct,vibracao_digital,luminosidade_analogica");
-        csvHeaderPrinted = true;
-      }
-      printCSVData(data);
-    }
-    
-    // Debug a cada medição
-    printDebugData(data);
-    
-    Serial.println("⏳ Aguardando próximo envio em 3 segundos...\n");
   }
   
   // Verificar reconexão WiFi se perdeu conexão
   if (wifiConnected && WiFi.status() != WL_CONNECTED) {
-    Serial.println("⚠️  Conexão WiFi perdida, tentando reconectar...");
+    Serial.println("⚠️ Conexão WiFi perdida, tentando reconectar...");
     setupWiFi();
+    if (wifiConnected) {
+      setupNTP();  // Tenta sincronizar NTP novamente após reconexão
+    }
   }
-
-  // Pequeno delay para não sobrecarregar o sistema
+  
   delay(100);
 }
 
@@ -242,7 +284,22 @@ bool sendDataToServer(SensorData data) {
 
 SensorData readSensors() {
   SensorData data;
-  data.timestamp = millis();
+  
+  // Obter timestamp atual
+  struct tm timeinfo;
+  if (getLocalTime(&timeinfo)) {
+    data.timestamp = mktime(&timeinfo);
+    // Verificar se o timestamp é válido (posterior a 2024)
+    if (data.timestamp < 1704067200) { // 1 Jan 2024 00:00:00
+      Serial.println("⚠️ Timestamp inválido detectado, tentando ressincronizar NTP...");
+      setupNTP();
+      getLocalTime(&timeinfo);
+      data.timestamp = mktime(&timeinfo);
+    }
+  } else {
+    Serial.println("❌ Falha ao obter hora atual!");
+    data.timestamp = 0;  // Indica erro
+  }
   
   // === SENSOR DHT22 (Temperatura e Umidade) ===
   // Simula variação diária realística
@@ -297,7 +354,7 @@ void printCSVData(SensorData data) {
 
 void printDebugData(SensorData data) {
   Serial.println("--- Status dos Sensores ---");
-  Serial.printf("📊 Medição #%d | ⏰ %lus\n", measurementCount, data.timestamp / 1000);
+  Serial.printf("📊 Medição #%d | ⏰ %lus\n", measurementCount, data.timestamp);
   Serial.printf("🌡️  Temperatura: %.1f°C\n", data.temperature);
   Serial.printf("💧 Umidade: %.1f%%\n", data.humidity);
   Serial.printf("📳 Vibração: %s\n", data.vibration ? "DETECTADA" : "Normal");
@@ -306,4 +363,38 @@ void printDebugData(SensorData data) {
                 wifiConnected ? "Conectado" : "Desconectado", 
                 wifiConnected ? WiFi.RSSI() : 0);
   Serial.println("---------------------------");
+}
+
+void setupNTP() {
+  Serial.println("\n⏰ Configurando NTP...");
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer, ntpServer2);
+  
+  if (syncNTP()) {
+    ntpSynced = true;
+    Serial.println("✅ NTP sincronizado com sucesso!");
+  } else {
+    ntpSynced = false;
+    Serial.println("❌ Falha na sincronização NTP");
+  }
+}
+
+bool syncNTP() {
+  struct tm timeinfo;
+  int attempts = 0;
+  const int maxAttempts = 10;
+  
+  while (!getLocalTime(&timeinfo) && attempts < maxAttempts) {
+    Serial.print(".");
+    delay(500);
+    attempts++;
+  }
+  
+  if (getLocalTime(&timeinfo)) {
+    Serial.printf("\n📅 Data/Hora atual: %d-%02d-%02d %02d:%02d:%02d\n",
+                 timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+                 timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+    return true;
+  }
+  
+  return false;
 } 
