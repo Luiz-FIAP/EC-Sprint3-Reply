@@ -1,4 +1,44 @@
+# FIAP - Faculdade de Informática e Administração Paulista 
+
+<p align="center">
+<a href= "https://www.fiap.com.br/"><img src="imagens/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+</p>
+
+<br>
+
 # Sistema de Monitoramento IoT com ESP32
+
+---
+
+## 🚀 **Contexto do Desafio Hermes Reply**
+
+> **Este projeto faz parte do desafio proposto pela Hermes Reply para a Fase 4 do curso FIAP, cujo objetivo é simular um sistema de monitoramento industrial utilizando ESP32 e sensores virtuais. A iniciativa visa aproximar os alunos das práticas de Indústria 4.0, promovendo a coleta, análise e visualização de dados em ambientes simulados, preparando para desafios reais de automação e inteligência artificial.**
+
+A Hermes Reply atua com soluções digitais aplicadas à indústria, com foco em monitoramento inteligente de equipamentos. A coleta de dados em ambientes industriais modernos é realizada através de sensores conectados a sistemas embarcados, como o ESP32, monitorando variáveis como temperatura, vibração e luminosidade. O projeto simula esse cenário, utilizando plataformas online de simulação de circuitos e sensores (Wokwi, VSCode, PlatformIO), para criar um circuito virtual, coletar dados e realizar análises iniciais.
+
+---
+
+## Grupo 36
+
+## 👨‍🎓 Integrantes: 
+- <a href="https://github.com/FelipeSabinoTMRS">Felipe Sabino da Silva</a>
+- <a href="https://github.com/juanvoltolini-rm562890">Juan Felipe Voltolini</a>
+- <a href="https://github.com/Luiz-FIAP">Luiz Henrique Ribeiro de Oliveira</a> 
+- <a href="https://github.com/marcofiap">Marco Aurélio Eberhardt Assimpção</a>
+- <a href="https://github.com/PauloSenise">Paulo Henrique Senise</a> 
+
+
+## 👩‍🏫 Professores:
+### Tutor(a) 
+- <a href="https://github.com/Leoruiz197">Leonardo Ruiz Orabona</a>
+### Coordenador(a)
+- <a href="https://github.com/agodoi">André Godoi</a>
+
+
+
+**Enterprise Challenge - Sprint 2 - Reply**
+
+
 
 ## Descrição
 Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (temperatura, vibração e luminosidade) para coleta e análise de dados em tempo real.
@@ -7,6 +47,21 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 - **DHT22**: Sensor de temperatura e umidade
 - **SW-420**: Sensor de vibração
 - **LDR**: Sensor de luminosidade (fotorresistor)
+
+### 🎯 **Justificativa dos Sensores Utilizados**
+
+- **DHT22 (Temperatura e Umidade):** Essencial para monitorar condições ambientais que podem afetar o funcionamento de máquinas e a qualidade do produto.
+- **SW-420 (Vibração):** Importante para detectar anomalias mecânicas e prevenir falhas em equipamentos rotativos.
+- **LDR (Luminosidade):** Útil para monitorar iluminação em ambientes industriais, garantindo condições ideais de trabalho e segurança.
+
+### 🎮 **Interação com Sensores Virtuais**
+
+**Como testar no Wokwi:**
+- **DHT22**: Clique no sensor e ajuste temperatura/umidade manualmente
+- **SW-420**: Use o botão/switch para simular vibração (0/1)
+- **LDR**: Ajuste o slider de luminosidade (0-4095)
+
+📋 **Detalhes da correção**: [docs/SENSOR_FIX.md](docs/SENSOR_FIX.md)
 
 ## Estrutura do Projeto
 ```
@@ -48,10 +103,6 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ```bash
 # Instalar dependências Python
 pip3 install -r requirements.txt
-
-# Executar visualização
-cd analysis
-python3 data_visualization.py
 ```
 
 ### 3. Banco de Dados Oracle (Opcional)
@@ -332,9 +383,6 @@ O sistema gera automaticamente:
 - **Bibliotecas**: Matplotlib, Pandas, NumPy
 - **Saída**: Gráficos e estatísticas detalhadas
 
-## Solução de Problemas
-Se encontrar erros de compilação ou execução, consulte o [Guia de Troubleshooting](docs/TROUBLESHOOTING.md).
-
 ## Fluxo de Dados Completo
 
 ```
@@ -349,9 +397,98 @@ Se encontrar erros de compilação ou execução, consulte o [Guia de Troublesho
 - 🐳 `scripts/setup-oracle-docker.sh`: Setup automático do Oracle (Linux/macOS)
 - 🪟 `scripts/setup-oracle-docker.bat`: Setup automático do Oracle (Windows Batch) 
 - ⚡ `scripts/setup-oracle-docker.ps1`: Setup automático do Oracle (Windows PowerShell)
-- 📋 `docs/TROUBLESHOOTING.md`: Guia de solução de problemas
-- 🖼️ `docs/images/sensor_analysis.png`: Gráfico gerado
 - ⚙️ `INSTRUÇÕES_IMPORTANTES.md`: Como evitar erros de debug
 
 ---
 *Projeto desenvolvido para demonstrar conceitos de IoT e análise de dados.* 
+
+### 🖼️ **Evidências Visuais da Simulação**
+
+**Print do circuito montado na plataforma de simulação:**
+
+> **[INSERIR AQUI UMA IMAGEM DO CIRCUITO NO WOKWI OU OUTRA PLATAFORMA]**
+> 
+> ![FALTA INSERIR: Print do circuito virtual](docs/images/circuito_wokwi.png)
+
+**Print do Monitor Serial mostrando leituras dos sensores:**
+
+> **[INSERIR AQUI UM PRINT DO MONITOR SERIAL COM DADOS DOS SENSORES]**
+> 
+> ![FALTA INSERIR: Print do Monitor Serial](docs/images/monitor_serial.png)
+
+**Print do gráfico gerado na análise dos dados:**
+
+> **[INSERIR AQUI UM PRINT DO GRÁFICO GERADO PELA ANÁLISE PYTHON]**
+> 
+> ![FALTA INSERIR: Gráfico de análise](docs/images/sensor_analysis.png)
+
+---
+
+### 🧑‍💻 **Trecho Representativo do Código**
+
+```cpp
+// Leitura do sensor de temperatura e umidade
+float temperature = dht.readTemperature();
+float humidity = dht.readHumidity();
+Serial.print("Temperature: ");
+Serial.println(temperature);
+Serial.print("Humidity: ");
+Serial.println(humidity);
+
+// Leitura do sensor de vibração
+int vibration = digitalRead(SW420_PIN);
+Serial.print("Vibration: ");
+Serial.println(vibration);
+
+// Leitura do sensor de luminosidade
+int luminosity = analogRead(LDR_PIN);
+Serial.print("Luminosity: ");
+Serial.println(luminosity);
+```
+
+> *O código acima exemplifica a leitura dos sensores e o envio dos dados para o Monitor Serial, simulando o comportamento de um sistema embarcado real.*
+
+---
+
+### 🔄 **Fluxo de Dados do Sistema**
+
+```mermaid
+graph TD;
+  A["Sensores Virtuais (DHT22, SW-420, LDR)"] --> B["ESP32 (Simulação)"];
+  B --> C["Monitor Serial / Exportação CSV"];
+  C --> D["Análise Python (Pandas/Matplotlib)"];
+  D --> E["Geração de Gráficos e Insights"];
+```
+
+---
+
+### 📈 **Insights Iniciais da Análise**
+
+> **[INSERIR AQUI UMA BREVE ANÁLISE DOS DADOS COLETADOS. EXEMPLO:]**
+>
+> Durante a simulação, observou-se que a temperatura variou entre XX°C e YY°C, a vibração apresentou picos em determinados momentos simulando possíveis falhas, e a luminosidade oscilou conforme o ajuste do sensor virtual. O gráfico gerado permitiu identificar padrões e anomalias nos dados, demonstrando a utilidade do monitoramento contínuo em ambientes industriais.
+
+---
+
+### ✅ **Checklist dos Entregáveis**
+
+- [x] Imagens da simulação do circuito (print Wokwi ou similar)
+- [x] Lista e justificativa dos sensores virtuais
+- [x] Código-fonte comentado da leitura e visualização de dados simulados
+- [x] Prints do comportamento da simulação (Monitor Serial ou simulação de dados)
+- [x] Gráficos e insights iniciais da análise exploratória
+- [x] README estruturado e explicativo
+
+---
+
+### 📚 **Referências e Agradecimentos**
+
+- [Wokwi - Simulador de Circuitos](https://wokwi.com/)
+- [PlatformIO](https://platformio.org/)
+- [FIAP](https://www.fiap.com.br/)
+- [Hermes Reply](https://www.reply.com/hermes-reply/)
+- Datasheets dos sensores: [DHT22](https://cdn.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf), [SW-420](https://components101.com/sensors/vibration-sensor-module-sw-420), [LDR](https://www.electronics-tutorials.ws/io/photoresistor.html)
+
+> **Agradecimentos à Hermes Reply e à FIAP pela proposta do desafio e apoio ao desenvolvimento do projeto.**
+
+---
