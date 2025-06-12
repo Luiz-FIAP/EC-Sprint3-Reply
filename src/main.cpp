@@ -29,7 +29,7 @@ const char* password = "";              // Sem senha no Wokwi
 // const char* password = "SUA_SENHA_WIFI";
 
 // *** Configurações do Servidor ***
-const char* serverURL = "http://192.168.2.126:8000/data";  // URL do servidor Flask
+const char* serverURL = "http://192.168.160.1:8000/data";  // URL do servidor Flask
 // IP local detectado automaticamente para conexão do Wokwi
 // Para teste local com localhost: "http://localhost:8000/data"
 
