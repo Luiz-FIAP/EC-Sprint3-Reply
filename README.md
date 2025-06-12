@@ -38,6 +38,16 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 - **SW-420**: Sensor de vibração
 - **LDR**: Sensor de luminosidade (fotorresistor)
 
+### 🎮 **Interação com Sensores Virtuais**
+> ✅ **CORREÇÃO APLICADA**: O código agora lê sensores **REAIS** ao invés de simular dados!
+
+**Como testar no Wokwi:**
+- **DHT22**: Clique no sensor e ajuste temperatura/umidade manualmente
+- **SW-420**: Use o botão/switch para simular vibração (0/1)
+- **LDR**: Ajuste o slider de luminosidade (0-4095)
+
+📋 **Detalhes da correção**: [docs/SENSOR_FIX.md](docs/SENSOR_FIX.md)
+
 ## Estrutura do Projeto
 ```
 ├── README.md                          # Este arquivo

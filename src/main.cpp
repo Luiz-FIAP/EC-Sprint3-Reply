@@ -52,9 +52,7 @@ DHT dht(DHT_PIN, DHT_TYPE);
 unsigned long lastSendTime = 0;
 const unsigned long SEND_INTERVAL = 3000;    // Envia dados a cada 3 segundos
 
-// Variáveis para geração de dados realísticos
-float baseTemperature = 25.0;
-int baseLuminosity = 2000;
+// Variável para controle de tempo de inicialização
 unsigned long startTime;
 int measurementCount = 0;
 
@@ -86,7 +84,7 @@ void setup() {
   
   // Inicialização dos sensores
   dht.begin();
-  pinMode(VIBRATION_PIN, INPUT);
+  pinMode(VIBRATION_PIN, INPUT_PULLUP);  // Pull-up interno para botão
   pinMode(LDR_PIN, INPUT);
   
   startTime = millis();
@@ -302,40 +300,30 @@ SensorData readSensors() {
   }
   
   // === SENSOR DHT22 (Temperatura e Umidade) ===
-  // Simula variação diária realística
-  float timeHours = (millis() - startTime) / 3600000.0;
+  // Leitura REAL do sensor DHT22
+  data.temperature = dht.readTemperature();
+  data.humidity = dht.readHumidity();
   
-  // Temperatura: varia entre 18°C e 32°C com padrão senoidal
-  data.temperature = baseTemperature + 
-                    7.0 * sin(timeHours * 0.5) + 
-                    random(-200, 200) / 100.0; // Ruído
-  
-  // Umidade: inversamente relacionada à temperatura
-  data.humidity = 70.0 - (data.temperature - 20.0) * 1.5 + 
-                  random(-300, 300) / 100.0;
-  
-  // Limita os valores dentro de faixas realísticas
-  data.temperature = constrain(data.temperature, 15.0, 35.0);
-  data.humidity = constrain(data.humidity, 30.0, 90.0);
-  
-  // === SENSOR SW-420 (Vibração) ===
-  // Simula detecção esporádica de vibração
-  int vibrationChance = random(0, 100);
-  if (vibrationChance < 15) { // 15% de chance de vibração
-    data.vibration = 1; // Vibração detectada
-  } else {
-    data.vibration = 0; // Sem vibração
+  // Verificar se as leituras são válidas
+  if (isnan(data.temperature) || isnan(data.humidity)) {
+    Serial.println("⚠️ Erro na leitura do DHT22! Usando valores padrão...");
+    data.temperature = 25.0; // Valor padrão
+    data.humidity = 60.0;    // Valor padrão
   }
   
-  // === SENSOR LDR (Luminosidade) ===
-  // Simula variação dia/noite
-  float dayNightCycle = sin(timeHours * 0.3); // Ciclo mais lento
-  data.luminosity = baseLuminosity + 
-                   1500 * dayNightCycle + 
-                   random(-200, 200); // Ruído
+  // === SENSOR SW-420 (Vibração) ===
+  // Leitura REAL do sensor de vibração
+  int rawButtonRead = digitalRead(VIBRATION_PIN);
+  // Com INPUT_PULLUP: botão pressionado = LOW (0), não pressionado = HIGH (1)
+  // Invertemos para: 1 = vibração detectada, 0 = sem vibração
+  data.vibration = !rawButtonRead;
   
-  // Limita valores do ADC (0-4095 para ESP32)
-  data.luminosity = constrain(data.luminosity, 0, 4095);
+  // Debug do botão (remover depois de testar)
+  Serial.printf("🔧 DEBUG Botão: Raw=%d, Final=%d\n", rawButtonRead, data.vibration);
+  
+  // === SENSOR LDR (Luminosidade) ===
+  // Leitura REAL do sensor de luminosidade
+  data.luminosity = analogRead(LDR_PIN);
   
   return data;
 }
