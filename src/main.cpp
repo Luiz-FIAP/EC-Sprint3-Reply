@@ -29,9 +29,22 @@ const char* password = "";              // Sem senha no Wokwi
 // const char* password = "SUA_SENHA_WIFI";
 
 // *** Configurações do Servidor ***
-const char* serverURL = "http://192.168.160.1:8000/data";  // URL do servidor Flask
-// IP local detectado automaticamente para conexão do Wokwi
-// Para teste local com localhost: "http://localhost:8000/data"
+// Lista de servidores para envio simultâneo
+const char* serverIPs[] = {
+  "192.168.2.126",    // Servidor principal
+  "192.168.160.1",    // Servidor Wokwi
+  "localhost",        // Servidor local
+  "192.168.1.100"     // Servidor adicional
+};
+const int numServers = sizeof(serverIPs) / sizeof(serverIPs[0]);
+const int serverPort = 8000;
+const char* serverPath = "/data";
+
+// Controle de servidores
+bool serverStatus[4] = {false, false, false, false}; // Status de cada servidor (máximo 4)
+int activeServers = 0;
+String serverURLs[4]; // URLs completas dos servidores
+bool multiServerMode = true; // Modo multi-servidor ativo
 
 // *** Configurações NTP ***
 const char* ntpServer = "pool.ntp.org";
@@ -74,8 +87,13 @@ struct SensorData {
 void setupWiFi();
 void setupNTP();
 bool syncNTP();
+void discoverActiveServers();
+bool testServerConnection(const char* ip);
+int sendDataToAllServers(SensorData data);
+bool sendDataToSingleServer(SensorData data, const char* serverURL);
+String getGatewayIP();
+void checkSerialCommands();
 SensorData readSensors();
-bool sendDataToServer(SensorData data);
 void printCSVData(SensorData data);
 void printDebugData(SensorData data);
 
@@ -97,8 +115,22 @@ void setup() {
   // Configurar WiFi
   setupWiFi();
   
-  // Configurar NTP após conectar WiFi
+  // Descobrir servidores ativos após conectar WiFi
   if (wifiConnected) {
+    discoverActiveServers();
+    
+    if (activeServers > 0) {
+      Serial.printf("🎯 %d servidor(es) ativo(s) encontrado(s)!\n", activeServers);
+      Serial.println("📡 Modo multi-servidor ativado - dados serão enviados para todos os servidores ativos");
+    } else {
+      Serial.println("❌ Nenhum servidor encontrado!");
+      Serial.println("💡 Digite 'add:<IP>' para adicionar servidor manualmente");
+      Serial.println("   Exemplo: add:192.168.1.100");
+      Serial.println("⚠️ Enquanto isso, dados serão salvos apenas localmente.");
+    }
+    Serial.println();
+    
+    // Configurar NTP
     setupNTP();
   }
   
@@ -117,6 +149,12 @@ void setup() {
   
   Serial.println("Iniciando coleta e envio automático de dados...");
   Serial.printf("⏰ Intervalo de envio: %d segundos\n", SEND_INTERVAL / 1000);
+  Serial.println();
+  Serial.println("💡 Comandos disponíveis via Serial:");
+  Serial.println("   • Digite 'help' para ver todos os comandos");
+  Serial.println("   • Digite 'status' para ver status do sistema");
+  Serial.println("   • Digite 'list' para ver lista de servidores");
+  Serial.println("   • Digite 'add:<IP>' para adicionar servidor manualmente");
   Serial.println();
   delay(2000); // Aguarda estabilização dos sensores
 }
@@ -143,25 +181,51 @@ void loop() {
       
       Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
       
-      // Tentar enviar para o servidor se conectado
-      bool dataSent = false;
+      // Tentar enviar para todos os servidores ativos
+      int successfulSends = 0;
       if (wifiConnected && WiFi.status() == WL_CONNECTED) {
-        Serial.println("📡 Enviando dados para servidor...");
-        dataSent = sendDataToServer(data);
-        
-        if (dataSent) {
-          Serial.printf("✅ [#%d] Dados enviados com SUCESSO!\n", measurementCount);
-          Serial.println("🎉 Todos os sensores enviados ao servidor!");
+        if (activeServers > 0) {
+          Serial.printf("📡 Enviando dados para %d servidor(es)...\n", activeServers);
+          successfulSends = sendDataToAllServers(data);
+          
+          if (successfulSends > 0) {
+            Serial.printf("✅ [#%d] Dados enviados com SUCESSO para %d/%d servidor(es)!\n", 
+                         measurementCount, successfulSends, activeServers);
+            if (successfulSends == activeServers) {
+              Serial.println("🎉 Todos os servidores receberam os dados!");
+            } else {
+              Serial.printf("⚠️ %d servidor(es) não responderam\n", activeServers - successfulSends);
+            }
+          } else {
+            Serial.printf("❌ [#%d] Falha ao enviar para todos os servidores\n", measurementCount);
+            Serial.println("🔄 Tentando redescobrir servidores...");
+            discoverActiveServers();
+            
+            if (activeServers > 0) {
+              Serial.printf("🎯 %d servidor(es) redescoberto(s)\n", activeServers);
+              successfulSends = sendDataToAllServers(data);
+            }
+            
+            if (successfulSends == 0) {
+              Serial.println("💾 Salvando dados localmente...");
+            }
+          }
         } else {
-          Serial.printf("❌ [#%d] Falha ao enviar dados para servidor\n", measurementCount);
-          Serial.println("💾 Salvando dados localmente...");
+          Serial.println("🔍 Nenhum servidor ativo, tentando descobrir...");
+          discoverActiveServers();
+          if (activeServers > 0) {
+            Serial.printf("🎯 %d servidor(es) descoberto(s)\n", activeServers);
+            successfulSends = sendDataToAllServers(data);
+          } else {
+            Serial.println("💾 Nenhum servidor encontrado - salvando localmente...");
+          }
         }
       } else {
         Serial.printf("📶 [#%d] WiFi desconectado - salvando localmente\n", measurementCount);
       }
       
-      // Fallback: salvar em formato CSV se não conseguir enviar
-      if (!dataSent) {
+      // Fallback: salvar em formato CSV se não conseguir enviar para nenhum servidor
+      if (successfulSends == 0) {
         if (!csvHeaderPrinted) {
           Serial.println("\n=== DADOS CSV (BACKUP) ===");
           Serial.println("timestamp,temperatura_c,umidade_pct,vibracao_digital,luminosidade_analogica");
@@ -188,6 +252,9 @@ void loop() {
     }
   }
   
+  // Verificar comandos via Serial
+  checkSerialCommands();
+  
   delay(100);
 }
 
@@ -206,10 +273,11 @@ void setupWiFi() {
     wifiConnected = true;
     Serial.println();
     Serial.println("✅ WiFi conectado com sucesso!");
-    Serial.print("📍 IP: ");
+    Serial.print("📍 IP do ESP32: ");
     Serial.println(WiFi.localIP());
-    Serial.print("📡 Servidor: ");
-    Serial.println(serverURL);
+    Serial.print("🌐 Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+    Serial.println("🔍 Servidor será descoberto automaticamente...");
   } else {
     wifiConnected = false;
     Serial.println();
@@ -219,69 +287,7 @@ void setupWiFi() {
   Serial.println();
 }
 
-bool sendDataToServer(SensorData data) {
-  HTTPClient http;
-  http.begin(serverURL);
-  http.addHeader("Content-Type", "application/json");
-  
-  // Criar JSON com os dados
-  JsonDocument jsonDoc;
-  uint64_t timestamp_ms = static_cast<uint64_t>(data.timestamp) * 1000ULL;
-  jsonDoc["timestamp"] = timestamp_ms; // Enviar em milissegundos
-  jsonDoc["sensor_type"] = "temperature";
-  jsonDoc["sensor_value"] = data.temperature;
-  
-  Serial.printf("DEBUG: Enviando timestamp %llu (JSON) e %lu (CSV)\n", timestamp_ms, data.timestamp);
-  
-  String jsonString;
-  serializeJson(jsonDoc, jsonString);
-  
-  // Enviar temperatura
-  int httpResponseCode = http.POST(jsonString);
-  bool success = (httpResponseCode == 200);
-  
-  if (!success) {
-    Serial.printf("⚠️  Erro HTTP: %d\n", httpResponseCode);
-    if (httpResponseCode > 0) {
-      String response = http.getString();
-      Serial.println("Resposta: " + response);
-    }
-  }
-  
-  http.end();
-  
-  // Enviar dados adicionais (umidade, vibração, luminosidade)
-  if (success) {
-    // Umidade
-    jsonDoc["sensor_type"] = "humidity";
-    jsonDoc["sensor_value"] = data.humidity;
-    serializeJson(jsonDoc, jsonString);
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
-    http.end();
-    
-    // Vibração
-    jsonDoc["sensor_type"] = "vibration";
-    jsonDoc["sensor_value"] = data.vibration;
-    serializeJson(jsonDoc, jsonString);
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
-    http.end();
-    
-    // Luminosidade
-    jsonDoc["sensor_type"] = "luminosity";
-    jsonDoc["sensor_value"] = data.luminosity;
-    serializeJson(jsonDoc, jsonString);
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
-    http.end();
-  }
-  
-  return success;
-}
+
 
 SensorData readSensors() {
   SensorData data;
@@ -388,4 +394,225 @@ bool syncNTP() {
   }
   
   return false;
+}
+
+void discoverActiveServers() {
+  Serial.println("🔍 Descobrindo servidores ativos...");
+  activeServers = 0;
+  
+  for (int i = 0; i < numServers; i++) {
+    Serial.printf("   Testando: %s\n", serverIPs[i]);
+    if (testServerConnection(serverIPs[i])) {
+      serverStatus[i] = true;
+      serverURLs[i] = "http://" + String(serverIPs[i]) + ":" + String(serverPort) + serverPath;
+      activeServers++;
+      Serial.printf("   ✅ Ativo: %s\n", serverURLs[i].c_str());
+    } else {
+      serverStatus[i] = false;
+      Serial.printf("   ❌ Inativo: %s\n", serverIPs[i]);
+    }
+    delay(300); // Pequena pausa entre testes
+  }
+  
+  Serial.printf("🎯 Total de servidores ativos: %d/%d\n", activeServers, numServers);
+}
+
+int sendDataToAllServers(SensorData data) {
+  int successCount = 0;
+  
+  for (int i = 0; i < numServers; i++) {
+    if (serverStatus[i]) {
+      Serial.printf("📤 Enviando para servidor %d: %s\n", i+1, serverIPs[i]);
+      if (sendDataToSingleServer(data, serverURLs[i].c_str())) {
+        successCount++;
+        Serial.printf("   ✅ Sucesso no servidor %d\n", i+1);
+      } else {
+        Serial.printf("   ❌ Falha no servidor %d\n", i+1);
+        serverStatus[i] = false; // Marca como inativo se falhar
+        activeServers--;
+      }
+    }
+  }
+  
+  return successCount;
+}
+
+bool sendDataToSingleServer(SensorData data, const char* serverURL) {
+  HTTPClient http;
+  http.begin(serverURL);
+  http.addHeader("Content-Type", "application/json");
+  http.setTimeout(3000); // Timeout de 3 segundos para não travar
+  
+  JsonDocument jsonDoc;
+  
+  // Validar timestamp antes de converter
+  if (data.timestamp == 0) {
+    data.timestamp = time(nullptr);
+  }
+  
+  // Verificar se timestamp está em segundos (não milissegundos)
+  uint64_t timestamp_ms;
+  if (data.timestamp > 1000000000000ULL) {
+    timestamp_ms = data.timestamp;
+  } else {
+    timestamp_ms = static_cast<uint64_t>(data.timestamp) * 1000ULL;
+  }
+  
+  jsonDoc["timestamp"] = timestamp_ms;
+  jsonDoc["sensor_type"] = "temperature";
+  jsonDoc["sensor_value"] = data.temperature;
+  
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
+  // Enviar temperatura
+  int httpResponseCode = http.POST(jsonString);
+  bool success = (httpResponseCode == 200);
+  
+  http.end();
+  
+  // Enviar dados adicionais se temperatura foi enviada com sucesso
+  if (success) {
+    // Umidade
+    jsonDoc["sensor_type"] = "humidity";
+    jsonDoc["sensor_value"] = data.humidity;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+    
+    // Vibração
+    jsonDoc["sensor_type"] = "vibration";
+    jsonDoc["sensor_value"] = data.vibration;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+    
+    // Luminosidade
+    jsonDoc["sensor_type"] = "luminosity";
+    jsonDoc["sensor_value"] = data.luminosity;
+    serializeJson(jsonDoc, jsonString);
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "application/json");
+    http.POST(jsonString);
+    http.end();
+  }
+  
+  return success;
+}
+
+bool testServerConnection(const char* ip) {
+  HTTPClient http;
+  String testURL = "http://" + String(ip) + ":" + String(serverPort) + "/health";
+  
+  http.begin(testURL);
+  http.setTimeout(2000); // Timeout de 2 segundos
+  
+  int httpResponseCode = http.GET();
+  http.end();
+  
+  // Considera sucesso se receber qualquer resposta HTTP (mesmo 404)
+  // Isso indica que há um servidor rodando nesse IP
+  return (httpResponseCode > 0);
+}
+
+String getGatewayIP() {
+  // Obtém o IP do gateway da rede atual
+  IPAddress gateway = WiFi.gatewayIP();
+  if (gateway == IPAddress(0, 0, 0, 0)) {
+    return "";
+  }
+  return gateway.toString();
+}
+
+void checkSerialCommands() {
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+    
+    if (command.startsWith("add:")) {
+      // Comando para adicionar servidor manualmente
+      // Formato: add:192.168.1.100
+      String newIP = command.substring(4);
+      newIP.trim();
+      
+      Serial.printf("🔧 Testando novo servidor: %s\n", newIP.c_str());
+      
+      if (testServerConnection(newIP.c_str())) {
+        // Encontrar slot vazio para adicionar o servidor
+        bool added = false;
+        for (int i = 0; i < numServers; i++) {
+          if (!serverStatus[i]) {
+            serverStatus[i] = true;
+            serverURLs[i] = "http://" + newIP + ":" + String(serverPort) + serverPath;
+            activeServers++;
+            added = true;
+            Serial.printf("✅ Servidor adicionado: %s\n", serverURLs[i].c_str());
+            break;
+          }
+        }
+        if (!added) {
+          Serial.println("⚠️ Lista de servidores cheia. Use 'clear' primeiro.");
+        }
+      } else {
+        Serial.printf("❌ Servidor não responde em: %s\n", newIP.c_str());
+      }
+    }
+    else if (command == "scan") {
+      // Comando para forçar nova descoberta
+      Serial.println("🔍 Forçando nova descoberta de servidores...");
+      discoverActiveServers();
+      if (activeServers > 0) {
+        Serial.printf("✅ %d servidor(es) redescoberto(s)\n", activeServers);
+      } else {
+        Serial.println("❌ Nenhum servidor encontrado");
+      }
+    }
+    else if (command == "clear") {
+      // Comando para limpar lista de servidores
+      Serial.println("🧹 Limpando lista de servidores...");
+      for (int i = 0; i < numServers; i++) {
+        serverStatus[i] = false;
+      }
+      activeServers = 0;
+      Serial.println("✅ Lista de servidores limpa");
+    }
+    else if (command == "list") {
+      // Comando para listar servidores
+      Serial.println("\n=== LISTA DE SERVIDORES ===");
+      for (int i = 0; i < numServers; i++) {
+        String status = serverStatus[i] ? "✅ ATIVO" : "❌ INATIVO";
+        Serial.printf("%d. %s - %s\n", i+1, serverIPs[i], status.c_str());
+      }
+      Serial.printf("Total ativos: %d/%d\n", activeServers, numServers);
+      Serial.println("===========================\n");
+    }
+    else if (command == "status") {
+      // Comando para mostrar status atual
+      Serial.println("\n=== STATUS DO SISTEMA ===");
+      Serial.printf("WiFi: %s\n", wifiConnected ? "Conectado" : "Desconectado");
+      Serial.printf("IP ESP32: %s\n", WiFi.localIP().toString().c_str());
+      Serial.printf("Gateway: %s\n", WiFi.gatewayIP().toString().c_str());
+      Serial.printf("Servidores Ativos: %d/%d\n", activeServers, numServers);
+      Serial.printf("Modo Multi-Servidor: %s\n", multiServerMode ? "Ativo" : "Inativo");
+      Serial.printf("NTP: %s\n", ntpSynced ? "Sincronizado" : "Não sincronizado");
+      Serial.printf("Medições: %d\n", measurementCount);
+      Serial.println("========================\n");
+    }
+    else if (command == "help") {
+      // Comando de ajuda
+      Serial.println("\n=== COMANDOS DISPONÍVEIS ===");
+      Serial.println("add:<IP>     - Adiciona servidor manualmente");
+      Serial.println("             Exemplo: add:192.168.1.100");
+      Serial.println("scan         - Força nova descoberta de servidores");
+      Serial.println("list         - Lista todos os servidores e status");
+      Serial.println("clear        - Limpa lista de servidores");
+      Serial.println("status       - Mostra status do sistema");
+      Serial.println("help         - Mostra esta ajuda");
+      Serial.println("============================\n");
+    }
+  }
 } 
