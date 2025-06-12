@@ -19,7 +19,7 @@ SERVER_CONFIG = {
 # === CONFIGURAÇÕES DOS SENSORES ===
 SENSOR_CONFIG = {
     "valid_types": ["temperature", "humidity", "vibration", "luminosity"],
-    "data_precision": 2,  # Casas decimais para valores
+    "data_precision": 6,  # Casas decimais para valores (aumentado para maior precisão)
     "max_value_range": {
         "temperature": (-50.0, 100.0),
         "humidity": (0.0, 100.0), 

@@ -1,5 +1,85 @@
 # Changelog - Sistema de Monitoramento IoT
 
+## [v3.2] - 2024-12-XX
+
+### 🔄 **RETORNO AO ENVIO AUTOMÁTICO**
+
+#### **Principais Alterações:**
+- ✅ **Removido botão manual** - Sistema mais simples e automático
+- ✅ **Envio automático a cada 3 segundos** - Frequência otimizada para demonstrações
+- ✅ **Interface simplificada** - Logs mais limpos e diretos
+- ✅ **Wokwi otimizado** - Menos componentes, foco nos sensores essenciais
+
+#### **⚠️ BREAKING CHANGE:**
+**Comportamento alterado**: Sistema agora **envia automaticamente** a cada 3 segundos, **sem necessidade de interação manual**.
+
+#### **Melhorias Técnicas:**
+- 🔧 **Código simplificado**: Removida toda lógica de botão e debounce
+- 🔧 **Performance**: Menos verificações de estado por loop
+- 🔧 **Logs otimizados**: Mensagens mais diretas sobre o envio automático
+- 🔧 **Wokwi reduzido**: Apenas 4 componentes essenciais
+- 🔧 **Precisão aprimorada**: Servidor aceita até 6 casas decimais (era 2)
+- 🔧 **Banco atualizado**: Coluna sensor_value alterada para NUMBER(15,6)
+
+#### **Vantagens:**
+- 🎯 **Demonstração contínua** ideal para apresentações
+- 🔋 **Simplicidade** sem necessidade de interação
+- 🎪 **Fluxo constante** de dados para análise
+- 📊 **Monitoramento automático** perfeito para IoT real
+
+#### **Como Usar:**
+1. 🔌 Carregue no Wokwi (apenas sensores + ESP32)
+2. ▶️ Inicie a simulação
+3. 👀 Observe o envio automático a cada 3s
+4. 📊 Dados aparecem continuamente no servidor
+
+---
+
+## [v3.1] - 2024-12-XX
+
+### 🔘 **FUNCIONALIDADE: Botão de Envio Manual (Removida em v3.2)**
+
+#### **Principais Adições:**
+- ✅ **Botão físico** no pino D5 para controle manual de envio
+- ✅ **Monitoramento contínuo** dos sensores (leitura a cada 2s)
+- ✅ **Envio sob demanda** apenas quando botão for pressionado
+- ✅ **Sistema de debounce** (50ms) para evitar múltiplos envios
+- ✅ **Contador de envios** bem-sucedidos
+- ✅ **Feedback visual** detalhado no monitor serial
+- ✅ **Configuração Wokwi** completa com botão vermelho
+- ✅ **Documentação específica** (`docs/BUTTON_USAGE.md`)
+
+#### **⚠️ BREAKING CHANGE:**
+**Comportamento alterado**: Sistema agora **não envia automaticamente** a cada 10s. É necessário **pressionar o botão** para enviar dados.
+
+#### **Melhorias Técnicas:**
+- 🔧 **Função `isButtonPressed()`**: Detecção robusta com debounce
+- 🔧 **Pull-up interno**: Resistor pull-up do ESP32 ativado
+- 🔧 **Anti-bounce**: Delay de 1s após envio para evitar duplicatas
+- 🔧 **Interface melhorada**: Monitor serial com emojis e status claros
+- 🔧 **Gestão de estado**: Controle preciso do estado do botão
+
+#### **Vantagens:**
+- 🎯 **Controle total** sobre quando enviar dados
+- 🔋 **Economia de bateria** e dados em sistemas portáteis
+- 🐛 **Debugging facilitado** com logs detalhados por ação
+- 🎮 **Interatividade** para demonstrações e testes
+- 📊 **Monitoramento em tempo real** com envio programado
+
+#### **Arquivos Modificados:**
+- `src/main.cpp` - Adicionado sistema de botão completo
+- `wokwi.toml` - Configuração com botão e resistor
+- `docs/BUTTON_USAGE.md` - Documentação específica
+- `CHANGELOG.md` - Documentação das mudanças
+
+#### **Como Usar:**
+1. 🔌 Conecte um botão no pino D5 e GND
+2. 📊 Sistema monitora sensores continuamente
+3. 🔘 Pressione o botão para enviar dados atuais
+4. ✅ Aguarde confirmação no monitor serial
+
+---
+
 ## [v3.0] - 2024-06-10
 
 ### ⚠️ **BREAKING CHANGES**
@@ -29,12 +109,19 @@
 - ✅ **Script de teste**: `test_api.py` para validar API
 - ✅ **Documentação atualizada**: Exemplos com POST e JSON
 
+#### **Compatibilidade Windows:**
+- ✅ **Script Batch**: `setup-oracle-docker.bat` para Command Prompt
+- ✅ **Script PowerShell**: `setup-oracle-docker.ps1` com cores e parâmetros avançados
+- ✅ **Documentação atualizada**: Instruções específicas por SO
+
 #### **Arquivos Modificados:**
 - `sensor.ingest.local/servidor.py` - Rota POST com JSON
 - `src/main.cpp` - WiFi + HTTP POST completo
 - `platformio.ini` - ArduinoJson adicionado
 - `README.md` - Documentação atualizada
 - `test_api.py` - Novo script de teste
+- `scripts/setup-oracle-docker.bat` - Novo script Windows Batch
+- `scripts/setup-oracle-docker.ps1` - Novo script Windows PowerShell
 
 #### **Exemplo de Uso:**
 ```bash

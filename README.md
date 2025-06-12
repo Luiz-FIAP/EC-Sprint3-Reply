@@ -20,7 +20,9 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 │   ├── servidor.py                   # Servidor Flask para ingestão de dados
 │   └── config.py                     # Configurações centralizadas
 ├── scripts/
-│   └── setup-oracle-docker.sh       # Script para configurar Oracle no Docker
+│   ├── setup-oracle-docker.sh       # Script para configurar Oracle (Linux/macOS)
+│   ├── setup-oracle-docker.bat      # Script para configurar Oracle (Windows Batch)  
+│   └── setup-oracle-docker.ps1      # Script para configurar Oracle (Windows PowerShell)
 ├── data/
 │   └── sensor_data.csv              # Dados coletados dos sensores
 ├── analysis/
@@ -64,9 +66,25 @@ Para usar o sistema completo com persistência de dados:
 **Passo a passo:**
 
 #### **🤖 Opção Automática (Recomendada)**
+
+**🐧 Linux/macOS:**
 ```bash
 # Execute o script automatizado
 ./scripts/setup-oracle-docker.sh
+```
+
+**🪟 Windows:**
+```cmd
+REM Opção 1: Script Batch (Command Prompt)
+scripts\setup-oracle-docker.bat
+```
+```powershell
+# Opção 2: PowerShell (Recomendado)
+.\scripts\setup-oracle-docker.ps1
+
+# Com opções avançadas:
+.\scripts\setup-oracle-docker.ps1 -Force              # Remove container existente sem perguntar
+.\scripts\setup-oracle-docker.ps1 -SkipMemoryCheck    # Pula verificação de memória
 ```
 
 #### **📋 Opção Manual**
@@ -328,7 +346,9 @@ Se encontrar erros de compilação ou execução, consulte o [Guia de Troublesho
 ## Arquivos Importantes
 - 🔧 `platformio.ini`: Configuração do PlatformIO
 - 🖥️ `sensor.ingest.local/servidor.py`: Servidor de ingestão de dados
-- 🐳 `scripts/setup-oracle-docker.sh`: Setup automático do Oracle
+- 🐳 `scripts/setup-oracle-docker.sh`: Setup automático do Oracle (Linux/macOS)
+- 🪟 `scripts/setup-oracle-docker.bat`: Setup automático do Oracle (Windows Batch) 
+- ⚡ `scripts/setup-oracle-docker.ps1`: Setup automático do Oracle (Windows PowerShell)
 - 📋 `docs/TROUBLESHOOTING.md`: Guia de solução de problemas
 - 🖼️ `docs/images/sensor_analysis.png`: Gráfico gerado
 - ⚙️ `INSTRUÇÕES_IMPORTANTES.md`: Como evitar erros de debug
