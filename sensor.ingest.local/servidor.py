@@ -101,7 +101,7 @@ def criar_tabela_se_nao_existir():
             for data_row in initial_data:
                 cursor.execute(f"""
                     INSERT INTO {TABLE_NAME} (timestamp_read, sensor_type, sensor_value, created_at)
-                    VALUES ({data_row[1]}, '{data_row[2]}', {data_row[3]}, {data_row[4]})
+                    VALUES ({data_row[0]}, '{data_row[1]}', {data_row[2]}, {data_row[3]})
                 """)
             
             # Verifica quantos registros foram inseridos
