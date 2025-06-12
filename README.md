@@ -87,10 +87,6 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ```bash
 # Instalar dependências Python
 pip3 install -r requirements.txt
-
-# Executar visualização
-cd analysis
-python3 data_visualization.py
 ```
 
 ### 3. Banco de Dados Oracle (Opcional)
@@ -371,9 +367,6 @@ O sistema gera automaticamente:
 - **Bibliotecas**: Matplotlib, Pandas, NumPy
 - **Saída**: Gráficos e estatísticas detalhadas
 
-## Solução de Problemas
-Se encontrar erros de compilação ou execução, consulte o [Guia de Troubleshooting](docs/TROUBLESHOOTING.md).
-
 ## Fluxo de Dados Completo
 
 ```
@@ -388,8 +381,6 @@ Se encontrar erros de compilação ou execução, consulte o [Guia de Troublesho
 - 🐳 `scripts/setup-oracle-docker.sh`: Setup automático do Oracle (Linux/macOS)
 - 🪟 `scripts/setup-oracle-docker.bat`: Setup automático do Oracle (Windows Batch) 
 - ⚡ `scripts/setup-oracle-docker.ps1`: Setup automático do Oracle (Windows PowerShell)
-- 📋 `docs/TROUBLESHOOTING.md`: Guia de solução de problemas
-- 🖼️ `docs/images/sensor_analysis.png`: Gráfico gerado
 - ⚙️ `INSTRUÇÕES_IMPORTANTES.md`: Como evitar erros de debug
 
 ---
