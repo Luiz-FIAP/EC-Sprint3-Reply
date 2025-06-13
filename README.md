@@ -318,7 +318,7 @@ pio run
 Após compilar, inicie a simulação no arquivo `diagram.json`
 
 <p align="center">
-<a><img src="imagens/play.png" alt="Esquema da ESP32 com sensores" border="0" width=70% height=70%></a>
+<a><img src="imagens/play.png" alt="Esquema da ESP32 com sensores" border="0" width=100%></a>
 </p>
 
 ### 5. Análise dos Dados
