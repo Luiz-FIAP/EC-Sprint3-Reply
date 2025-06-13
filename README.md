@@ -260,8 +260,21 @@ SERVER_CONFIG = {
 
 # Sensores válidos
 SENSOR_CONFIG = {
-    "valid_types": ["temperature", "humidity", "vibration", "luminosity"]
+    "valid_types": ["temperature", "humidity", "vibration", "luminosity"],
+    "data_precision": 6,  # Casas decimais para valores (aumentado para maior precisão)
+    "max_value_range": {
+        "temperature": (-50.0, 100.0),
+        "humidity": (0.0, 100.0), 
+        "vibration": (0, 1),
+        "luminosity": (0, 4095)
+    }
 }
+
+# Configurações de query
+QUERY_CONFIG = {
+    "default_limit": 100,
+    "max_limit": 1000
+} 
 ```
 
 #### **Endpoints Disponíveis:**
