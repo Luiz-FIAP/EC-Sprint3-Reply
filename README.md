@@ -225,7 +225,7 @@ python servidor.py (windows)
 <a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=100%></a>
 </p>
 
-Após rodar `servidor.py`,copie o endereço do servidor Flask para esta parte do código na linha 31 do `main.cpp`:
+Após rodar `servidor.py`, copie o endereço do servidor Flask para esta parte do código na linha 31 do `main.cpp`:
 
 ```c
 // *** Configurações do Servidor ***
