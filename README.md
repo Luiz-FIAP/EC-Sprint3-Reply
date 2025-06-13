@@ -65,8 +65,6 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 - **SW-420**: Use o botão/switch para simular vibração (0/1)
 - **LDR**: Ajuste o slider de luminosidade (0-4095)
 
-📋 **Detalhes da correção**: [docs/SENSOR_FIX.md](docs/SENSOR_FIX.md)
-
 ## Estrutura do Projeto
 ```
 ├── README.md                          # Este arquivo
