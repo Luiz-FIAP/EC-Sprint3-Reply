@@ -221,26 +221,12 @@ cd sensor.ingest.local
 python3 servidor.py (mac)
 python servidor.py (windows)
 ```
-Após rodar `servidor.py` copie o endereço do servidor para o `main.cpp`
-
 <p align="center">
-<a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=90%></a>
+<a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=100%></a>
 </p>
 
-```bash
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8000
- * Running on http://192.168.100.161:8000
-Press CTRL+C to quit
- * Restarting with watchdog (windowsapi)
-Conectado ao Oracle DB com sucesso!
-A tabela 'sensor_readings' já existe.
-🚀 Iniciando servidor de ingestão de dados IoT...
- * Debugger is active!
- * Debugger PIN: 253-939-424
-```
+Após rodar `servidor.py`,copie o endereço do servidor Flask para esta parte do código na linha 31 do `main.cpp`:
+
 ```c
 // *** Configurações do Servidor ***
 // Lista de servidores para envio simultâneo
