@@ -6,10 +6,10 @@ from config import DB_CONFIG, SERVER_CONFIG, SENSOR_CONFIG, QUERY_CONFIG
 app = Flask(__name__)
 
 # *** Configurações do Banco de Dados Oracle ***
-DB_USER = "fiap"
-DB_PASSWORD = "123456" 
-DB_DSN = "localhost:1521/FREEPDB1"
-TABLE_NAME = "SENSOR_READINGS"
+DB_USER = DB_CONFIG["user"]
+DB_PASSWORD = DB_CONFIG["password"]
+DB_DSN = DB_CONFIG["dsn"]
+TABLE_NAME = DB_CONFIG["table_name"]
 
 def conectar_db():
     """Conecta ao banco de dados Oracle."""

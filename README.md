@@ -49,7 +49,7 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 
 ## Sensores Utilizados
 - **DHT22**: Sensor de temperatura e umidade
-- **SW-420**: Sensor de vibração
+- **SW-420**: Sensor de vibração (simulado com botão)
 - **LDR**: Sensor de luminosidade (fotorresistor)
 
 ### 🎯 **Justificativa dos Sensores Utilizados**
@@ -179,13 +179,16 @@ docker exec -it oracle-free sqlplus fiap/123456@FREEPDB1
 
 #### **📋 Configurações para o Servidor Python**
 
-Edite as configurações no `sensor.ingest.local/servidor.py`:
+Edite as configurações conforme seu banco de dados Oracle no `sensor.ingest.local/config.py`:
 
 ```python
-# Configurações do Banco Oracle no Docker
-DB_USER = "fiap"
-DB_PASSWORD = "123456"  
-DB_DSN = "localhost:1521/FREEPDB1"  # Porta mapeada do Docker
+# Configurações do Banco Oracle
+DB_CONFIG = {
+  "user": "fiap",
+  "password": "123456", 
+  "dsn": "localhost:1521/FREEPDB1", # Configurado para porta mapeada do Docker
+  "table_name": "sensor_readings"
+}  
 ```
 
 #### **🛑 Comandos Úteis do Docker**
@@ -213,15 +216,43 @@ Para receber dados em tempo real do ESP32 e armazenar no Oracle:
 pip3 install flask oracledb
 
 # As configurações estão centralizadas em config.py
-# Para Oracle local, edite o arquivo sensor.ingest.local/config.py
+# Para conexão com banco de dados Oracle, edite o arquivo sensor.ingest.local/config.py
 
 # Iniciar servidor
 cd sensor.ingest.local
 python3 servidor.py (mac)
 python servidor.py (windows)
 ```
+Após rodar `servidor.py` copie o endereço do servidor para o `main.cpp`
 
-**💡 Dica**: Se o Oracle estiver no Docker, o servidor se conectará automaticamente!
+<p align="center">
+<a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=90%></a>
+</p>
+
+```bash
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.100.161:8000
+Press CTRL+C to quit
+ * Restarting with watchdog (windowsapi)
+Conectado ao Oracle DB com sucesso!
+A tabela 'sensor_readings' já existe.
+🚀 Iniciando servidor de ingestão de dados IoT...
+ * Debugger is active!
+ * Debugger PIN: 253-939-424
+```
+```c
+// *** Configurações do Servidor ***
+// Lista de servidores para envio simultâneo
+const char* serverIPs[] = {
+  "192.168.2.126",    // Servidor principal
+  "192.168.160.1",    // Servidor Wokwi
+  "localhost",        // Servidor local
+  "192.168.1.100"     // Servidor adicional
+};
+```
 
 #### **⚙️ Configurações Personalizadas**
 
@@ -281,6 +312,14 @@ Content-Type: application/json
 - **Formato**: Dados em JSON/texto plano
 - **Log**: Console com timestamps
 - **Tratamento**: Rollback automático em caso de erro
+
+### 5. Compilar e simular ESP32
+```bash
+# Compilar código ESP32
+pio run
+```
+Após compilar, inicie a simulação no arquivo `diagram.json`
+
 
 ### 5. Análise dos Dados
 ```bash
