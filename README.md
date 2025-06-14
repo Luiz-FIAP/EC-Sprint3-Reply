@@ -650,13 +650,10 @@ graph TD;
 ```
 
 ---
-
 ### 📈 **Insights Iniciais da Análise**
-
-> **[INSERIR AQUI UMA BREVE ANÁLISE DOS DADOS COLETADOS. EXEMPLO:]**
->
-> Durante a simulação, observou-se que a temperatura variou entre XX°C e YY°C, a vibração apresentou picos em determinados momentos simulando possíveis falhas, e a luminosidade oscilou conforme o ajuste do sensor virtual. O gráfico gerado permitiu identificar padrões e anomalias nos dados, demonstrando a utilidade do monitoramento contínuo em ambientes industriais.
-
+> 5 registros de umidade fora da faixa ideal (30-70%)!
+> 1 registros de luminosidade fora da faixa recomendada (300-3500)!
+> Nenhum evento de vibração detectado.
 ---
 
 ### ✅ **Checklist dos Entregáveis**
