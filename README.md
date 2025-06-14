@@ -68,28 +68,35 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ## Estrutura do Projeto
 ```
 ├── README.md                          # Este arquivo
+├── plan.md                           # Plano de desenvolvimento do projeto
 ├── diagram.json                       # Configuração do circuito Wokwi
 ├── wokwi.toml                        # Configuração do projeto Wokwi
 ├── platformio.ini                    # Configuração PlatformIO
+├── requirements.txt                   # Dependências Python do projeto
+├── .gitignore                        # Arquivos ignorados pelo Git
 ├── src/
 │   └── main.cpp                      # Código principal Arduino/ESP32
 ├── sensor.ingest.local/
 │   ├── servidor.py                   # Servidor Flask para ingestão de dados
-│   └── config.py                     # Configurações centralizadas
+│   ├── config.py                     # Configurações centralizadas
+│   ├── initial_data.sql              # Script SQL para inicialização do banco
+│   └── server_logs.txt               # Logs do servidor de ingestão
 ├── scripts/
 │   ├── setup-oracle-docker.sh       # Script para configurar Oracle (Linux/macOS)
 │   ├── setup-oracle-docker.bat      # Script para configurar Oracle (Windows Batch)  
 │   └── setup-oracle-docker.ps1      # Script para configurar Oracle (Windows PowerShell)
 ├── data/
-│   └── sensor_data.csv              # Dados coletados dos sensores
-├── analysis/
-│   └── data_visualization.py        # Script para gerar gráficos
-├── docs/
-│   ├── images/                      # Prints do circuito e gráficos
-│   └── TROUBLESHOOTING.md           # Guia de solução de problemas
-└── .vscode/                         # Configurações do VS Code
-    ├── settings.json
-    └── launch.json
+│   ├── dashboard.py                  # Script para geração de dashboard
+│   ├── dashboard_*.png               # Capturas de tela dos dashboards (1-10)
+│   └── README.md                     # Documentação específica dos dados
+├── imagens/
+│   ├── esquema.png                   # Esquema do circuito ESP32
+│   ├── logo-fiap.png                 # Logo da FIAP
+│   ├── play.png                      # Imagem do botão play
+│   └── servidor.png                  # Screenshot do servidor em execução
+├── .vscode/                          # Configurações do VS Code
+│   ├── settings.json                 # Configurações do editor
+│   └── extensions.json               # Extensões recomendadas
 ```
 
 ## Como Executar
