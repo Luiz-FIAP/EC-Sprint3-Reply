@@ -346,13 +346,13 @@ Terminal do ``servidor.py`` ao rodar ESP32:
 
 ### 6. Análise dos Dados
 
-#### Dashboard de Sensores IoT (Oracle)
+### Dashboard de Sensores IoT (Oracle)
 
 Este dashboard foi desenvolvido em Streamlit para visualização e análise dos dados coletados por sensores IoT (temperatura, umidade, vibração e luminosidade) e armazenados em um banco de dados Oracle.
 
 ---
 
-#### Visão Geral do Dashboard
+### Visão Geral do Dashboard
 
 <p align="center">
 <a><img src="imagens/dashboard_1.png" alt="Visão Geral e Alertas" border="0" width=100%></a>
@@ -361,13 +361,13 @@ Visão geral do dashboard com alertas de não conformidade para umidade, luminos
 
 ---
 
-#### Objetivo
+### Objetivo
 
 Permitir o acompanhamento em tempo real e a análise histórica das medições dos sensores conectados ao seu sistema IoT, facilitando a visualização de tendências, correlações e eventos relevantes.
 
 ---
 
-#### Recursos do Dashboard
+### Recursos do Dashboard
 
 - **Visualização em tempo real** dos dados coletados
 - **Filtro de período** (última hora, últimas 24h, tudo)
@@ -387,7 +387,7 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 
 ---
 
-#### Análises e Alertas de Não Conformidade
+### Análises e Alertas de Não Conformidade
 
 O dashboard realiza automaticamente análises de não conformidade e exibe alertas visuais no topo da página para facilitar a identificação de situações críticas:
 
@@ -402,7 +402,7 @@ Esses limites podem ser facilmente ajustados no código conforme a necessidade d
 
 ---
 
-#### Relatório e Exportação
+### Relatório e Exportação
 
 - **Download dos dados em CSV:**
   - Permite baixar todos os dados coletados para análise externa ou arquivamento.
@@ -413,28 +413,28 @@ Esses limites podem ser facilmente ajustados no código conforme a necessidade d
 
 ### Gráficos Disponíveis
 
-#### Linha: Temperatura e Umidade ao longo do tempo
+### Linha: Temperatura e Umidade ao longo do tempo
 
 <p align="center">
 <a><img src="imagens/dashboard_2.png" alt="Gráfico de Linha - Temperatura e Umidade" border="0" width=100%></a>
 </p>
 Evolução da temperatura e umidade ao longo do tempo.
 
-#### Barra: Média de Luminosidade por Hora
+### Barra: Média de Luminosidade por Hora
 
 <p align="center">
 <a><img src="imagens/dashboard_3.png" alt="Gráfico de Barra - Luminosidade" border="0" width=100%></a>
 </p>
 Média de luminosidade registrada em cada hora.
 
-#### Dispersão: Temperatura vs. Umidade
+### Dispersão: Temperatura vs. Umidade
 
 <p align="center">
 <a><img src="imagens/dashboard_4.png" alt="Gráfico de Dispersão - Temperatura vs. Umidade" border="0" width=100%></a>
 </p>
 Relação entre temperatura e umidade, útil para identificar correlações.
 
-#### Barra: Eventos de Vibração por Hora
+### Barra: Eventos de Vibração por Hora
 <p align="center">
 <a><img src="imagens/dashboard_5.png" alt="Gráfico de Barra - Vibração" border="0" width=100%></a>
 </p>
@@ -442,7 +442,7 @@ Contagem de eventos de vibração detectados em cada hora.
 
 ---
 
-#### Tabela de Dados Recentes
+### Tabela de Dados Recentes
 
 <p align="center">
 <a><img src="imagens/dashboard_6.png" alt="Tabela de Dados Recentes" border="0" width=100%></a>
@@ -451,10 +451,10 @@ Visualização dos registros mais recentes recebidos pelo sistema.
 
 ---
 
-#### Relatório e Exportação
+### Relatório e Exportação
 
 <p align="center">
-<a><img src="imagens/dashboard_7.png" alt="Botão de Exportação CSV" border="0" width=100%></a>
+<a><img src="imagens/dashboard_7.png" alt="Botão de Exportação CSV" border="0" width=50%></a>
 </p>
 Botão para baixar todos os dados em CSV.
 
@@ -465,7 +465,7 @@ Resumo estatístico por tipo de sensor: média, mínimo, máximo, desvio padrão
 
 ---
 
-#### Filtro de Período
+### Filtro de Período
 
 <p align="center">
 <a><img src="imagens/dashboard_9.png" alt="Filtro de Período" border="0" width=100%></a>
@@ -474,16 +474,16 @@ Resumo estatístico por tipo de sensor: média, mínimo, máximo, desvio padrão
 
 ---
 
-#### Menu de Configurações
+### Menu de Configurações
 
 <p align="center">
-<a><img src="imagens/dashboard_10.png" alt="Menu de Configurações" border="0" width=100%></a>
+<a><img src="imagens/dashboard_10.png" alt="Menu de Configurações" border="0" width=30%></a>
 </p>
 Menu do Streamlit com opções para atualizar, imprimir, gravar screencast, limpar cache, etc.
 
 ---
 
-#### Como Rodar o Dashboard
+### Como Rodar o Dashboard
 
 1. **Instale as dependências:**
    ```bash
@@ -499,7 +499,7 @@ Menu do Streamlit com opções para atualizar, imprimir, gravar screencast, limp
 
 ---
 
-#### Dicas de Uso
+### Dicas de Uso
 
 - Use o filtro de período para analisar dados recentes ou históricos.
 - Passe o mouse sobre os gráficos para ver detalhes de cada ponto.
@@ -510,7 +510,7 @@ Menu do Streamlit com opções para atualizar, imprimir, gravar screencast, limp
 
 ---
 
-#### Dependências
+### Dependências
 - [Streamlit](https://streamlit.io/)
 - [Pandas](https://pandas.pydata.org/)
 - [Requests](https://docs.python-requests.org/)
