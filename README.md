@@ -86,10 +86,9 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 │   ├── setup-oracle-docker.bat      # Script para configurar Oracle (Windows Batch)  
 │   └── setup-oracle-docker.ps1      # Script para configurar Oracle (Windows PowerShell)
 ├── data/
-│   ├── dashboard.py                  # Script para geração de dashboard
-│   ├── dashboard_*.png               # Capturas de tela dos dashboards (1-10)
-│   └── README.md                     # Documentação específica dos dados
+│   └── dashboard.py                  # Script para geração de dashboard
 ├── imagens/
+│   ├── dashboard_*.png               # Capturas de tela dos dashboards (1-10)
 │   ├── esquema.png                   # Esquema do circuito ESP32
 │   ├── logo-fiap.png                 # Logo da FIAP
 │   ├── play.png                      # Imagem do botão play
