@@ -471,7 +471,7 @@ Resumo estatístico por tipo de sensor: média, mínimo, máximo, desvio padrão
 <p align="center">
 <a><img src="imagens/dashboard_9.png" alt="Filtro de Período" border="0" width=100%></a>
 </p>
-*Selecione o período desejado para análise: última hora, últimas 24h ou tudo.*
+Selecione o período desejado para análise: última hora, últimas 24h ou tudo.
 
 ---
 
