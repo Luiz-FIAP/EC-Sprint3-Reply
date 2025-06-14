@@ -228,6 +228,8 @@ cd sensor.ingest.local
 python3 servidor.py (mac)
 python servidor.py (windows)
 ```
+Terminal do ``servidor.py``:
+
 <p align="center">
 <a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=100%></a>
 </p>
