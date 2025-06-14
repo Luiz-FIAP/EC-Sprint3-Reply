@@ -519,11 +519,11 @@ curl http://localhost:8000/sensors
 
 ### 8. Resultados Obtidos
 O sistema gera automaticamente:
-- 📊 **Gráfico de análise**: `docs/images/sensor_analysis.png`
+- 📊 **Gráficoss e Insigths**: `data/dashboard_*.png` (10 visualizações completas)
 - 📈 **Estatísticas detalhadas** no terminal
 - 📄 **Dados CSV** prontos para análise
 - 🗄️ **Dados no Oracle** (se usar servidor)
-- 🐳 **Banco Oracle** rodando no Docker
+- 🐳 **Banco Oracle** rodando no Docker ou localmente
 
 ## Casos de Uso
 
@@ -607,28 +607,6 @@ O sistema gera automaticamente:
 
 ---
 *Projeto desenvolvido para demonstrar conceitos de IoT e análise de dados.* 
-
-### 🖼️ **Evidências Visuais da Simulação**
-
-**Print do circuito montado na plataforma de simulação:**
-
-> **[INSERIR AQUI UMA IMAGEM DO CIRCUITO NO WOKWI OU OUTRA PLATAFORMA]**
-> 
-> ![FALTA INSERIR: Print do circuito virtual](docs/images/circuito_wokwi.png)
-
-**Print do Monitor Serial mostrando leituras dos sensores:**
-
-> **[INSERIR AQUI UM PRINT DO MONITOR SERIAL COM DADOS DOS SENSORES]**
-> 
-> ![FALTA INSERIR: Print do Monitor Serial](docs/images/monitor_serial.png)
-
-**Print do gráfico gerado na análise dos dados:**
-
-> **[INSERIR AQUI UM PRINT DO GRÁFICO GERADO PELA ANÁLISE PYTHON]**
-> 
-> ![FALTA INSERIR: Gráfico de análise](docs/images/sensor_analysis.png)
-
----
 
 ### 🧑‍💻 **Trecho Representativo do Código**
 
