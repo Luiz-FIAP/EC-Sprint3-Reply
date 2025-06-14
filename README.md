@@ -228,6 +228,8 @@ cd sensor.ingest.local
 python3 servidor.py (mac)
 python servidor.py (windows)
 ```
+Terminal do ``servidor.py``:
+
 <p align="center">
 <a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=100%></a>
 </p>
@@ -353,7 +355,10 @@ Este dashboard foi desenvolvido em Streamlit para visualização e análise dos 
 
 ## Visão Geral do Dashboard
 
-![Visão Geral e Alertas](dashboard_1.png)
+![Visão Geral e Alertas]
+<p align="center">
+<a><img src="imagens/dashboard_1.png" alt="Esquema da ESP32 com sensores" border="0" width=100%></a>
+</p>
 *Visão geral do dashboard com alertas de não conformidade para umidade, luminosidade e vibração.*
 
 ---
