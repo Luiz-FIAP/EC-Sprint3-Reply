@@ -412,30 +412,30 @@ Esses limites podem ser facilmente ajustados no código conforme a necessidade d
 
 ---
 
-#### Gráficos Disponíveis
+### Gráficos Disponíveis
 
-##### Linha: Temperatura e Umidade ao longo do tempo
+#### Linha: Temperatura e Umidade ao longo do tempo
 
 <p align="center">
 <a><img src="imagens/dashboard_2.png" alt="Gráfico de Linha - Temperatura e Umidade" border="0" width=100%></a>
 </p>
 Evolução da temperatura e umidade ao longo do tempo.
 
-##### Barra: Média de Luminosidade por Hora
+#### Barra: Média de Luminosidade por Hora
 
 <p align="center">
 <a><img src="imagens/dashboard_3.png" alt="Gráfico de Barra - Luminosidade" border="0" width=100%></a>
 </p>
 Média de luminosidade registrada em cada hora.
 
-##### Dispersão: Temperatura vs. Umidade
+#### Dispersão: Temperatura vs. Umidade
 
 <p align="center">
 <a><img src="imagens/dashboard_4.png" alt="Gráfico de Dispersão - Temperatura vs. Umidade" border="0" width=100%></a>
 </p>
 Relação entre temperatura e umidade, útil para identificar correlações.
 
-##### Barra: Eventos de Vibração por Hora
+#### Barra: Eventos de Vibração por Hora
 <p align="center">
 <a><img src="imagens/dashboard_5.png" alt="Gráfico de Barra - Vibração" border="0" width=100%></a>
 </p>
