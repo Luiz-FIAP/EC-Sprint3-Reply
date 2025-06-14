@@ -458,6 +458,7 @@ Visualização dos registros mais recentes recebidos pelo sistema.
 </p>
 Botão para baixar todos os dados em CSV.
 
+
 <p align="center">
 <a><img src="imagens/dashboard_8.png" alt="Resumo Estatístico" border="0" width=100%></a>
 </p>
