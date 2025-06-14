@@ -43,9 +43,13 @@ A Hermes Reply atua com soluções digitais aplicadas à indústria, com foco em
 ## Descrição
 Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (temperatura, vibração e luminosidade) para coleta e análise de dados em tempo real.
 
+<p align="center">
+<a><img src="imagens/esquema.png" alt="Esquema da ESP32 com sensores" border="0" width=70% height=70%></a>
+</p>
+
 ## Sensores Utilizados
 - **DHT22**: Sensor de temperatura e umidade
-- **SW-420**: Sensor de vibração
+- **SW-420**: Sensor de vibração (simulado com botão)
 - **LDR**: Sensor de luminosidade (fotorresistor)
 
 ### 🎯 **Justificativa dos Sensores Utilizados**
@@ -61,33 +65,37 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 - **SW-420**: Use o botão/switch para simular vibração (0/1)
 - **LDR**: Ajuste o slider de luminosidade (0-4095)
 
-📋 **Detalhes da correção**: [docs/SENSOR_FIX.md](docs/SENSOR_FIX.md)
-
 ## Estrutura do Projeto
 ```
 ├── README.md                          # Este arquivo
+├── plan.md                           # Plano de desenvolvimento do projeto
 ├── diagram.json                       # Configuração do circuito Wokwi
 ├── wokwi.toml                        # Configuração do projeto Wokwi
 ├── platformio.ini                    # Configuração PlatformIO
+├── requirements.txt                   # Dependências Python do projeto
+├── .gitignore                        # Arquivos ignorados pelo Git
 ├── src/
 │   └── main.cpp                      # Código principal Arduino/ESP32
 ├── sensor.ingest.local/
 │   ├── servidor.py                   # Servidor Flask para ingestão de dados
-│   └── config.py                     # Configurações centralizadas
+│   ├── config.py                     # Configurações centralizadas
+│   ├── initial_data.sql              # Script SQL para inicialização do banco
+│   └── server_logs.txt               # Logs do servidor de ingestão
 ├── scripts/
 │   ├── setup-oracle-docker.sh       # Script para configurar Oracle (Linux/macOS)
 │   ├── setup-oracle-docker.bat      # Script para configurar Oracle (Windows Batch)  
 │   └── setup-oracle-docker.ps1      # Script para configurar Oracle (Windows PowerShell)
 ├── data/
-│   └── sensor_data.csv              # Dados coletados dos sensores
-├── analysis/
-│   └── data_visualization.py        # Script para gerar gráficos
-├── docs/
-│   ├── images/                      # Prints do circuito e gráficos
-│   └── TROUBLESHOOTING.md           # Guia de solução de problemas
-└── .vscode/                         # Configurações do VS Code
-    ├── settings.json
-    └── launch.json
+│   └── dashboard.py                  # Script para geração de dashboard
+├── imagens/
+│   ├── dashboard_*.png               # Capturas de tela dos dashboards (1-10)
+│   ├── esquema.png                   # Esquema do circuito ESP32
+│   ├── logo-fiap.png                 # Logo da FIAP
+│   ├── play.png                      # Imagem do botão play
+│   └── servidor.png                  # Screenshot do servidor em execução
+├── .vscode/                          # Configurações do VS Code
+│   ├── settings.json                 # Configurações do editor
+│   └── extensions.json               # Extensões recomendadas
 ```
 
 ## Como Executar
@@ -175,13 +183,16 @@ docker exec -it oracle-free sqlplus fiap/123456@FREEPDB1
 
 #### **📋 Configurações para o Servidor Python**
 
-Edite as configurações no `sensor.ingest.local/servidor.py`:
+Edite as configurações conforme seu banco de dados Oracle no `sensor.ingest.local/config.py`:
 
 ```python
-# Configurações do Banco Oracle no Docker
-DB_USER = "fiap"
-DB_PASSWORD = "123456"  
-DB_DSN = "localhost:1521/FREEPDB1"  # Porta mapeada do Docker
+# Configurações do Banco Oracle
+DB_CONFIG = {
+  "user": "fiap",
+  "password": "123456", 
+  "dsn": "localhost:1521/FREEPDB1", # Configurado para porta mapeada do Docker
+  "table_name": "sensor_readings"
+}  
 ```
 
 #### **🛑 Comandos Úteis do Docker**
@@ -209,15 +220,31 @@ Para receber dados em tempo real do ESP32 e armazenar no Oracle:
 pip3 install flask oracledb
 
 # As configurações estão centralizadas em config.py
-# Para Oracle local, edite o arquivo sensor.ingest.local/config.py
+# Para conexão com banco de dados Oracle, edite o arquivo sensor.ingest.local/config.py
 
 # Iniciar servidor
 cd sensor.ingest.local
 python3 servidor.py (mac)
 python servidor.py (windows)
 ```
+Terminal do ``servidor.py``:
 
-**💡 Dica**: Se o Oracle estiver no Docker, o servidor se conectará automaticamente!
+<p align="center">
+<a><img src="imagens/servidor.png" alt="Terminal servidor.py" border="0" width=100%></a>
+</p>
+
+Após rodar `servidor.py`, copie o endereço do servidor Flask para esta parte do código na linha 31 do `main.cpp`:
+
+```c
+// *** Configurações do Servidor ***
+// Lista de servidores para envio simultâneo
+const char* serverIPs[] = {
+  "192.168.2.126",    // Servidor principal
+  "192.168.160.1",    // Servidor Wokwi
+  "localhost",        // Servidor local
+  "192.168.1.100"     // Servidor adicional
+};
+```
 
 #### **⚙️ Configurações Personalizadas**
 
@@ -241,8 +268,21 @@ SERVER_CONFIG = {
 
 # Sensores válidos
 SENSOR_CONFIG = {
-    "valid_types": ["temperature", "humidity", "vibration", "luminosity"]
+    "valid_types": ["temperature", "humidity", "vibration", "luminosity"],
+    "data_precision": 6,  # Casas decimais para valores (aumentado para maior precisão)
+    "max_value_range": {
+        "temperature": (-50.0, 100.0),
+        "humidity": (0.0, 100.0), 
+        "vibration": (0, 1),
+        "luminosity": (0, 4095)
+    }
 }
+
+# Configurações de query
+QUERY_CONFIG = {
+    "default_limit": 100,
+    "max_limit": 1000
+} 
 ```
 
 #### **Endpoints Disponíveis:**
@@ -278,17 +318,208 @@ Content-Type: application/json
 - **Log**: Console com timestamps
 - **Tratamento**: Rollback automático em caso de erro
 
-### 5. Análise dos Dados
+### 5. Compilar e simular ESP32
 ```bash
-# Instalar dependências Python
-pip3 install -r requirements.txt
-
-# Executar visualização
-cd analysis
-python3 data_visualization.py
+# Compilar código ESP32
+pio run
 ```
+Após compilar, inicie a simulação no arquivo `diagram.json`
 
-### 6. Verificação do Sistema Completo
+<p align="center">
+<a><img src="imagens/play.png" alt="Esquema da ESP32 com sensores" border="0" width=100%></a>
+</p>
+
+Monitor serial ESP32:
+
+<p align="center">
+<a><img src="imagens/monitor_serial_1.png" alt="Imagem monitor serial" border="0" width=100%></a>
+</p>
+<p align="center">
+<a><img src="imagens/monitor_serial_2.png" alt="Imagem monitor serial" border="0" width=100%></a>
+</p>
+
+Terminal do ``servidor.py`` ao rodar ESP32:
+
+<p align="center">
+<a><img src="imagens/terminal_servidor.png" alt="Imagem terminal do servidor" border="0" width=100%></a>
+</p>
+
+### 6. Análise dos Dados
+
+### Dashboard de Sensores IoT (Oracle)
+
+Este dashboard foi desenvolvido em Streamlit para visualização e análise dos dados coletados por sensores IoT (temperatura, umidade, vibração e luminosidade) e armazenados em um banco de dados Oracle.
+
+---
+
+### Visão Geral do Dashboard
+
+<p align="center">
+<a><img src="imagens/dashboard_1.png" alt="Visão Geral e Alertas" border="0" width=100%></a>
+</p>
+Visão geral do dashboard com alertas de não conformidade para umidade, luminosidade e vibração.
+
+---
+
+### Objetivo
+
+Permitir o acompanhamento em tempo real e a análise histórica das medições dos sensores conectados ao seu sistema IoT, facilitando a visualização de tendências, correlações e eventos relevantes.
+
+---
+
+### Recursos do Dashboard
+
+- **Visualização em tempo real** dos dados coletados
+- **Filtro de período** (última hora, últimas 24h, tudo)
+- **Cards de métricas rápidas** (últimos valores de cada grandeza)
+- **Análises e Alertas de Não Conformidade**:
+  - Destaca automaticamente valores fora da faixa ideal para umidade, luminosidade e eventos de vibração
+- **Gráficos interativos** organizados em abas:
+  - **Linha:** Temperatura e Umidade ao longo do tempo
+  - **Barra:** Média de Luminosidade por Hora
+  - **Dispersão:** Temperatura vs. Umidade
+  - **Barra:** Contagem de Eventos de Vibração por Hora
+- **Tabela de dados recentes**
+- **Relatório e Exportação**:
+  - Botão para baixar todos os dados em CSV
+  - Resumo estatístico por tipo de sensor
+- **Layout responsivo** e visual moderno
+
+---
+
+### Análises e Alertas de Não Conformidade
+
+O dashboard realiza automaticamente análises de não conformidade e exibe alertas visuais no topo da página para facilitar a identificação de situações críticas:
+
+- **Umidade fora da faixa ideal:**
+  - Alerta se algum valor de umidade estiver abaixo de 30% ou acima de 70%.
+- **Luminosidade fora da faixa recomendada:**
+  - Alerta se algum valor de luminosidade estiver abaixo de 300 ou acima de 3500.
+- **Eventos de vibração detectados:**
+  - Alerta se houver qualquer evento de vibração (valor 1).
+
+Esses limites podem ser facilmente ajustados no código conforme a necessidade do seu projeto.
+
+---
+
+### Relatório e Exportação
+
+- **Download dos dados em CSV:**
+  - Permite baixar todos os dados coletados para análise externa ou arquivamento.
+- **Resumo estatístico por tipo de sensor:**
+  - Exibe média, mínimo, máximo, desvio padrão e outros indicadores para cada grandeza coletada.
+
+---
+
+### Gráficos Disponíveis
+
+### Linha: Temperatura e Umidade ao longo do tempo
+
+<p align="center">
+<a><img src="imagens/dashboard_2.png" alt="Gráfico de Linha - Temperatura e Umidade" border="0" width=100%></a>
+</p>
+Evolução da temperatura e umidade ao longo do tempo.
+
+### Barra: Média de Luminosidade por Hora
+
+<p align="center">
+<a><img src="imagens/dashboard_3.png" alt="Gráfico de Barra - Luminosidade" border="0" width=100%></a>
+</p>
+Média de luminosidade registrada em cada hora.
+
+### Dispersão: Temperatura vs. Umidade
+
+<p align="center">
+<a><img src="imagens/dashboard_4.png" alt="Gráfico de Dispersão - Temperatura vs. Umidade" border="0" width=100%></a>
+</p>
+Relação entre temperatura e umidade, útil para identificar correlações.
+
+### Barra: Eventos de Vibração por Hora
+<p align="center">
+<a><img src="imagens/dashboard_5.png" alt="Gráfico de Barra - Vibração" border="0" width=100%></a>
+</p>
+Contagem de eventos de vibração detectados em cada hora.
+
+---
+
+### Tabela de Dados Recentes
+
+<p align="center">
+<a><img src="imagens/dashboard_6.png" alt="Tabela de Dados Recentes" border="0" width=100%></a>
+</p>
+Visualização dos registros mais recentes recebidos pelo sistema.
+
+---
+
+### Relatório e Exportação
+
+<p align="center">
+<a><img src="imagens/dashboard_7.png" alt="Botão de Exportação CSV" border="0" width=50%></a>
+</p>
+Botão para baixar todos os dados em CSV.
+
+
+<p align="center">
+<a><img src="imagens/dashboard_8.png" alt="Resumo Estatístico" border="0" width=100%></a>
+</p>
+Resumo estatístico por tipo de sensor: média, mínimo, máximo, desvio padrão, etc.
+
+---
+
+### Filtro de Período
+
+<p align="center">
+<a><img src="imagens/dashboard_9.png" alt="Filtro de Período" border="0" width=100%></a>
+</p>
+Selecione o período desejado para análise: última hora, últimas 24h ou tudo.
+
+---
+
+### Menu de Configurações
+
+<p align="center">
+<a><img src="imagens/dashboard_10.png" alt="Menu de Configurações" border="0" width=30%></a>
+</p>
+Menu do Streamlit com opções para atualizar, imprimir, gravar screencast, limpar cache, etc.
+
+---
+
+### Como Rodar o Dashboard
+
+1. **Instale as dependências:**
+   ```bash
+   pip install streamlit pandas requests plotly
+   ```
+2. **Certifique-se de que o servidor Flask está rodando na porta 8000.**
+3. **No terminal, execute:**
+   ```bash
+   streamlit run data/dashboard.py
+   ```
+4. **Acesse o dashboard pelo navegador:**
+   - O endereço padrão será: [http://localhost:8501](http://localhost:8501)
+
+---
+
+### Dicas de Uso
+
+- Use o filtro de período para analisar dados recentes ou históricos.
+- Passe o mouse sobre os gráficos para ver detalhes de cada ponto.
+- Utilize as abas para alternar entre diferentes tipos de análise.
+- Consulte a tabela de dados recentes para ver os últimos registros recebidos.
+- Fique atento aos alertas de não conformidade no topo do dashboard.
+- Utilize o botão de download para exportar os dados em CSV e o resumo estatístico para análises rápidas.
+
+---
+
+### Dependências
+- [Streamlit](https://streamlit.io/)
+- [Pandas](https://pandas.pydata.org/)
+- [Requests](https://docs.python-requests.org/)
+- [Plotly](https://plotly.com/python/)
+
+---
+
+### 7. Verificação do Sistema Completo
 
 #### **🔍 Testar se tudo está funcionando:**
 
@@ -311,13 +542,13 @@ curl http://localhost:8000/sensors
 # Deve retornar JSON com os dados inseridos
 ```
 
-### 7. Resultados Obtidos
+### 8. Resultados Obtidos
 O sistema gera automaticamente:
-- 📊 **Gráfico de análise**: `docs/images/sensor_analysis.png`
+- 📊 **Gráficoss e Insigths**: `data/dashboard_*.png` (10 visualizações completas)
 - 📈 **Estatísticas detalhadas** no terminal
 - 📄 **Dados CSV** prontos para análise
 - 🗄️ **Dados no Oracle** (se usar servidor)
-- 🐳 **Banco Oracle** rodando no Docker
+- 🐳 **Banco Oracle** rodando no Docker ou localmente
 
 ## Casos de Uso
 
@@ -402,28 +633,6 @@ O sistema gera automaticamente:
 ---
 *Projeto desenvolvido para demonstrar conceitos de IoT e análise de dados.* 
 
-### 🖼️ **Evidências Visuais da Simulação**
-
-**Print do circuito montado na plataforma de simulação:**
-
-> **[INSERIR AQUI UMA IMAGEM DO CIRCUITO NO WOKWI OU OUTRA PLATAFORMA]**
-> 
-> ![FALTA INSERIR: Print do circuito virtual](docs/images/circuito_wokwi.png)
-
-**Print do Monitor Serial mostrando leituras dos sensores:**
-
-> **[INSERIR AQUI UM PRINT DO MONITOR SERIAL COM DADOS DOS SENSORES]**
-> 
-> ![FALTA INSERIR: Print do Monitor Serial](docs/images/monitor_serial.png)
-
-**Print do gráfico gerado na análise dos dados:**
-
-> **[INSERIR AQUI UM PRINT DO GRÁFICO GERADO PELA ANÁLISE PYTHON]**
-> 
-> ![FALTA INSERIR: Gráfico de análise](docs/images/sensor_analysis.png)
-
----
-
 ### 🧑‍💻 **Trecho Representativo do Código**
 
 ```cpp
@@ -461,13 +670,10 @@ graph TD;
 ```
 
 ---
-
 ### 📈 **Insights Iniciais da Análise**
-
-> **[INSERIR AQUI UMA BREVE ANÁLISE DOS DADOS COLETADOS. EXEMPLO:]**
->
-> Durante a simulação, observou-se que a temperatura variou entre XX°C e YY°C, a vibração apresentou picos em determinados momentos simulando possíveis falhas, e a luminosidade oscilou conforme o ajuste do sensor virtual. O gráfico gerado permitiu identificar padrões e anomalias nos dados, demonstrando a utilidade do monitoramento contínuo em ambientes industriais.
-
+> 5 registros de umidade fora da faixa ideal (30-70%)!
+> 1 registros de luminosidade fora da faixa recomendada (300-3500)!
+> Nenhum evento de vibração detectado.
 ---
 
 ### ✅ **Checklist dos Entregáveis**

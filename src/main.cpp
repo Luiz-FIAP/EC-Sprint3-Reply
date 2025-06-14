@@ -34,16 +34,18 @@ const char* serverIPs[] = {
   "192.168.2.126",    // Servidor principal
   "192.168.160.1",    // Servidor Wokwi
   "localhost",        // Servidor local
-  "192.168.1.100"     // Servidor adicional
+  "192.168.1.100",     // Servidor adicional
+  "192.168.100.161"   // Servidor adicional
+  // Adicione mais servidores conforme necessário
 };
 const int numServers = sizeof(serverIPs) / sizeof(serverIPs[0]);
 const int serverPort = 8000;
 const char* serverPath = "/data";
 
 // Controle de servidores
-bool serverStatus[4] = {false, false, false, false}; // Status de cada servidor (máximo 4)
+bool serverStatus[numServers] = {false}; // Status de cada servidor
 int activeServers = 0;
-String serverURLs[4]; // URLs completas dos servidores
+String serverURLs[numServers]; // URLs completas dos servidores
 bool multiServerMode = true; // Modo multi-servidor ativo
 
 // *** Configurações NTP ***
