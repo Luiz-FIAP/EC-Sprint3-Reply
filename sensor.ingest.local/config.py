@@ -1,13 +1,14 @@
 # Configurações do Sistema de Monitoramento IoT
 # Centralizando configurações para facilitar manutenção
 
-# === CONFIGURAÇÕES DO BANCO DE DADOS ORACLE ===
+=== CONFIGURAÇÕES DO BANCO DE DADOS ORACLE ===
 DB_CONFIG = {
     "user": "fiap",
     "password": "123456", 
     "dsn": "localhost:1521/FREEPDB1",
     "table_name": "sensor_readings"
 }
+
 
 # === CONFIGURAÇÕES DO SERVIDOR FLASK ===
 SERVER_CONFIG = {

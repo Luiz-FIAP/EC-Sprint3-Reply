@@ -64,6 +64,7 @@ REM Criar e executar container Oracle se não existir
 docker ps -a | findstr "oracle-free" >nul 2>&1
 if %errorlevel% neq 0 (
     echo 📦 Criando container Oracle Database Free...
+    $dockerCommand = @"
     docker run -d ^
       --name oracle-free ^
       -p 1521:1521 ^
