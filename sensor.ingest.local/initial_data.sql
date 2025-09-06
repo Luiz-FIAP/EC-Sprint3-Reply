@@ -40,7 +40,7 @@ CREATE TABLE devices (
 CREATE TABLE sensors (
     sensor_id VARCHAR2(50) PRIMARY KEY,
     device_id VARCHAR2(50) NOT NULL,
-    sensor_type VARCHAR2(50) NOT NULL CHECK (sensor_type IN ('temperature', 'humidity', 'vibration', 'luminosity')),
+    sensor_type VARCHAR2(50) NOT NULL,
     pin_number NUMBER(3) NOT NULL,
     sensor_name VARCHAR2(100) NOT NULL,
     status VARCHAR2(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'error')),
@@ -52,6 +52,9 @@ CREATE TABLE sensors (
 -- Adicionar constraint de chave estrangeira separadamente
 ALTER TABLE sensors ADD CONSTRAINT fk_sensors_device 
     FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE CASCADE;
+
+ALTER TABLE sensors ADD CONSTRAINT fk_sensors_type 
+    FOREIGN KEY (sensor_type) REFERENCES sensor_types(type_id) ON DELETE CASCADE;
 
 -- =====================================================
 -- 4. TABELA: SENSOR_READINGS (Leituras)
