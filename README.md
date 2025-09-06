@@ -331,7 +331,6 @@ O arquivo `sensor.ingest.local/servidor.py` implementa a integração completa c
 - ✅ Consultas eficientes com particionamento por tempo
 
 #### **Manutenibilidade**
-- ✅ Modelo bem documentado (`diagrama.md`)
 - ✅ Script de inicialização automático (`initial_data.sql`)
 - ✅ Configurações centralizadas (`config.py`)
 - ✅ Sistema de alertas automático
@@ -339,7 +338,6 @@ O arquivo `sensor.ingest.local/servidor.py` implementa a integração completa c
 ### 📁 Arquivos de Base do Modelo
 
 - **`sensor.ingest.local/initial_data.sql`**: Script completo de criação do banco
-- **`sensor.ingest.local/diagrama.md`**: Documentação detalhada do modelo ER
 - **`sensor.ingest.local/servidor.py`**: Implementação da integração com o banco
 - **`sensor.ingest.local/config.py`**: Configurações centralizadas do sistema
 
