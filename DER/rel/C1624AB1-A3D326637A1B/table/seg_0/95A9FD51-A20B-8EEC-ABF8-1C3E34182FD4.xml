@@ -1,0 +1,141 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="95A9FD51-A20B-8EEC-ABF8-1C3E34182FD4" name="sensor_readings">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>1D55F0C6-BFF6-1727-E5EC-2CC526C39591</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="reading_id" id="1F848789-F665-4086-ABF2-5F2AE470EC9E">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>C0457E8A-4146-4745-5AAF-54BF1890D481</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>7478C0E7-651D-DA21-6DDA-4EC9EA55E6B6</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="sensor_id" id="A53E90DB-4A81-5D2D-CA06-FF66686EDD45">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>FC0FC6AF-89E0-0482-9918-7B844433357F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="446C2B29-11B5-975C-7805-E45A104CF682" referredColumn="0D5AD0EE-4983-AA33-9D0B-EC9A41802AA4"/>
+</associations>
+</Column>
+<Column name="timestamp" id="D69225FD-1EB6-32AF-FBC6-8F271A03EC3F">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>0D947B2A-045E-BC32-CFD5-D8CDF56C868E</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="sensor_value" id="8D59D69D-7F95-1169-EF98-3FEF61C6D431">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>99D23E41-F949-98C9-D5D1-92DF60467202</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="quality" id="974316F8-2883-543C-780B-C9CC17846613">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>F34A1246-4B87-727D-2CEB-169146DD6D51</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>086EACD6-B843-F70D-F633-006CDBB2A078</domain>
+<listOfValues>
+<valueDef value="error" description=""/>
+<valueDef value="good" description=""/>
+<valueDef value="warning" description=""/>
+</listOfValues>
+<defaultValue>&apos;good&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="raw_value" id="D8D1EF47-2010-CCE6-C3E4-BEEF79F5CFD8">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>75E372AC-07B1-750B-124D-855213327BB6</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="created_at" id="DA066015-379D-6AE4-41A8-3197BC5AB182">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>E89CD00D-20F4-6F44-7BB9-2D7AC59856FE</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="5E9286DB-8C25-126A-7A84-C3048C833592" name="sensor_readings_PK">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>5A76B4BF-B5DC-E994-E739-84FBFCAE9390</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1F848789-F665-4086-ABF2-5F2AE470EC9E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="ABF2944B-2D87-C2EA-C7BF-F604B769D362" name="fk_readings_sensor">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A53E90DB-4A81-5D2D-CA06-FF66686EDD45"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,176 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="12F4D327-30FB-ABFD-9EBC-D6A02A487F88" name="sensors">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>CE4F635F-DA70-F769-7EAB-EA0F037EAD17</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="sensor_id" id="0D5AD0EE-4983-AA33-9D0B-EC9A41802AA4">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>37AD07DF-DE05-9E58-8E07-7E8721947819</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="device_id" id="AFFCECD9-F8BD-7479-154F-1C69BAA0C847">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>2F7BF6A2-6A8C-0E0E-DF1C-C70E76CC3BAB</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6A3E6727-0EA4-2CE9-797B-9A300FF53CB5" referredColumn="CDCCF59F-98D4-8F1E-FAE1-E083D963AF88"/>
+</associations>
+</Column>
+<Column name="sensor_type" id="756CD7CD-DDD9-50CF-5F12-42D75F0A3888">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>A269267D-8ED6-BE13-3656-66A4DCDD155B</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="141C9E45-E670-D9B6-9164-00227885CC77" referredColumn="B85BF2C2-17C7-3A94-1A8A-E7740E8C9069"/>
+</associations>
+</Column>
+<Column name="pin_number" id="468871DA-956A-51DF-413A-EBD74EA6F89A">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>3EDE5FEF-C047-BD24-9664-33CF2D466DDD</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>66385B54-101C-000F-26AB-F2D6AD1664A7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="sensor_name" id="55B04610-4C36-87C6-6F0E-1E5D98558DE9">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>59E612FC-1BB8-04A3-510E-896183B258FB</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>38045F8F-5C4D-0A81-A196-D5C3FAAB431F</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="status" id="AD5E83CC-1655-5C31-1CE4-C7FD91275D93">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>00DD64AF-1F02-DFD7-F2D3-1795A3FC6EC5</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>086EACD6-B843-F70D-F633-006CDBB2A078</domain>
+<listOfValues>
+<valueDef value="active" description=""/>
+<valueDef value="error" description=""/>
+<valueDef value="inactive" description=""/>
+</listOfValues>
+<defaultValue>&apos;active&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="calibration_offset" id="FC1B3049-FC4A-D222-1377-35E7CDE72EDD">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>5534F98F-BD0D-0F3B-DB14-355DC192BEFF</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>499A0C7D-E685-7C2B-A5A6-3840961590BC</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="sampling_interval" id="9E79CD59-3B13-A4D0-59AE-8C798EC7F776">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>93223A29-8825-BAF7-0771-EF1654C19D2B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>9171C3EC-F32D-B4CC-BABF-3B12072EC039</domain>
+<defaultValue>3000</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="created_at" id="7F4F6BC9-A838-4877-3270-DD90F4D31B98">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>AA0CDEAD-906E-FF7B-29C2-A9E3E0B412F3</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="B0FBA27B-BADA-210D-AA39-E046BC2D177C" name="sensors_PK">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>35A873ED-18A4-8480-9C3E-325E202407FD</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0D5AD0EE-4983-AA33-9D0B-EC9A41802AA4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BB5014C8-91E5-A7D2-9C15-1BC8AB7F5904" name="fk_sensors_device">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="AFFCECD9-F8BD-7479-154F-1C69BAA0C847"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="20E8C27E-2616-0ED2-7410-A6C044AC7E16" name="fk_sensors_type">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="756CD7CD-DDD9-50CF-5F12-42D75F0A3888"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,67 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="sensor_readings" directorySegmentName="seg_0" id="95A9FD51-A20B-8EEC-ABF8-1C3E34182FD4">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="reading_id" id="1F848789-F665-4086-ABF2-5F2AE470EC9E">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="sensor_value" id="8D59D69D-7F95-1169-EF98-3FEF61C6D431">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="quality" id="974316F8-2883-543C-780B-C9CC17846613">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>&apos;good&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="sensor_id" id="A53E90DB-4A81-5D2D-CA06-FF66686EDD45">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="timestamp" id="D69225FD-1EB6-32AF-FBC6-8F271A03EC3F">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="raw_value" id="D8D1EF47-2010-CCE6-C3E4-BEEF79F5CFD8">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="created_at" id="DA066015-379D-6AE4-41A8-3197BC5AB182">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="fk_readings_sensor" id="ABF2944B-2D87-C2EA-C7BF-F604B769D362">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="sensor_readings_PK" id="5E9286DB-8C25-126A-7A84-C3048C833592">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

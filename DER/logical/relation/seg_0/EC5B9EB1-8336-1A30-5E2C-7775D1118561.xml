@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_alerts_sensor" directorySegmentName="seg_0" id="EC5B9EB1-8336-1A30-5E2C-7775D1118561">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>3E2168E1-E812-FB40-9466-255301A8DD64</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<sourcePk>BFDD836F-4802-A27B-6573-9C30C2001CB4</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>2C50833B-B8C7-D52B-754A-BA7826D42227</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>581FACA3-AEAD-1893-125B-0822DF2EA081</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

@@ -1,0 +1,74 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="devices" directorySegmentName="seg_0" id="D1F169B4-04A2-129B-6E20-3E4448357CBE">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="updated_at" id="02110316-C2CA-2080-5A8F-5660DE5A573A">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="status" id="12E41D98-1504-4E42-E5C4-21A880EADB59">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>&apos;active&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="ip_address" id="2D2E3C15-E188-66E0-B99A-486ED796E54B">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="device_type" id="753BD740-8579-F788-69A3-CCE21410C7BE">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="created_at" id="8F2E9F3A-5AAD-BB26-C899-B25DED8A5D92">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="firmware_version" id="B844BBF2-6A9C-FAC9-E570-B22ABB093B7F">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="last_seen" id="BB07FD56-B16B-CA0C-A306-4FA5E7CF5F2C">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="location" id="BD65E581-EDCD-6188-2670-7D3071EB1A67">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="device_id" id="CDCCF59F-98D4-8F1E-FAE1-E083D963AF88">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="device_name" id="D9C76077-25DF-9A32-9093-F5C278D7BB42">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="devices_PK" id="29E70BA2-B805-51C3-EC27-9D082CFDEA27">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

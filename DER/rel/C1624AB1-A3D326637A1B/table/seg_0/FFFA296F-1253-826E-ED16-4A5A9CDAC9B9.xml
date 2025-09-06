@@ -1,0 +1,150 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FFFA296F-1253-826E-ED16-4A5A9CDAC9B9" name="sensor_types">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>A19CCD4A-D0F3-3C29-32A6-4D91AE0B5739</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="type_id" id="B85BF2C2-17C7-3A94-1A8A-E7740E8C9069">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>F1E1680F-9BBA-A165-DEAD-7CE32F4862DE</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="type_name" id="32AC0581-4764-70B6-6B77-40991A13FE5F">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>4340BAF7-9F77-C512-E94A-0339760D78CC</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>38045F8F-5C4D-0A81-A196-D5C3FAAB431F</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="unit" id="80AD518E-D2CF-CD37-7427-4D6BC43B9B88">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>94196FE4-6945-2C14-FD46-C87B7F56CBB7</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>086EACD6-B843-F70D-F633-006CDBB2A078</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="min_value" id="9F0DBBAE-528B-ABDB-92C9-9B91D7BBA294">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>B1D9CABE-0B17-DFBC-B0F9-AF1FFC95238E</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="max_value" id="CE248AED-495A-EA14-BD5D-FA88F237D955">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>C5D7E88F-640A-E2C3-5308-E643AE618AD0</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="precision_digits" id="3C1083DF-DBC1-128C-04C5-91C4685B498A">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>7EA6F31A-622C-4281-79F0-8A8708BA9B6F</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>7BECB756-42FC-7162-4EEE-4BDF53B7252A</domain>
+<defaultValue>2</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="description" id="E4A5C447-F3F5-BEA1-1ADA-292AA91C0018">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>B03EA038-96B2-CE61-8DA6-5370DA3FCD84</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>EBDCFD0B-DD4F-EC7D-F532-EF5B3E5C8F36</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="is_active" id="3E04B308-AAD3-3F74-F2DF-ADD490F804FE">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>FB53A381-2D65-6005-4887-7FEF53C42679</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>FC62A775-36E1-D7CA-075F-2300764E0A8E</domain>
+<listOfValues>
+<valueDef value="N" description=""/>
+<valueDef value="Y" description=""/>
+</listOfValues>
+<defaultValue>&apos;Y&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="created_at" id="B540CD24-1629-C541-4FEF-82EA0D93F2A3">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>283A87E5-4BD4-37C0-BBA5-FD1ABF5EAF86</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7D786510-FBF8-7078-D37A-B1D39C631DA3" name="sensor_types_PK">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>74F2503E-3560-0B9F-E9BE-E3262111F515</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B85BF2C2-17C7-3A94-1A8A-E7740E8C9069"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

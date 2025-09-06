@@ -123,3 +123,7 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json
+**/*.localz
+**/*.local
+**/*.git
+**/*.DS_Store

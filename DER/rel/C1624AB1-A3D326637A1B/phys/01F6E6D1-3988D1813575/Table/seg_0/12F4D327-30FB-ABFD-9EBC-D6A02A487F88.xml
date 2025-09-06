@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="sensors" directorySegmentName="seg_0" id="12F4D327-30FB-ABFD-9EBC-D6A02A487F88">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="sensor_id" id="0D5AD0EE-4983-AA33-9D0B-EC9A41802AA4">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="pin_number" id="468871DA-956A-51DF-413A-EBD74EA6F89A">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="sensor_name" id="55B04610-4C36-87C6-6F0E-1E5D98558DE9">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="sensor_type" id="756CD7CD-DDD9-50CF-5F12-42D75F0A3888">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="created_at" id="7F4F6BC9-A838-4877-3270-DD90F4D31B98">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="sampling_interval" id="9E79CD59-3B13-A4D0-59AE-8C798EC7F776">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>3000</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="status" id="AD5E83CC-1655-5C31-1CE4-C7FD91275D93">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>&apos;active&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="device_id" id="AFFCECD9-F8BD-7479-154F-1C69BAA0C847">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="calibration_offset" id="FC1B3049-FC4A-D222-1377-35E7CDE72EDD">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="fk_sensors_type" id="20E8C27E-2616-0ED2-7410-A6C044AC7E16">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="fk_sensors_device" id="BB5014C8-91E5-A7D2-9C15-1BC8AB7F5904">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="sensors_PK" id="B0FBA27B-BADA-210D-AA39-E046BC2D177C">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

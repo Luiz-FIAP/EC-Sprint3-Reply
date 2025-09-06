@@ -1,0 +1,48 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="trg_auto_alerts" directorySegmentName="seg_0" id="D7230E0E-2494-3F3F-7319-8F54832AF9F9">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:24 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[DECLARE
+    v_min_val NUMBER;
+    v_max_val NUMBER;
+    v_alert_type VARCHAR2(50);
+BEGIN
+    -- Busca os limites do tipo de sensor
+    SELECT min_value, max_value 
+    INTO v_min_val, v_max_val
+    FROM sensor_types st
+    JOIN sensors s ON st.type_id = s.sensor_type
+    WHERE s.sensor_id = :NEW.sensor_id;
+    
+    -- Verifica se valor está fora dos limites
+    IF :NEW.sensor_value < v_min_val THEN
+        v_alert_type := 'threshold_low';
+    ELSIF :NEW.sensor_value > v_max_val THEN
+        v_alert_type := 'threshold_high';
+    ELSE
+        RETURN; -- Sai se estiver dentro dos limites
+    END IF;
+    
+    -- Insere alerta
+    INSERT INTO alerts (
+        sensor_id, 
+        alert_type, 
+        threshold_value, 
+        actual_value, 
+        severity, 
+        message
+    ) VALUES (
+        :NEW.sensor_id,
+        v_alert_type,
+        CASE WHEN v_alert_type = 'threshold_low' THEN v_min_val ELSE v_max_val END,
+        :NEW.sensor_value,
+        'high',
+        'Valor ' || v_alert_type || ' detectado: ' || :NEW.sensor_value
+    );
+END;]]></body>
+<triggerTime>AFTER</triggerTime>
+<table>95A9FD51-A20B-8EEC-ABF8-1C3E34182FD4</table>
+</TriggerOraclev10g>
