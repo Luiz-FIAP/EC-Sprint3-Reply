@@ -2,13 +2,18 @@
 # Centralizando configurações para facilitar manutenção
 
 # === CONFIGURAÇÕES DO BANCO DE DADOS ORACLE ===
+# DB_CONFIG = {
+#     "user": "fiap",
+#     "password": "123456", 
+#     "dsn": "localhost:1521/FREEPDB1",
+#     "table_name": "sensor_readings"
+# }
 DB_CONFIG = {
-    "user": "fiap",
-    "password": "123456", 
-    "dsn": "localhost:1521/FREEPDB1",
+    "user": "SYSTEM",
+    "password": "242622", 
+    "dsn": "localhost:1521/xe",
     "table_name": "sensor_readings"
 }
-
 
 # === CONFIGURAÇÕES DO SERVIDOR FLASK ===
 SERVER_CONFIG = {

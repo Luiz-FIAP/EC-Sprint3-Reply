@@ -151,19 +151,19 @@ def executar_initial_data_se_necessario():
         print(f"🔍 Traceback:\n{traceback.format_exc()}")
         return False
 
-def inserir_dados_sensor(sensor_id, sensor_value, timestamp_read=None, quality='good'):
-    """Insere uma nova leitura de sensor na tabela SENSOR_READINGS."""
-    print(f"🗄️ [BANCO] Iniciando inserção: {sensor_id} = {sensor_value}")
-    
+def inserir_dados_sensor(sensor_id, sensor_value, timestamp_read=None, quality="good", raw_value=None):
+    """
+    Insere dados na tabela SENSOR_READINGS.
+    """
     conn, cursor = conectar_db()
     if conn and cursor:
         try:
             if timestamp_read is None:
                 # Usar timestamp atual
                 cursor.execute(f"""
-                    INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, quality)
-                    VALUES (:sensor_id, :sensor_value, :quality)
-                """, sensor_id=sensor_id, sensor_value=sensor_value, quality=quality)
+                    INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, quality, raw_value)
+                    VALUES (:sensor_id, :sensor_value, :quality, :raw_value)
+                """, sensor_id=sensor_id, sensor_value=sensor_value, quality=quality, raw_value=raw_value)
             else:
                 # Processar timestamp fornecido
                 try:
@@ -181,21 +181,21 @@ def inserir_dados_sensor(sensor_id, sensor_value, timestamp_read=None, quality='
                         timestamp_dt = datetime.now()
                     
                     cursor.execute(f"""
-                        INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, timestamp, quality)
-                        VALUES (:sensor_id, :sensor_value, :timestamp, :quality)
+                        INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, timestamp, quality, raw_value)
+                        VALUES (:sensor_id, :sensor_value, :timestamp, :quality, :raw_value)
                     """, sensor_id=sensor_id, sensor_value=sensor_value, 
-                        timestamp=timestamp_dt, quality=quality)
+                        timestamp=timestamp_dt, quality=quality, raw_value=raw_value)
                         
                 except (ValueError, OSError) as e:
                     print(f"❌ Erro ao processar timestamp: {e}")
                     # Fallback para timestamp atual
                     cursor.execute(f"""
-                        INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, quality)
-                        VALUES (:sensor_id, :sensor_value, :quality)
-                    """, sensor_id=sensor_id, sensor_value=sensor_value, quality=quality)
+                        INSERT INTO {TABLE_NAME} (sensor_id, sensor_value, quality, raw_value)
+                        VALUES (:sensor_id, :sensor_value, :quality, :raw_value)
+                    """, sensor_id=sensor_id, sensor_value=sensor_value, quality=quality, raw_value=raw_value)
             
             conn.commit()
-            print(f"✅ Dados inseridos com sucesso: {sensor_id} = {sensor_value}")
+            print(f"✅ Dados inseridos com sucesso: {sensor_id} = {sensor_value} (Q: {quality})")
             return True
             
         except oracledb.Error as error:
@@ -216,7 +216,7 @@ def inserir_dados_sensor(sensor_id, sensor_value, timestamp_read=None, quality='
             if conn:
                 conn.close()
     else:
-        print(f"❌ Falha na conexão com o banco de dados")
+        print("❌ Falha na conexão com o banco de dados")
         return False
 
 def validate_sensor_data(sensor_id, sensor_value, timestamp=None, sensor_type=None):
@@ -307,13 +307,14 @@ def receive_data():
                 "details": "Envie um objeto JSON com sensor_type e sensor_value"
             }), 400
         
-        # 3. Extrair dados - MODIFICADO
+        # 3. Extrair dados
         sensor_id = data.get('sensor_id')
         device_id = data.get('device_id')
         sensor_type = data.get('sensor_type')
         sensor_value = data.get('sensor_value')
         timestamp_param = data.get('timestamp')
         quality = data.get('quality', 'good')
+        raw_value = data.get('raw_value')
         
         # 4. Validar campos obrigatórios
         if None in [sensor_id, sensor_value]:
@@ -376,10 +377,11 @@ def receive_data():
             }), error_code
 
         # 7. Inserir dados
-        print(f"✅ Dados válidos: {sensor_id} = {sensor_value}")
+        # Log da qualidade recebida
+        print(f"✅ Dados válidos: {sensor_id} = {sensor_value} (Q: {quality})")
         print(f"💾 Tentando salvar no banco...")
 
-        if inserir_dados_sensor(sensor_id, sensor_value, timestamp_param, quality):
+        if inserir_dados_sensor(sensor_id, sensor_value, timestamp_param, quality, raw_value):
             print(f"🎉 SUCESSO! Dados salvos no banco")
             return jsonify({
                 "status": "success",
@@ -389,7 +391,8 @@ def receive_data():
                     "device_id": device_id,
                     "sensor_type": sensor_type,
                     "sensor_value": sensor_value,
-                    "quality": quality
+                    "quality": quality,
+                    "raw_value": raw_value
                 }
             }), 200
         else:

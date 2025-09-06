@@ -41,7 +41,7 @@ const char* serverIPs[] = {
   "192.168.2.126",    // Servidor principal (ajuste conforme sua rede)
   "192.168.1.100",    // Servidor adicional
   "192.168.100.161",  // Servidor adicional
-  "192.168.18.7",      // Servidor adicional
+  "192.168.0.201",      // Servidor adicional
   "localhost",        // Servidor local
   "192.168.160.1",    // Servidor Wokwi
   "127.0.0.1"        // Loopback
@@ -119,6 +119,34 @@ const char* SENSOR_IDS[] = {
   "ESP32_001_VIB",   // Vibração
   "ESP32_001_LUM"    // Luminosidade
 };
+
+// *** Adicionar função para determinar qualidade ***
+String evaluateSensorQuality(const char* sensorType, float value) {
+  if (strcmp(sensorType, "temperature") == 0) {
+    // Faixas de temperatura: ideal 18-25°C, warning 10-30°C, error fora disso
+    if (value >= 18.0 && value <= 25.0) return "good";
+    else if (value >= 10.0 && value <= 30.0) return "warning";
+    else return "error";
+    
+  } else if (strcmp(sensorType, "humidity") == 0) {
+    // Faixas de umidade: ideal 30-70%, warning 20-80%, error fora disso
+    if (value >= 30.0 && value <= 70.0) return "good";
+    else if (value >= 20.0 && value <= 80.0) return "warning";
+    else return "error";
+    
+  } else if (strcmp(sensorType, "vibration") == 0) {
+    // Vibração: 0 = normal (good), 1 = vibração detectada (warning)
+    return (value == 0.0) ? "good" : "warning";
+    
+  } else if (strcmp(sensorType, "luminosity") == 0) {
+    // Faixas de luminosidade: ideal 300-3500, warning 100-4000, error fora disso
+    if (value >= 300 && value <= 3500) return "good";
+    else if (value >= 100 && value <= 4000) return "warning";
+    else return "error";
+  }
+  
+  return "unknown"; // Caso não identificado
+}
 
 void setup() {
   Serial.begin(115200);
@@ -553,14 +581,20 @@ bool sendDataToSingleServer(SensorData data, const char* serverURL) {
     jsonDoc["timestamp"] = timestamp_ms;
     jsonDoc["sensor_type"] = sensorData[i].sensorType;
     jsonDoc["sensor_value"] = sensorData[i].value;
-    jsonDoc["quality"] = "good";
+    // *** AVALIAR QUALIDADE BASEADA NO VALOR ***
+    String quality = evaluateSensorQuality(sensorData[i].sensorType, sensorData[i].value);
+    jsonDoc["quality"] = quality;
+    jsonDoc["raw_value"] = sensorData[i].value;
     
     // Serializar JSON
     String jsonString;
     serializeJson(jsonDoc, jsonString);
     
     // Debug: mostrar JSON sendo enviado
-    Serial.printf("📤 Enviando %s: %s\n", sensorData[i].sensorType, jsonString.c_str());
+    Serial.printf("📤 Enviando %s (Q: %s): %s\n", 
+                  sensorData[i].sensorType, 
+                  quality.c_str(), 
+                  jsonString.c_str());
     
     // Iniciar conexão HTTP
     http.begin(serverURL);
