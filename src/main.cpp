@@ -21,6 +21,13 @@
 #include <math.h>
 #include <time.h>  // Adicionado para suporte a NTP
 
+// Controle de servidor confiável
+bool reliableServerFound = false;        // Flag para servidor confiável encontrado
+int reliableServerIndex = -1;            // Índice do servidor confiável
+int consecutiveFailures = 0;             // Contador de falhas consecutivas
+const int MAX_CONSECUTIVE_FAILURES = 3;  // Máximo de falhas antes de rediscovery
+bool forceDiscovery = false;             // Flag para forçar descoberta (comando manual)
+
 // *** Configurações WiFi ***
 const char* ssid = "Wokwi-GUEST";      // Para simulação Wokwi
 const char* password = "";              // Sem senha no Wokwi
@@ -31,12 +38,14 @@ const char* password = "";              // Sem senha no Wokwi
 // *** Configurações do Servidor ***
 // Lista de servidores para envio simultâneo
 const char* serverIPs[] = {
-  "192.168.2.126",    // Servidor principal
-  "192.168.160.1",    // Servidor Wokwi
+  "192.168.2.126",    // Servidor principal (ajuste conforme sua rede)
+  "192.168.1.100",    // Servidor adicional
+  "192.168.100.161",  // Servidor adicional
+  "192.168.0.201",      // Servidor adicional
   "localhost",        // Servidor local
-  "192.168.1.100",     // Servidor adicional
-  "192.168.100.161"   // Servidor adicional
-  // Adicione mais servidores conforme necessário
+  "192.168.160.1",    // Servidor Wokwi
+  "127.0.0.1"        // Loopback
+// Adicione mais servidores conforme necessário
 };
 const int numServers = sizeof(serverIPs) / sizeof(serverIPs[0]);
 const int serverPort = 8000;
@@ -98,6 +107,46 @@ void checkSerialCommands();
 SensorData readSensors();
 void printCSVData(SensorData data);
 void printDebugData(SensorData data);
+
+// *** Configurações do Dispositivo ***
+const char* DEVICE_ID = "ESP32_001";  // Deve corresponder ao initial_data.sql
+const char* DEVICE_NAME = "Sensor Sala Servidores";
+
+// IDs dos sensores (devem corresponder aos do initial_data.sql)
+const char* SENSOR_IDS[] = {
+  "ESP32_001_TEMP",  // Temperatura
+  "ESP32_001_HUM",   // Umidade  
+  "ESP32_001_VIB",   // Vibração
+  "ESP32_001_LUM"    // Luminosidade
+};
+
+// *** Adicionar função para determinar qualidade ***
+String evaluateSensorQuality(const char* sensorType, float value) {
+  if (strcmp(sensorType, "temperature") == 0) {
+    // Faixas de temperatura: ideal 18-25°C, warning 10-30°C, error fora disso
+    if (value >= 18.0 && value <= 25.0) return "good";
+    else if (value >= 10.0 && value <= 30.0) return "warning";
+    else return "error";
+    
+  } else if (strcmp(sensorType, "humidity") == 0) {
+    // Faixas de umidade: ideal 30-70%, warning 20-80%, error fora disso
+    if (value >= 30.0 && value <= 70.0) return "good";
+    else if (value >= 20.0 && value <= 80.0) return "warning";
+    else return "error";
+    
+  } else if (strcmp(sensorType, "vibration") == 0) {
+    // Vibração: 0 = normal (good), 1 = vibração detectada (warning)
+    return (value == 0.0) ? "good" : "warning";
+    
+  } else if (strcmp(sensorType, "luminosity") == 0) {
+    // Faixas de luminosidade: ideal 300-3500, warning 100-4000, error fora disso
+    if (value >= 300 && value <= 3500) return "good";
+    else if (value >= 100 && value <= 4000) return "warning";
+    else return "error";
+  }
+  
+  return "unknown"; // Caso não identificado
+}
 
 void setup() {
   Serial.begin(115200);
@@ -183,43 +232,36 @@ void loop() {
       
       Serial.printf("📊 [Medição #%d] Coletando dados dos sensores...\n", measurementCount);
       
-      // Tentar enviar para todos os servidores ativos
+      // Tentar enviar para servidores
       int successfulSends = 0;
       if (wifiConnected && WiFi.status() == WL_CONNECTED) {
         if (activeServers > 0) {
-          Serial.printf("📡 Enviando dados para %d servidor(es)...\n", activeServers);
+          if (reliableServerFound) {
+            Serial.printf("🎯 Usando modo servidor confiável (%d servidor ativo)\n", activeServers);
+          } else {
+            Serial.printf("📡 Enviando dados para %d servidor(es)...\n", activeServers);
+          }
           successfulSends = sendDataToAllServers(data);
           
           if (successfulSends > 0) {
-            Serial.printf("✅ [#%d] Dados enviados com SUCESSO para %d/%d servidor(es)!\n", 
-                         measurementCount, successfulSends, activeServers);
-            if (successfulSends == activeServers) {
-              Serial.println("🎉 Todos os servidores receberam os dados!");
-            } else {
-              Serial.printf("⚠️ %d servidor(es) não responderam\n", activeServers - successfulSends);
-            }
+            Serial.printf("✅ [#%d] Dados enviados com SUCESSO!\n", measurementCount);
           } else {
-            Serial.printf("❌ [#%d] Falha ao enviar para todos os servidores\n", measurementCount);
-            Serial.println("🔄 Tentando redescobrir servidores...");
-            discoverActiveServers();
-            
-            if (activeServers > 0) {
-              Serial.printf("🎯 %d servidor(es) redescoberto(s)\n", activeServers);
-              successfulSends = sendDataToAllServers(data);
-            }
-            
-            if (successfulSends == 0) {
-              Serial.println("💾 Salvando dados localmente...");
-            }
+            Serial.printf("❌ [#%d] Falha ao enviar dados\n", measurementCount);
+            Serial.println("💾 Salvando dados localmente...");
           }
         } else {
-          Serial.println("🔍 Nenhum servidor ativo, tentando descobrir...");
-          discoverActiveServers();
-          if (activeServers > 0) {
-            Serial.printf("🎯 %d servidor(es) descoberto(s)\n", activeServers);
-            successfulSends = sendDataToAllServers(data);
+          // Só faz rediscovery se não tem servidor confiável ou se foi forçado
+          if (!reliableServerFound || forceDiscovery) {
+            Serial.println("🔍 Nenhum servidor ativo, tentando descobrir...");
+            discoverActiveServers();
+            if (activeServers > 0) {
+              successfulSends = sendDataToAllServers(data);
+            } else {
+              Serial.println("💾 Nenhum servidor encontrado - salvando localmente...");
+            }
           } else {
-            Serial.println("💾 Nenhum servidor encontrado - salvando localmente...");
+            Serial.println("🎯 Servidor confiável definido, pulando rediscovery automática");
+            Serial.println("💾 Salvando dados localmente...");
           }
         }
       } else {
@@ -402,6 +444,9 @@ void discoverActiveServers() {
   Serial.println("🔍 Descobrindo servidores ativos...");
   activeServers = 0;
   
+  // Reset do contador de falhas quando faz descoberta
+  consecutiveFailures = 0;
+  
   for (int i = 0; i < numServers; i++) {
     Serial.printf("   Testando: %s\n", serverIPs[i]);
     if (testServerConnection(serverIPs[i])) {
@@ -409,6 +454,13 @@ void discoverActiveServers() {
       serverURLs[i] = "http://" + String(serverIPs[i]) + ":" + String(serverPort) + serverPath;
       activeServers++;
       Serial.printf("   ✅ Ativo: %s\n", serverURLs[i].c_str());
+      
+      // Se ainda não encontrou servidor confiável, marca este como confiável
+      if (!reliableServerFound && !forceDiscovery) {
+        reliableServerFound = true;
+        reliableServerIndex = i;
+        Serial.printf("   🎯 Servidor confiável definido: %s\n", serverIPs[i]);
+      }
     } else {
       serverStatus[i] = false;
       Serial.printf("   ❌ Inativo: %s\n", serverIPs[i]);
@@ -417,21 +469,68 @@ void discoverActiveServers() {
   }
   
   Serial.printf("🎯 Total de servidores ativos: %d/%d\n", activeServers, numServers);
+  
+  // Se encontrou servidor confiável, mostra mensagem
+  if (reliableServerFound && !forceDiscovery) {
+    Serial.printf("🔒 Modo servidor confiável ativado - usando: %s\n", serverIPs[reliableServerIndex]);
+  }
+  
+  // Reset da flag de força após descoberta
+  forceDiscovery = false;
 }
 
 int sendDataToAllServers(SensorData data) {
   int successCount = 0;
   
+  // Se tem servidor confiável, tenta apenas ele primeiro
+  if (reliableServerFound && reliableServerIndex >= 0 && serverStatus[reliableServerIndex]) {
+    Serial.printf("🎯 Usando servidor confiável: %s\n", serverIPs[reliableServerIndex]);
+    if (sendDataToSingleServer(data, serverURLs[reliableServerIndex].c_str())) {
+      successCount++;
+      consecutiveFailures = 0; // Reset contador de falhas
+      Serial.printf("   ✅ Sucesso no servidor confiável\n");
+      return successCount; // Retorna imediatamente se conseguiu enviar
+    } else {
+      consecutiveFailures++;
+      Serial.printf("   ❌ Falha no servidor confiável (%d/%d)\n", consecutiveFailures, MAX_CONSECUTIVE_FAILURES);
+      
+      // Se atingiu limite de falhas, marca como inativo e força rediscovery
+      if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+        Serial.println("   🔄 Muitas falhas consecutivas - servidor confiável removido");
+        serverStatus[reliableServerIndex] = false;
+        reliableServerFound = false;
+        reliableServerIndex = -1;
+        consecutiveFailures = 0;
+        
+        // Tenta outros servidores ativos se houver
+        Serial.println("   🔄 Tentando outros servidores ativos...");
+      }
+    }
+  }
+  
+  // Tenta todos os servidores ativos (incluindo o confiável se ainda estiver ativo)
   for (int i = 0; i < numServers; i++) {
     if (serverStatus[i]) {
       Serial.printf("📤 Enviando para servidor %d: %s\n", i+1, serverIPs[i]);
       if (sendDataToSingleServer(data, serverURLs[i].c_str())) {
         successCount++;
         Serial.printf("   ✅ Sucesso no servidor %d\n", i+1);
+        
+        // Se conseguiu enviar e não tinha servidor confiável, marca este como confiável
+        if (!reliableServerFound && successCount == 1) {
+          reliableServerFound = true;
+          reliableServerIndex = i;
+          Serial.printf("   🎯 Novo servidor confiável definido: %s\n", serverIPs[i]);
+        }
       } else {
         Serial.printf("   ❌ Falha no servidor %d\n", i+1);
         serverStatus[i] = false; // Marca como inativo se falhar
         activeServers--;
+        
+        // Se era o servidor confiável que falhou, incrementa contador
+        if (reliableServerFound && i == reliableServerIndex) {
+          consecutiveFailures++;
+        }
       }
     }
   }
@@ -441,11 +540,7 @@ int sendDataToAllServers(SensorData data) {
 
 bool sendDataToSingleServer(SensorData data, const char* serverURL) {
   HTTPClient http;
-  http.begin(serverURL);
-  http.addHeader("Content-Type", "application/json");
-  http.setTimeout(3000); // Timeout de 3 segundos para não travar
-  
-  JsonDocument jsonDoc;
+  bool overallSuccess = false;
   
   // Validar timestamp antes de converter
   if (data.timestamp == 0) {
@@ -460,50 +555,71 @@ bool sendDataToSingleServer(SensorData data, const char* serverURL) {
     timestamp_ms = static_cast<uint64_t>(data.timestamp) * 1000ULL;
   }
   
-  jsonDoc["timestamp"] = timestamp_ms;
-  jsonDoc["sensor_type"] = "temperature";
-  jsonDoc["sensor_value"] = data.temperature;
+  // Estrutura para organizar dados de cada sensor
+  struct SensorInfo {
+    const char* sensorId;
+    const char* sensorType;
+    float value;
+  };
   
-  String jsonString;
-  serializeJson(jsonDoc, jsonString);
+  // Criar array com informações de cada sensor
+  SensorInfo sensorData[] = {
+    {SENSOR_IDS[0], "temperature", data.temperature},
+    {SENSOR_IDS[1], "humidity", data.humidity}, 
+    {SENSOR_IDS[2], "vibration", data.vibration},
+    {SENSOR_IDS[3], "luminosity", data.luminosity}
+  };
   
-  // Enviar temperatura
-  int httpResponseCode = http.POST(jsonString);
-  bool success = (httpResponseCode == 200);
-  
-  http.end();
-  
-  // Enviar dados adicionais se temperatura foi enviada com sucesso
-  if (success) {
-    // Umidade
-    jsonDoc["sensor_type"] = "humidity";
-    jsonDoc["sensor_value"] = data.humidity;
+  // Enviar cada sensor separadamente
+  for (int i = 0; i < 4; i++) {
+    // Criar novo documento JSON para cada sensor
+    JsonDocument jsonDoc;
+    
+    // Preencher dados do sensor
+    jsonDoc["sensor_id"] = sensorData[i].sensorId;
+    jsonDoc["device_id"] = DEVICE_ID;
+    jsonDoc["timestamp"] = timestamp_ms;
+    jsonDoc["sensor_type"] = sensorData[i].sensorType;
+    jsonDoc["sensor_value"] = sensorData[i].value;
+    // *** AVALIAR QUALIDADE BASEADA NO VALOR ***
+    String quality = evaluateSensorQuality(sensorData[i].sensorType, sensorData[i].value);
+    jsonDoc["quality"] = quality;
+    jsonDoc["raw_value"] = sensorData[i].value;
+    
+    // Serializar JSON
+    String jsonString;
     serializeJson(jsonDoc, jsonString);
+    
+    // Debug: mostrar JSON sendo enviado
+    Serial.printf("📤 Enviando %s (Q: %s): %s\n", 
+                  sensorData[i].sensorType, 
+                  quality.c_str(), 
+                  jsonString.c_str());
+    
+    // Iniciar conexão HTTP
     http.begin(serverURL);
     http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
+    http.setTimeout(3000); // Timeout de 3 segundos
+    
+    // Enviar dados
+    int httpResponseCode = http.POST(jsonString);
+    
+    // Verificar resposta
+    if (httpResponseCode == 200) {
+      Serial.printf("   ✅ %s enviado com sucesso\n", sensorData[i].sensorType);
+      overallSuccess = true; // Pelo menos um sensor conseguiu enviar
+    } else {
+      Serial.printf("   ❌ Falha %s (HTTP %d)\n", sensorData[i].sensorType, httpResponseCode);
+    }
+    
+    // Fechar conexão
     http.end();
     
-    // Vibração
-    jsonDoc["sensor_type"] = "vibration";
-    jsonDoc["sensor_value"] = data.vibration;
-    serializeJson(jsonDoc, jsonString);
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
-    http.end();
-    
-    // Luminosidade
-    jsonDoc["sensor_type"] = "luminosity";
-    jsonDoc["sensor_value"] = data.luminosity;
-    serializeJson(jsonDoc, jsonString);
-    http.begin(serverURL);
-    http.addHeader("Content-Type", "application/json");
-    http.POST(jsonString);
-    http.end();
+    // Pequena pausa entre envios
+    delay(100);
   }
   
-  return success;
+  return overallSuccess;
 }
 
 bool testServerConnection(const char* ip) {
@@ -516,9 +632,7 @@ bool testServerConnection(const char* ip) {
   int httpResponseCode = http.GET();
   http.end();
   
-  // Considera sucesso se receber qualquer resposta HTTP (mesmo 404)
-  // Isso indica que há um servidor rodando nesse IP
-  return (httpResponseCode > 0);
+  return (httpResponseCode == 200); // Sucesso se retornar 200
 }
 
 String getGatewayIP() {
@@ -566,9 +680,10 @@ void checkSerialCommands() {
     else if (command == "scan") {
       // Comando para forçar nova descoberta
       Serial.println("🔍 Forçando nova descoberta de servidores...");
+      forceDiscovery = true;  // Força rediscovery
       discoverActiveServers();
       if (activeServers > 0) {
-        Serial.printf("✅ %d servidor(es) redescoberto(s)\n", activeServers);
+        Serial.printf("✅ %d servidor(es) encontrado(s)\n", activeServers);
       } else {
         Serial.println("❌ Nenhum servidor encontrado");
       }
@@ -604,6 +719,24 @@ void checkSerialCommands() {
       Serial.printf("Medições: %d\n", measurementCount);
       Serial.println("========================\n");
     }
+    else if (command == "reliable") {
+      // Comando para mostrar/verificar servidor confiável
+      if (reliableServerFound && reliableServerIndex >= 0) {
+        Serial.printf("🎯 Servidor confiável: %s\n", serverIPs[reliableServerIndex]);
+        Serial.printf("   Status: %s\n", serverStatus[reliableServerIndex] ? "Ativo" : "Inativo");
+        Serial.printf("   Falhas consecutivas: %d/%d\n", consecutiveFailures, MAX_CONSECUTIVE_FAILURES);
+      } else {
+        Serial.println("❌ Nenhum servidor confiável definido");
+      }
+    }
+    else if (command == "reset") {
+      // Comando para resetar servidor confiável
+      Serial.println("🔄 Resetando servidor confiável...");
+      reliableServerFound = false;
+      reliableServerIndex = -1;
+      consecutiveFailures = 0;
+      Serial.println("✅ Servidor confiável removido");
+    }
     else if (command == "help") {
       // Comando de ajuda
       Serial.println("\n=== COMANDOS DISPONÍVEIS ===");
@@ -613,6 +746,8 @@ void checkSerialCommands() {
       Serial.println("list         - Lista todos os servidores e status");
       Serial.println("clear        - Limpa lista de servidores");
       Serial.println("status       - Mostra status do sistema");
+      Serial.println("reliable     - Mostra servidor confiável atual");
+      Serial.println("reset        - Remove servidor confiável");
       Serial.println("help         - Mostra esta ajuda");
       Serial.println("============================\n");
     }

@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_configs_device" directorySegmentName="seg_0" id="EFF54C62-3FF3-72B4-8D89-0BB3F3F52684">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>E30E0DF9-E2BC-D1AC-43B3-42417F963564</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<sourcePk>FA1DC2B5-550D-D2D7-A40D-62E58E96A2FC</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>3D83213D-C610-9DCF-97F0-B0E258C2CC0A</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>32787DAA-8A83-0A50-0543-CD397A9DC31D</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

@@ -1,59 +1,329 @@
--- Inserção dos dados iniciais dos sensores
-INSERT INTO sensor_data (id, timestamp, sensor_type, value, created_at) VALUES
-(1, TO_TIMESTAMP('11/06/25 20:49:48', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.82273, TO_TIMESTAMP('11/06/25 20:49:49.117548', 'DD/MM/YY HH24:MI:SS.FF')),
-(2, TO_TIMESTAMP('11/06/25 20:49:48', 'DD/MM/YY HH24:MI:SS'), 'humidity', 64.0259, TO_TIMESTAMP('11/06/25 20:49:49.261326', 'DD/MM/YY HH24:MI:SS.FF')),
-(3, TO_TIMESTAMP('11/06/25 20:49:48', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:49:49.402366', 'DD/MM/YY HH24:MI:SS.FF')),
-(4, TO_TIMESTAMP('11/06/25 20:49:48', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 1925, TO_TIMESTAMP('11/06/25 20:49:49.555663', 'DD/MM/YY HH24:MI:SS.FF')),
-(5, TO_TIMESTAMP('11/06/25 20:49:51', 'DD/MM/YY HH24:MI:SS'), 'temperature', 23.40572, TO_TIMESTAMP('11/06/25 20:49:52.157367', 'DD/MM/YY HH24:MI:SS.FF')),
-(6, TO_TIMESTAMP('11/06/25 20:49:51', 'DD/MM/YY HH24:MI:SS'), 'humidity', 63.95142, TO_TIMESTAMP('11/06/25 20:49:52.271569', 'DD/MM/YY HH24:MI:SS.FF')),
-(7, TO_TIMESTAMP('11/06/25 20:49:51', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:49:52.384481', 'DD/MM/YY HH24:MI:SS.FF')),
-(8, TO_TIMESTAMP('11/06/25 20:49:51', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2037, TO_TIMESTAMP('11/06/25 20:49:52.506132', 'DD/MM/YY HH24:MI:SS.FF')),
-(9, TO_TIMESTAMP('11/06/25 20:49:54', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.06869, TO_TIMESTAMP('11/06/25 20:49:55.315371', 'DD/MM/YY HH24:MI:SS.FF')),
-(10, TO_TIMESTAMP('11/06/25 20:49:54', 'DD/MM/YY HH24:MI:SS'), 'humidity', 62.15697, TO_TIMESTAMP('11/06/25 20:49:55.496412', 'DD/MM/YY HH24:MI:SS.FF')),
-(11, TO_TIMESTAMP('11/06/25 20:49:54', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:49:55.659210', 'DD/MM/YY HH24:MI:SS.FF')),
-(12, TO_TIMESTAMP('11/06/25 20:49:54', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 1897, TO_TIMESTAMP('11/06/25 20:49:55.805156', 'DD/MM/YY HH24:MI:SS.FF')),
-(13, TO_TIMESTAMP('11/06/25 20:49:57', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.86161, TO_TIMESTAMP('11/06/25 20:49:58.191191', 'DD/MM/YY HH24:MI:SS.FF')),
-(14, TO_TIMESTAMP('11/06/25 20:49:57', 'DD/MM/YY HH24:MI:SS'), 'humidity', 62.24759, TO_TIMESTAMP('11/06/25 20:49:58.376402', 'DD/MM/YY HH24:MI:SS.FF')),
-(15, TO_TIMESTAMP('11/06/25 20:49:57', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:49:58.511941', 'DD/MM/YY HH24:MI:SS.FF')),
-(16, TO_TIMESTAMP('11/06/25 20:49:57', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 1955, TO_TIMESTAMP('11/06/25 20:49:58.641018', 'DD/MM/YY HH24:MI:SS.FF')),
-(17, TO_TIMESTAMP('11/06/25 20:50:01', 'DD/MM/YY HH24:MI:SS'), 'temperature', 23.46455, TO_TIMESTAMP('11/06/25 20:50:01.218908', 'DD/MM/YY HH24:MI:SS.FF')),
-(18, TO_TIMESTAMP('11/06/25 20:50:01', 'DD/MM/YY HH24:MI:SS'), 'humidity', 61.94318, TO_TIMESTAMP('11/06/25 20:50:01.350483', 'DD/MM/YY HH24:MI:SS.FF')),
-(19, TO_TIMESTAMP('11/06/25 20:50:01', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:01.479273', 'DD/MM/YY HH24:MI:SS.FF')),
-(20, TO_TIMESTAMP('11/06/25 20:50:01', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 1968, TO_TIMESTAMP('11/06/25 20:50:01.594888', 'DD/MM/YY HH24:MI:SS.FF')),
-(21, TO_TIMESTAMP('11/06/25 20:50:04', 'DD/MM/YY HH24:MI:SS'), 'temperature', 24.52751, TO_TIMESTAMP('11/06/25 20:50:04.244060', 'DD/MM/YY HH24:MI:SS.FF')),
-(22, TO_TIMESTAMP('11/06/25 20:50:04', 'DD/MM/YY HH24:MI:SS'), 'humidity', 63.39873, TO_TIMESTAMP('11/06/25 20:50:04.384001', 'DD/MM/YY HH24:MI:SS.FF')),
-(23, TO_TIMESTAMP('11/06/25 20:50:04', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:04.639264', 'DD/MM/YY HH24:MI:SS.FF')),
-(24, TO_TIMESTAMP('11/06/25 20:50:04', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 1892, TO_TIMESTAMP('11/06/25 20:50:05.062563', 'DD/MM/YY HH24:MI:SS.FF')),
-(25, TO_TIMESTAMP('11/06/25 20:50:07', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.01051, TO_TIMESTAMP('11/06/25 20:50:07.711273', 'DD/MM/YY HH24:MI:SS.FF')),
-(26, TO_TIMESTAMP('11/06/25 20:50:07', 'DD/MM/YY HH24:MI:SS'), 'humidity', 63.05423, TO_TIMESTAMP('11/06/25 20:50:07.911586', 'DD/MM/YY HH24:MI:SS.FF')),
-(27, TO_TIMESTAMP('11/06/25 20:50:07', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:08.033813', 'DD/MM/YY HH24:MI:SS.FF')),
-(28, TO_TIMESTAMP('11/06/25 20:50:07', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2219, TO_TIMESTAMP('11/06/25 20:50:08.176767', 'DD/MM/YY HH24:MI:SS.FF')),
-(29, TO_TIMESTAMP('11/06/25 20:50:10', 'DD/MM/YY HH24:MI:SS'), 'temperature', 26.84347, TO_TIMESTAMP('11/06/25 20:50:10.519060', 'DD/MM/YY HH24:MI:SS.FF')),
-(30, TO_TIMESTAMP('11/06/25 20:50:10', 'DD/MM/YY HH24:MI:SS'), 'humidity', 61.33479, TO_TIMESTAMP('11/06/25 20:50:10.650889', 'DD/MM/YY HH24:MI:SS.FF')),
-(31, TO_TIMESTAMP('11/06/25 20:50:10', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:10.761398', 'DD/MM/YY HH24:MI:SS.FF')),
-(32, TO_TIMESTAMP('11/06/25 20:50:10', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2151, TO_TIMESTAMP('11/06/25 20:50:10.881533', 'DD/MM/YY HH24:MI:SS.FF')),
-(33, TO_TIMESTAMP('11/06/25 20:50:13', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.3664, TO_TIMESTAMP('11/06/25 20:50:13.545246', 'DD/MM/YY HH24:MI:SS.FF')),
-(34, TO_TIMESTAMP('11/06/25 20:50:13', 'DD/MM/YY HH24:MI:SS'), 'humidity', 60.4604, TO_TIMESTAMP('11/06/25 20:50:13.685252', 'DD/MM/YY HH24:MI:SS.FF')),
-(35, TO_TIMESTAMP('11/06/25 20:50:13', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:13.800108', 'DD/MM/YY HH24:MI:SS.FF')),
-(36, TO_TIMESTAMP('11/06/25 20:50:13', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2147, TO_TIMESTAMP('11/06/25 20:50:13.914861', 'DD/MM/YY HH24:MI:SS.FF')),
-(37, TO_TIMESTAMP('11/06/25 20:50:16', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.44935, TO_TIMESTAMP('11/06/25 20:50:16.639072', 'DD/MM/YY HH24:MI:SS.FF')),
-(38, TO_TIMESTAMP('11/06/25 20:50:16', 'DD/MM/YY HH24:MI:SS'), 'humidity', 60.81597, TO_TIMESTAMP('11/06/25 20:50:16.788579', 'DD/MM/YY HH24:MI:SS.FF')),
-(39, TO_TIMESTAMP('11/06/25 20:50:16', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:16.917787', 'DD/MM/YY HH24:MI:SS.FF')),
-(40, TO_TIMESTAMP('11/06/25 20:50:16', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2034, TO_TIMESTAMP('11/06/25 20:50:17.237771', 'DD/MM/YY HH24:MI:SS.FF')),
-(41, TO_TIMESTAMP('11/06/25 20:50:19', 'DD/MM/YY HH24:MI:SS'), 'temperature', 23.53227, TO_TIMESTAMP('11/06/25 20:50:19.610831', 'DD/MM/YY HH24:MI:SS.FF')),
-(42, TO_TIMESTAMP('11/06/25 20:50:19', 'DD/MM/YY HH24:MI:SS'), 'humidity', 66.9216, TO_TIMESTAMP('11/06/25 20:50:19.735842', 'DD/MM/YY HH24:MI:SS.FF')),
-(43, TO_TIMESTAMP('11/06/25 20:50:19', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:19.848380', 'DD/MM/YY HH24:MI:SS.FF')),
-(44, TO_TIMESTAMP('11/06/25 20:50:19', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2157, TO_TIMESTAMP('11/06/25 20:50:19.968136', 'DD/MM/YY HH24:MI:SS.FF')),
-(45, TO_TIMESTAMP('11/06/25 20:50:22', 'DD/MM/YY HH24:MI:SS'), 'temperature', 23.91521, TO_TIMESTAMP('11/06/25 20:50:22.614770', 'DD/MM/YY HH24:MI:SS.FF')),
-(46, TO_TIMESTAMP('11/06/25 20:50:22', 'DD/MM/YY HH24:MI:SS'), 'humidity', 65.60718, TO_TIMESTAMP('11/06/25 20:50:22.741326', 'DD/MM/YY HH24:MI:SS.FF')),
-(47, TO_TIMESTAMP('11/06/25 20:50:43', 'DD/MM/YY HH24:MI:SS'), 'luminosity', 2220, TO_TIMESTAMP('11/06/25 20:50:44.386715', 'DD/MM/YY HH24:MI:SS.FF')),
-(48, TO_TIMESTAMP('11/06/25 20:50:46', 'DD/MM/YY HH24:MI:SS'), 'temperature', 25.00879, TO_TIMESTAMP('11/06/25 20:50:46.997870', 'DD/MM/YY HH24:MI:SS.FF')),
-(49, TO_TIMESTAMP('11/06/25 20:50:46', 'DD/MM/YY HH24:MI:SS'), 'humidity', 60.21681, TO_TIMESTAMP('11/06/25 20:50:47.128453', 'DD/MM/YY HH24:MI:SS.FF')),
-(50, TO_TIMESTAMP('11/06/25 20:50:46', 'DD/MM/YY HH24:MI:SS'), 'vibration', 0, TO_TIMESTAMP('11/06/25 20:50:47.248652', 'DD/MM/YY HH24:MI:SS.FF'));
+-- ================================================================================
+-- SISTEMA DE MONITORAMENTO IoT - BANCO DE DADOS ORACLE
+-- Script completo de criação v2.0 - Modelo ER Expandido
+-- ================================================================================
 
--- Atualiza a sequence para o próximo valor após o último ID
-SELECT setval('sensor_data_id_seq', (SELECT MAX(id) FROM sensor_data));
+-- =====================================================
+-- 1. TABELA: SENSOR_TYPES (Catálogo de tipos)
+-- =====================================================
+CREATE TABLE sensor_types (
+    type_id VARCHAR2(50) PRIMARY KEY,
+    type_name VARCHAR2(100) NOT NULL,
+    unit VARCHAR2(20) NOT NULL,
+    min_value NUMBER(15,6),
+    max_value NUMBER(15,6),
+    precision_digits NUMBER(2) DEFAULT 2,
+    description VARCHAR2(500),
+    is_active CHAR(1) DEFAULT 'Y' CHECK (is_active IN ('Y', 'N')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- Verifica se os dados foram inseridos corretamente
-SELECT COUNT(*) as total_records FROM sensor_data;
-SELECT sensor_type, COUNT(*) as records_per_type FROM sensor_data GROUP BY sensor_type ORDER BY sensor_type; 
+-- =====================================================
+-- 2. TABELA: DEVICES (Dispositivos IoT)
+-- =====================================================
+CREATE TABLE devices (
+    device_id VARCHAR2(50) PRIMARY KEY,
+    device_name VARCHAR2(100) NOT NULL,
+    device_type VARCHAR2(50) NOT NULL CHECK (device_type IN ('esp32', 'esp32-s2', 'esp32-s3', 'esp8266')),
+    location VARCHAR2(200),
+    ip_address VARCHAR2(15),
+    status VARCHAR2(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'maintenance')),
+    firmware_version VARCHAR2(20),
+    last_seen TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================
+-- 3. TABELA: SENSORS (Sensores individuais)
+-- =====================================================
+CREATE TABLE sensors (
+    sensor_id VARCHAR2(50) PRIMARY KEY,
+    device_id VARCHAR2(50) NOT NULL,
+    sensor_type VARCHAR2(50) NOT NULL,
+    pin_number NUMBER(3) NOT NULL,
+    sensor_name VARCHAR2(100) NOT NULL,
+    status VARCHAR2(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'error')),
+    calibration_offset NUMBER(8,4) DEFAULT 0,
+    sampling_interval NUMBER(5) DEFAULT 3000,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Adicionar constraint de chave estrangeira separadamente
+ALTER TABLE sensors ADD CONSTRAINT fk_sensors_device 
+    FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE CASCADE;
+
+ALTER TABLE sensors ADD CONSTRAINT fk_sensors_type 
+    FOREIGN KEY (sensor_type) REFERENCES sensor_types(type_id) ON DELETE CASCADE;
+
+-- =====================================================
+-- 4. TABELA: SENSOR_READINGS (Leituras)
+-- =====================================================
+CREATE TABLE sensor_readings (
+    reading_id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    sensor_id VARCHAR2(50) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sensor_value NUMBER(15,6) NOT NULL,
+    quality VARCHAR2(20) DEFAULT 'good' CHECK (quality IN ('good', 'warning', 'error')),
+    raw_value NUMBER(15,6),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Adicionar constraint de chave estrangeira separadamente
+ALTER TABLE sensor_readings ADD CONSTRAINT fk_readings_sensor 
+    FOREIGN KEY (sensor_id) REFERENCES sensors(sensor_id) ON DELETE CASCADE;
+
+-- =====================================================
+-- 5. TABELA: ALERTS (Sistema de alertas)
+-- =====================================================
+CREATE TABLE alerts (
+    alert_id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    sensor_id VARCHAR2(50) NOT NULL,
+    alert_type VARCHAR2(50) NOT NULL CHECK (alert_type IN ('threshold_high', 'threshold_low', 'sensor_error', 'device_offline')),
+    threshold_value NUMBER(15,6) NOT NULL,
+    actual_value NUMBER(15,6) NOT NULL,
+    severity VARCHAR2(20) NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+    message VARCHAR2(500) NOT NULL,
+    triggered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    acknowledged CHAR(1) DEFAULT 'N' CHECK (acknowledged IN ('Y', 'N')),
+    resolved_at TIMESTAMP
+);
+
+-- Adicionar constraint de chave estrangeira separadamente
+ALTER TABLE alerts ADD CONSTRAINT fk_alerts_sensor 
+    FOREIGN KEY (sensor_id) REFERENCES sensors(sensor_id) ON DELETE CASCADE;
+
+-- =====================================================
+-- 6. TABELA: DEVICE_CONFIGS (Configurações)
+-- =====================================================
+CREATE TABLE device_configs (
+    config_id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    device_id VARCHAR2(50) NOT NULL,
+    config_key VARCHAR2(100) NOT NULL,
+    config_value VARCHAR2(500) NOT NULL,
+    config_type VARCHAR2(20) DEFAULT 'string' CHECK (config_type IN ('string', 'number', 'boolean')),
+    description VARCHAR2(200),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Adicionar constraints separadamente
+ALTER TABLE device_configs ADD CONSTRAINT fk_configs_device 
+    FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE CASCADE;
+
+ALTER TABLE device_configs ADD CONSTRAINT uk_device_config 
+    UNIQUE (device_id, config_key);
+
+-- =====================================================
+-- 7. ÍNDICES PARA PERFORMANCE
+-- =====================================================
+
+-- Índices para DEVICES
+CREATE INDEX idx_devices_status ON devices(status);
+CREATE INDEX idx_devices_last_seen ON devices(last_seen DESC);
+
+-- Índices para SENSORS
+CREATE INDEX idx_sensors_device ON sensors(device_id);
+CREATE INDEX idx_sensors_type ON sensors(sensor_type);
+CREATE INDEX idx_sensors_status ON sensors(status);
+
+-- Índices para SENSOR_READINGS (principais consultas)
+CREATE INDEX idx_readings_sensor_timestamp ON sensor_readings(sensor_id, timestamp DESC);
+CREATE INDEX idx_readings_timestamp ON sensor_readings(timestamp DESC);
+CREATE INDEX idx_readings_quality ON sensor_readings(quality);
+
+-- Índices para ALERTS
+CREATE INDEX idx_alerts_sensor_triggered ON alerts(sensor_id, triggered_at DESC);
+CREATE INDEX idx_alerts_severity ON alerts(severity);
+CREATE INDEX idx_alerts_acknowledged ON alerts(acknowledged, triggered_at DESC);
+
+-- =====================================================
+-- 8. DADOS INICIAIS
+-- =====================================================
+
+-- Tipos de sensores suportados
+INSERT INTO sensor_types (type_id, type_name, unit, min_value, max_value, precision_digits, description) 
+VALUES ('temperature', 'Temperatura Ambiente', '°C', -50.0, 100.0, 2, 'Sensor DHT22 para temperatura ambiente');
+
+INSERT INTO sensor_types (type_id, type_name, unit, min_value, max_value, precision_digits, description) 
+VALUES ('humidity', 'Umidade Relativa', '%', 0.0, 100.0, 1, 'Sensor DHT22 para umidade relativa do ar');
+
+INSERT INTO sensor_types (type_id, type_name, unit, min_value, max_value, precision_digits, description) 
+VALUES ('vibration', 'Detector de Vibração', 'digital', 0, 1, 0, 'Sensor SW-420 para detecção de vibração');
+
+INSERT INTO sensor_types (type_id, type_name, unit, min_value, max_value, precision_digits, description) 
+VALUES ('luminosity', 'Sensor de Luminosidade', 'ADC', 0, 4095, 0, 'Sensor LDR com leitura analógica ESP32');
+
+-- Dispositivo exemplo
+INSERT INTO devices (device_id, device_name, device_type, location, status) 
+VALUES ('ESP32_001', 'Sensor Sala Servidores', 'esp32', 'Data Center - Rack 5', 'active');
+
+-- Sensores do dispositivo
+INSERT INTO sensors (sensor_id, device_id, sensor_type, pin_number, sensor_name) 
+VALUES ('ESP32_001_TEMP', 'ESP32_001', 'temperature', 4, 'DHT22 Temperatura');
+
+INSERT INTO sensors (sensor_id, device_id, sensor_type, pin_number, sensor_name) 
+VALUES ('ESP32_001_HUM', 'ESP32_001', 'humidity', 4, 'DHT22 Umidade');
+
+INSERT INTO sensors (sensor_id, device_id, sensor_type, pin_number, sensor_name) 
+VALUES ('ESP32_001_VIB', 'ESP32_001', 'vibration', 2, 'SW-420 Vibração');
+
+INSERT INTO sensors (sensor_id, device_id, sensor_type, pin_number, sensor_name) 
+VALUES ('ESP32_001_LUM', 'ESP32_001', 'luminosity', 34, 'LDR Luminosidade');
+
+-- Configurações do dispositivo
+INSERT INTO device_configs (device_id, config_key, config_value, config_type, description) 
+VALUES ('ESP32_001', 'sampling_interval', '3000', 'number', 'Intervalo entre leituras em ms');
+
+INSERT INTO device_configs (device_id, config_key, config_value, config_type, description) 
+VALUES ('ESP32_001', 'wifi_ssid', 'Wokwi-GUEST', 'string', 'Rede WiFi para conexão');
+
+INSERT INTO device_configs (device_id, config_key, config_value, config_type, description) 
+VALUES ('ESP32_001', 'server_port', '8000', 'number', 'Porta do servidor de dados');
+
+INSERT INTO device_configs (device_id, config_key, config_value, config_type, description) 
+VALUES ('ESP32_001', 'ntp_enabled', 'true', 'boolean', 'Sincronização NTP ativa');
+
+-- =====================================================
+-- 9. VIEWS PARA CONSULTAS FREQUENTES
+-- =====================================================
+
+-- View completa dos dispositivos com seus sensores
+CREATE OR REPLACE VIEW device_sensor_inventory AS
+SELECT 
+    d.device_id,
+    d.device_name,
+    d.device_type,
+    d.location,
+    d.status as device_status,
+    d.last_seen,
+    s.sensor_id,
+    s.sensor_name,
+    s.sensor_type,
+    st.type_name,
+    st.unit,
+    s.status as sensor_status,
+    s.pin_number,
+    s.sampling_interval
+FROM devices d
+LEFT JOIN sensors s ON d.device_id = s.device_id
+LEFT JOIN sensor_types st ON s.sensor_type = st.type_id
+ORDER BY d.device_id, s.sensor_type;
+
+-- View das últimas leituras por sensor
+CREATE OR REPLACE VIEW latest_sensor_readings AS
+SELECT sr.*
+FROM sensor_readings sr
+WHERE sr.timestamp = (
+    SELECT MAX(sr2.timestamp)
+    FROM sensor_readings sr2
+    WHERE sr2.sensor_id = sr.sensor_id
+);
+
+-- View de estatísticas por sensor
+CREATE OR REPLACE VIEW sensor_statistics AS
+SELECT 
+    s.sensor_id,
+    s.sensor_name,
+    s.sensor_type,
+    st.type_name,
+    st.unit,
+    COUNT(sr.reading_id) as total_readings,
+    ROUND(AVG(sr.sensor_value), st.precision_digits) as avg_value,
+    ROUND(MIN(sr.sensor_value), st.precision_digits) as min_value,
+    ROUND(MAX(sr.sensor_value), st.precision_digits) as max_value,
+    ROUND(STDDEV(sr.sensor_value), st.precision_digits) as std_dev,
+    MIN(sr.timestamp) as first_reading,
+    MAX(sr.timestamp) as last_reading,
+    COUNT(CASE WHEN sr.quality != 'good' THEN 1 END) as quality_issues
+FROM sensors s
+LEFT JOIN sensor_types st ON s.sensor_type = st.type_id
+LEFT JOIN sensor_readings sr ON s.sensor_id = sr.sensor_id
+GROUP BY s.sensor_id, s.sensor_name, s.sensor_type, st.type_name, st.unit, st.precision_digits;
+
+-- =====================================================
+-- 10. TRIGGERS PARA MANUTENÇÃO AUTOMÁTICA
+-- =====================================================
+
+-- Trigger para atualizar last_seen quando há nova leitura
+CREATE OR REPLACE TRIGGER trg_update_device_last_seen
+AFTER INSERT ON sensor_readings
+FOR EACH ROW
+DECLARE
+    v_device_id VARCHAR2(50);
+BEGIN
+    -- Encontra o device_id através do sensor_id
+    SELECT device_id INTO v_device_id
+    FROM sensors 
+    WHERE sensor_id = :NEW.sensor_id;
+    
+    -- Atualiza o last_seen do dispositivo
+    UPDATE devices 
+    SET last_seen = :NEW.timestamp, 
+        updated_at = CURRENT_TIMESTAMP
+    WHERE device_id = v_device_id;
+END;
+/
+
+-- Trigger para alertas automáticos baseados em thresholds
+CREATE OR REPLACE TRIGGER trg_auto_alerts
+AFTER INSERT ON sensor_readings
+FOR EACH ROW
+DECLARE
+    v_min_val NUMBER;
+    v_max_val NUMBER;
+    v_alert_type VARCHAR2(50);
+BEGIN
+    -- Busca os limites do tipo de sensor
+    SELECT min_value, max_value 
+    INTO v_min_val, v_max_val
+    FROM sensor_types st
+    JOIN sensors s ON st.type_id = s.sensor_type
+    WHERE s.sensor_id = :NEW.sensor_id;
+    
+    -- Verifica se valor está fora dos limites
+    IF :NEW.sensor_value < v_min_val THEN
+        v_alert_type := 'threshold_low';
+    ELSIF :NEW.sensor_value > v_max_val THEN
+        v_alert_type := 'threshold_high';
+    ELSE
+        RETURN; -- Sai se estiver dentro dos limites
+    END IF;
+    
+    -- Insere alerta
+    INSERT INTO alerts (
+        sensor_id, 
+        alert_type, 
+        threshold_value, 
+        actual_value, 
+        severity, 
+        message
+    ) VALUES (
+        :NEW.sensor_id,
+        v_alert_type,
+        CASE WHEN v_alert_type = 'threshold_low' THEN v_min_val ELSE v_max_val END,
+        :NEW.sensor_value,
+        'high',
+        'Valor ' || v_alert_type || ' detectado: ' || :NEW.sensor_value
+    );
+END;
+/
+
+-- =====================================================
+-- 11. COMMIT FINAL
+-- =====================================================
+COMMIT;
+
+-- =====================================================
+-- VERIFICAÇÃO DA ESTRUTURA
+-- =====================================================
+
+-- Verificar tabelas criadas
+SELECT table_name FROM user_tables 
+WHERE table_name IN ('DEVICES', 'SENSORS', 'SENSOR_TYPES', 'SENSOR_READINGS', 'ALERTS', 'DEVICE_CONFIGS')
+ORDER BY table_name;
+
+-- Verificar estrutura das tabelas
+SELECT 'Estrutura criada com sucesso!' as status FROM dual;
+            
+            
+                    

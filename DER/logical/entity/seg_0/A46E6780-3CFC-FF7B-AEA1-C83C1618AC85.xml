@@ -1,0 +1,149 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A46E6780-3CFC-FF7B-AEA1-C83C1618AC85" name="sensor readings">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>95A9FD51-A20B-8EEC-ABF8-1C3E34182FD4</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="reading id" id="065E25E3-954A-BC09-051B-8CFCEF1C8A9D">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>1F848789-F665-4086-ABF2-5F2AE470EC9E</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>7478C0E7-651D-DA21-6DDA-4EC9EA55E6B6</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="sensor id" id="AD4A11A3-BD0B-08FD-D4DA-4BAE52870A15">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>F2060E0B-6C15-41D5-1103-D8751445243A</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<referedAttribute>F6F3DC60-A5E3-3F1D-4BA2-20FE24E7940A</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C1EB615B-BDDD-CB60-4101-B362FE2AFD78</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="timestamp" id="DADD9708-8E3B-B22C-5F64-6E71D9B03D7E">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>D69225FD-1EB6-32AF-FBC6-8F271A03EC3F</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="sensor value" id="27A257DB-047C-7EB0-E0C9-BB91FDF18863">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>8D59D69D-7F95-1169-EF98-3FEF61C6D431</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="quality" id="B4B9FB6A-3B93-113F-C30B-09C476D4DE58">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>974316F8-2883-543C-780B-C9CC17846613</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>086EACD6-B843-F70D-F633-006CDBB2A078</domain>
+<listOfValues>
+<valueDef value="error" description=""/>
+<valueDef value="good" description=""/>
+<valueDef value="warning" description=""/>
+</listOfValues>
+<defaultValue>&apos;good&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="raw value" id="A3E7E6DC-90EA-2F81-587C-4A6FE796A193">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>D8D1EF47-2010-CCE6-C3E4-BEEF79F5CFD8</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>DE0551D2-356B-AB1F-41F5-0AAD2EC39CAD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="created at" id="D6BA221F-63C2-651E-1740-83F94B518CB4">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>DA066015-379D-6AE4-41A8-3197BC5AB182</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>8210BD70-AFD7-3C33-DBEC-E4CB9FA4F194</domain>
+<defaultValue>CURRENT_TIMESTAMP</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4FEC0F38-D59F-AC73-A73F-7FA205AFE17F" name="sensor readings PK">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 17:56:28 UTC</createdTime>
+<generatorID>5E9286DB-8C25-126A-7A84-C3048C833592</generatorID>
+<ownerDesignName>DER</ownerDesignName>
+<engineerTo>
+<item key="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" value="true"/>
+<item key="BCF91848-B58E-1C22-4EA5-95FF6E767F69" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>065E25E3-954A-BC09-051B-8CFCEF1C8A9D</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

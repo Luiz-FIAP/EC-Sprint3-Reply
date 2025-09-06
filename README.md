@@ -73,7 +73,12 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ├── wokwi.toml                        # Configuração do projeto Wokwi
 ├── platformio.ini                    # Configuração PlatformIO
 ├── requirements.txt                   # Dependências Python do projeto
+├── DER.dmd # Arquivo de modelagem do banco de dados
+├── Relacional.html # Visualização HTML do modelo relacional
+├── Logical.html # Visualização HTML do modelo lógico
 ├── .gitignore                        # Arquivos ignorados pelo Git
+├── DER/ # Diretório de modelagem de dados
+│   └── ...                           # Arquivos da modelagem de dados
 ├── src/
 │   └── main.cpp                      # Código principal Arduino/ESP32
 ├── sensor.ingest.local/
@@ -92,11 +97,263 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 │   ├── esquema.png                   # Esquema do circuito ESP32
 │   ├── logo-fiap.png                 # Logo da FIAP
 │   ├── play.png                      # Imagem do botão play
-│   └── servidor.png                  # Screenshot do servidor em execução
+│   ├── servidor.png                  # Screenshot do servidor em execução
+│   └── ...                           # Outras diversas imagens
 ├── .vscode/                          # Configurações do VS Code
 │   ├── settings.json                 # Configurações do editor
 │   └── extensions.json               # Extensões recomendadas
 ```
+
+## Modelo Banco de Dados
+
+<p align="center">
+<a href="https://raw.githack.com/Luiz-FIAP/EC-Sprint3-Reply/refs/heads/database/Logical.html" target="_blank">
+<img src="imagens/Logical.png" alt="Modelo Lógico do Banco de Dados" border="0" width=100%>
+</a><br>
+<i>📊 Clique para visualizar o diagrama interativo completo</i>
+</p>
+
+### 🏗️ Tabelas Principais
+
+#### **1. DEVICES** (Dispositivos IoT)
+Gerencia os dispositivos ESP32 conectados ao sistema.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `device_id` | `VARCHAR2(50)` | **PK**, NOT NULL | Identificador único do dispositivo (ex: "ESP32_001") |
+| `device_name` | `VARCHAR2(100)` | NOT NULL | Nome descritivo (ex: "Sensor Sala Servidores") |
+| `device_type` | `VARCHAR2(50)` | NOT NULL, CHECK | Tipo: 'esp32', 'esp32-s2', 'esp32-s3', 'esp8266' |
+| `location` | `VARCHAR2(200)` | NULL | Localização física (ex: "Data Center - Rack 5") |
+| `ip_address` | `VARCHAR2(15)` | NULL | Endereço IP atual do dispositivo |
+| `status` | `VARCHAR2(20)` | NOT NULL, DEFAULT 'active' | Status: 'active', 'inactive', 'maintenance' |
+| `firmware_version` | `VARCHAR2(20)` | NULL | Versão do firmware instalado |
+| `last_seen` | `TIMESTAMP` | NULL | Última comunicação registrada |
+| `created_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Data de cadastro |
+| `updated_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Última atualização |
+
+#### **2. SENSORS** (Sensores Individuais)
+Instâncias específicas de sensores em cada dispositivo.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `sensor_id` | `VARCHAR2(50)` | **PK**, NOT NULL | ID único do sensor (ex: "ESP32_001_TEMP") |
+| `device_id` | `VARCHAR2(50)` | **FK**, NOT NULL | Referência ao dispositivo |
+| `sensor_type` | `VARCHAR2(50)` | **FK**, NOT NULL | Tipo: temperature, humidity, vibration, luminosity |
+| `pin_number` | `NUMBER(3)` | NOT NULL | Pino GPIO do ESP32 (ex: 4, 2, 34) |
+| `sensor_name` | `VARCHAR2(100)` | NOT NULL | Nome descritivo (ex: "DHT22 Temperatura") |
+| `status` | `VARCHAR2(20)` | NULL, DEFAULT 'active' | Status: 'active', 'inactive', 'error' |
+| `calibration_offset` | `NUMBER(8,4)` | DEFAULT 0 | Offset de calibração |
+| `sampling_interval` | `NUMBER(5)` | DEFAULT 3000 | Intervalo em ms (padrão 3s) |
+| `created_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Data de criação |
+
+#### **3. SENSOR_TYPES** (Catálogo de Tipos)
+Metadados dos tipos de sensores suportados.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `type_id` | `VARCHAR2(50)` | **PK**, NOT NULL | Código do tipo (ex: "temperature") |
+| `type_name` | `VARCHAR2(100)` | NOT NULL | Nome descritivo (ex: "Temperatura Ambiente") |
+| `unit` | `VARCHAR2(20)` | NOT NULL | Unidade de medida (ex: "°C", "%", "digital") |
+| `min_value` | `NUMBER(15,6)` | NULL | Valor mínimo válido |
+| `max_value` | `NUMBER(15,6)` | NULL | Valor máximo válido |
+| `precision_digits` | `NUMBER(2)` | DEFAULT 2 | Casas decimais para exibição |
+| `description` | `VARCHAR2(500)` | NULL | Descrição técnica do sensor |
+| `is_active` | `CHAR(1)` | DEFAULT 'Y' | Flag de tipo ativo |
+| `created_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Data de criação |
+
+#### **4. SENSOR_READINGS** (Leituras dos Sensores)
+Armazenamento das medições coletadas - tabela principal de dados.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `reading_id` | `NUMBER` | **PK**, AUTO_INCREMENT | ID sequencial da leitura |
+| `sensor_id` | `VARCHAR2(50)` | **FK**, NOT NULL | Referência ao sensor |
+| `timestamp` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Momento da leitura |
+| `sensor_value` | `NUMBER(15,6)` | NOT NULL | Valor medido |
+| `quality` | `VARCHAR2(20)` | DEFAULT 'good' | Qualidade: 'good', 'warning', 'error' |
+| `raw_value` | `NUMBER(15,6)` | NULL | Valor bruto (antes calibração) |
+| `created_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Timestamp de inserção |
+
+#### **5. ALERTS** (Sistema de Alertas)
+Gerenciamento automático de alertas e notificações.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `alert_id` | `NUMBER` | **PK**, AUTO_INCREMENT | ID único do alerta |
+| `sensor_id` | `VARCHAR2(50)` | **FK**, NOT NULL | Sensor que gerou o alerta |
+| `alert_type` | `VARCHAR2(50)` | NOT NULL | Tipo: 'threshold_high', 'threshold_low', 'error' |
+| `threshold_value` | `NUMBER(15,6)` | NOT NULL | Valor limite que ativou o alerta |
+| `actual_value` | `NUMBER(15,6)` | NOT NULL | Valor real medido |
+| `severity` | `VARCHAR2(20)` | NOT NULL | Severidade: 'low', 'medium', 'high', 'critical' |
+| `message` | `VARCHAR2(500)` | NOT NULL | Mensagem descritiva do alerta |
+| `triggered_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Quando foi acionado |
+| `acknowledged` | `CHAR(1)` | DEFAULT 'N' | Se foi reconhecido |
+| `resolved_at` | `TIMESTAMP` | NULL | Quando foi resolvido |
+
+#### **6. DEVICE_CONFIGS** (Configurações)
+Configurações específicas por dispositivo.
+
+| Campo | Tipo | Restrições | Descrição |
+|-------|------|------------|-----------|
+| `config_id` | `NUMBER` | **PK**, AUTO_INCREMENT | ID único da configuração |
+| `device_id` | `VARCHAR2(50)` | **FK**, NOT NULL | Dispositivo associado |
+| `config_key` | `VARCHAR2(100)` | NOT NULL | Chave da configuração |
+| `config_value` | `VARCHAR2(500)` | NOT NULL | Valor da configuração |
+| `config_type` | `VARCHAR2(20)` | DEFAULT 'string' | Tipo: 'string', 'number', 'boolean' |
+| `description` | `VARCHAR2(200)` | NULL | Descrição da configuração |
+| `updated_at` | `TIMESTAMP` | DEFAULT CURRENT_TIMESTAMP | Última atualização |
+
+### 🔗 Relacionamentos e Constraints
+
+#### **Chaves Estrangeiras**
+```sql
+-- Relacionamentos obrigatórios
+ALTER TABLE sensors ADD CONSTRAINT fk_sensors_device 
+    FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE CASCADE;
+
+ALTER TABLE sensors ADD CONSTRAINT fk_sensors_type 
+    FOREIGN KEY (sensor_type) REFERENCES sensor_types(type_id) ON DELETE CASCADE;
+
+ALTER TABLE sensor_readings ADD CONSTRAINT fk_readings_sensor 
+    FOREIGN KEY (sensor_id) REFERENCES sensors(sensor_id) ON DELETE CASCADE;
+
+ALTER TABLE alerts ADD CONSTRAINT fk_alerts_sensor 
+    FOREIGN KEY (sensor_id) REFERENCES sensors(sensor_id) ON DELETE CASCADE;
+
+ALTER TABLE device_configs ADD CONSTRAINT fk_configs_device 
+    FOREIGN KEY (device_id) REFERENCES devices(device_id) ON DELETE CASCADE;
+```
+
+#### **Constraints de Validação**
+```sql
+-- Validações de domínio
+ALTER TABLE sensor_types ADD CONSTRAINT chk_sensor_types_active
+    CHECK (is_active IN ('Y', 'N'));
+
+ALTER TABLE devices ADD CONSTRAINT chk_device_type 
+    CHECK (device_type IN ('esp32', 'esp32-s2', 'esp32-s3', 'esp8266'));
+
+ALTER TABLE devices ADD CONSTRAINT chk_devices_status
+    CHECK (status IN ('active', 'inactive', 'maintenance'));
+
+ALTER TABLE sensors ADD CONSTRAINT chk_sensors_status 
+    CHECK (status IN ('active', 'inactive', 'error'));
+
+ALTER TABLE sensor_readings ADD CONSTRAINT chk_reading_quality 
+    CHECK (quality IN ('good', 'warning', 'error'));
+
+ALTER TABLE alerts ADD CONSTRAINT chk_alerts_type
+    CHECK (alert_type IN ('threshold_high', 'threshold_low', 'sensor_error', 'device_offline'));
+
+ALTER TABLE alerts ADD CONSTRAINT chk_alerts_severity
+    CHECK (severity IN ('low', 'medium', 'high', 'critical'));
+
+ALTER TABLE alerts ADD CONSTRAINT chk_alerts_acknowledged
+    CHECK (acknowledged IN ('Y', 'N'));
+
+ALTER TABLE device_configs ADD CONSTRAINT chk_device_configs_type
+    CHECK (config_type IN ('string', 'number', 'boolean'));
+```
+
+### ⚡ Funcionalidades Avançadas
+
+#### **Triggers Automáticos**
+- **Atualização de `last_seen`**: Automaticamente atualiza quando há nova leitura
+- **Alertas automáticos**: Gera alertas quando valores ultrapassam thresholds
+- **Manutenção automática**: Triggers para limpeza e otimização
+
+#### **Views para Consultas**
+```sql
+-- View completa dos dispositivos com seus sensores
+CREATE OR REPLACE VIEW device_sensor_inventory AS
+SELECT d.device_id, d.device_name, s.sensor_id, s.sensor_name, 
+       s.sensor_type, st.type_name, st.unit
+FROM devices d
+LEFT JOIN sensors s ON d.device_id = s.device_id
+LEFT JOIN sensor_types st ON s.sensor_type = st.type_id;
+
+-- View de estatísticas por sensor
+CREATE OR REPLACE VIEW sensor_statistics AS
+SELECT s.sensor_id, s.sensor_name, COUNT(sr.reading_id) as total_readings,
+       ROUND(AVG(sr.sensor_value), 2) as avg_value,
+       ROUND(MIN(sr.sensor_value), 2) as min_value,
+       ROUND(MAX(sr.sensor_value), 2) as max_value
+FROM sensors s
+LEFT JOIN sensor_readings sr ON s.sensor_id = sr.sensor_id
+GROUP BY s.sensor_id, s.sensor_name;
+```
+
+#### **Índices de Performance**
+```sql
+-- Índices para consultas principais
+CREATE INDEX idx_readings_sensor_timestamp ON sensor_readings(sensor_id, timestamp DESC);
+CREATE INDEX idx_readings_timestamp ON sensor_readings(timestamp DESC);
+CREATE INDEX idx_devices_status ON devices(status);
+CREATE INDEX idx_sensors_device ON sensors(device_id);
+```
+
+### 🔧 Integração com o Servidor Flask
+
+O arquivo `sensor.ingest.local/servidor.py` implementa a integração completa com o banco:
+
+#### **Funcionalidades do Servidor**
+- **Auto-inicialização**: Executa `initial_data.sql` automaticamente se tabelas não existirem
+- **Validação de dados**: Verifica integridade antes de inserir
+- **API REST**: Endpoints para ingestão e consulta de dados
+- **Tratamento de erros**: Rollback automático em caso de falhas
+- **Logging detalhado**: Acompanhamento completo das operações
+
+#### **Endpoints Principais**
+- `POST /data` - Recebe dados dos sensores ESP32
+- `GET /sensors` - Lista leituras com filtros
+- `GET /health` - Status do sistema e banco
+
+#### **Exemplo de Ingestão**
+```python
+# Dados recebidos do ESP32
+{
+  "sensor_id": "ESP32_001_TEMP",
+  "sensor_value": 25.5,
+  "timestamp": 1703123456,
+  "quality": "good"
+}
+```
+
+### 🎯 Benefícios do Modelo Implementado
+
+#### **Escalabilidade**
+- ✅ Suporte a múltiplos dispositivos ESP32
+- ✅ Fácil adição de novos tipos de sensores
+- ✅ Configurações flexíveis por dispositivo
+- ✅ Estrutura preparada para alto volume de dados
+
+#### **Integridade de Dados**
+- ✅ Constraints rigorosas previnem dados inválidos
+- ✅ Relacionamentos consistentes com CASCADE
+- ✅ Triggers automáticos para manutenção
+- ✅ Validação em nível de aplicação e banco
+
+#### **Performance**
+- ✅ Índices otimizados para consultas típicas
+- ✅ Views para acesso rápido a dados agregados
+- ✅ Estrutura normalizada evita redundância
+- ✅ Consultas eficientes com particionamento por tempo
+
+#### **Manutenibilidade**
+- ✅ Script de inicialização automático (`initial_data.sql`)
+- ✅ Configurações centralizadas (`config.py`)
+- ✅ Sistema de alertas automático
+
+### 📁 Arquivos de Base do Modelo
+
+- **`sensor.ingest.local/initial_data.sql`**: Script completo de criação do banco
+- **`sensor.ingest.local/servidor.py`**: Implementação da integração com o banco
+- **`sensor.ingest.local/config.py`**: Configurações centralizadas do sistema
+- **`DER.dmd`**: Arquivo de modelagem do banco de dados.
+
+Este modelo representa uma arquitetura robusta e profissional para sistemas IoT, preparada para cenários reais de monitoramento industrial com ESP32 e múltiplos sensores.
+
+---
 
 ## Como Executar
 
@@ -371,11 +628,12 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 
 - **Visualização em tempo real** dos dados coletados
 - **Filtro de período** (última hora, últimas 24h, tudo)
-- **Cards de métricas rápidas** (últimos valores de cada grandeza)
+- **Cards de métricas rápidas** (últimos valores de cada grandeza com indicador de qualidade)
+- **Sistema de qualidade visual** (cores nos gráficos baseadas na qualidade: verde=good, laranja=warning, vermelho=error)
 - **Análises e Alertas de Não Conformidade**:
-  - Destaca automaticamente valores fora da faixa ideal para umidade, luminosidade e eventos de vibração
+  - Destaca automaticamente valores fora da faixa ideal para temperatura, umidade, luminosidade e eventos de vibração
 - **Gráficos interativos** organizados em abas:
-  - **Linha:** Temperatura e Umidade ao longo do tempo
+  - **Linha:** Temperatura e Umidade ao longo do tempo (com cores por qualidade)
   - **Barra:** Média de Luminosidade por Hora
   - **Dispersão:** Temperatura vs. Umidade
   - **Barra:** Contagem de Eventos de Vibração por Hora
@@ -383,6 +641,7 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 - **Relatório e Exportação**:
   - Botão para baixar todos os dados em CSV
   - Resumo estatístico por tipo de sensor
+  - Distribuição de qualidade por sensor
 - **Layout responsivo** e visual moderno
 
 ---
@@ -391,12 +650,16 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 
 O dashboard realiza automaticamente análises de não conformidade e exibe alertas visuais no topo da página para facilitar a identificação de situações críticas:
 
+- **Temperatura fora da faixa ideal:**
+  - Alerta se algum valor de temperatura estiver abaixo de 18°C ou acima de 25°C.
 - **Umidade fora da faixa ideal:**
   - Alerta se algum valor de umidade estiver abaixo de 30% ou acima de 70%.
 - **Luminosidade fora da faixa recomendada:**
   - Alerta se algum valor de luminosidade estiver abaixo de 300 ou acima de 3500.
 - **Eventos de vibração detectados:**
   - Alerta se houver qualquer evento de vibração (valor 1).
+- **Qualidade dos dados:**
+  - Alertas automáticos para registros com qualidade 'error' ou 'warning'.
 
 Esses limites podem ser facilmente ajustados no código conforme a necessidade do seu projeto.
 

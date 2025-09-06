@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="6A3E6727-0EA4-2CE9-797B-9A300FF53CB5" containerWithKeyObject="12F4D327-30FB-ABFD-9EBC-D6A02A487F88" localFKIndex="BB5014C8-91E5-A7D2-9C15-1BC8AB7F5904" name="fk_sensors_device">
+<sourceDDLFile>initial_data.sql</sourceDDLFile>
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:36 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<importedID>EAFD4BEA-71CC-DFBD-A967-505292944821</importedID>
+<referredTableLongName>devices</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>D1F169B4-04A2-129B-6E20-3E4448357CBE</referredTableID>
+<keyObject>29E70BA2-B805-51C3-EC27-9D082CFDEA27</keyObject>
+<referredKeyID>29E70BA2-B805-51C3-EC27-9D082CFDEA27</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>device_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

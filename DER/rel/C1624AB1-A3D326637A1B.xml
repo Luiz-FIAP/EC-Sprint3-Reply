@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="initial_data" id="C1624AB1-D9A8-44F3-D42A-A3D326637A1B" mainViewID="72CF933D-836F-3F8F-577D-9A214DF9DD00">
+<createdBy>luizh</createdBy>
+<createdTime>2025-09-06 15:37:24 UTC</createdTime>
+<ownerDesignName>DER</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>01F6E6D1-21D0-CFBD-ABDD-3988D1813575</selectedRDBMSSite>
+<importDDLFileStamps>
+<importDDLFileStamp class="oracle.dbtools.crest.imports.DDLFileStamp">
+<fileName>initial_data.sql</fileName>
+<pathName>C:\Users\luizh\Documents\Fiap\Trabalhos\Fase_04\EC-Sprint3-Reply\sensor.ingest.local</pathName>
+<dbType>17</dbType>
+</importDDLFileStamp>
+</importDDLFileStamps>
+</relationalModel>
