@@ -107,8 +107,10 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ## Modelo Banco de Dados
 
 <p align="center">
-<a href="Logical.html"><img src="imagens/Logical.png" alt="Modelo Lógico do Banco de Dados" border="0" width=100%></a><br>
-<i>Clique na imagem para visualizar o diagrama interativo completo</i>
+<a href="https://raw.githack.com/Luiz-FIAP/EC-Sprint3-Reply/main/Logical.html" target="_blank">
+<img src="imagens/Logical.png" alt="Modelo Lógico do Banco de Dados" border="0" width=100%>
+</a><br>
+<i>📊 Clique para visualizar o diagrama interativo completo</i>
 </p>
 
 ### 🏗️ Tabelas Principais
