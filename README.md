@@ -340,6 +340,7 @@ O arquivo `sensor.ingest.local/servidor.py` implementa a integração completa c
 - **`sensor.ingest.local/initial_data.sql`**: Script completo de criação do banco
 - **`sensor.ingest.local/servidor.py`**: Implementação da integração com o banco
 - **`sensor.ingest.local/config.py`**: Configurações centralizadas do sistema
+- **`DER.dmd`**: Arquivo de modelagem do banco de dados.
 
 Este modelo representa uma arquitetura robusta e profissional para sistemas IoT, preparada para cenários reais de monitoramento industrial com ESP32 e múltiplos sensores.
 
@@ -618,11 +619,12 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 
 - **Visualização em tempo real** dos dados coletados
 - **Filtro de período** (última hora, últimas 24h, tudo)
-- **Cards de métricas rápidas** (últimos valores de cada grandeza)
+- **Cards de métricas rápidas** (últimos valores de cada grandeza com indicador de qualidade)
+- **Sistema de qualidade visual** (cores nos gráficos baseadas na qualidade: verde=good, laranja=warning, vermelho=error)
 - **Análises e Alertas de Não Conformidade**:
-  - Destaca automaticamente valores fora da faixa ideal para umidade, luminosidade e eventos de vibração
+  - Destaca automaticamente valores fora da faixa ideal para temperatura, umidade, luminosidade e eventos de vibração
 - **Gráficos interativos** organizados em abas:
-  - **Linha:** Temperatura e Umidade ao longo do tempo
+  - **Linha:** Temperatura e Umidade ao longo do tempo (com cores por qualidade)
   - **Barra:** Média de Luminosidade por Hora
   - **Dispersão:** Temperatura vs. Umidade
   - **Barra:** Contagem de Eventos de Vibração por Hora
@@ -630,6 +632,7 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 - **Relatório e Exportação**:
   - Botão para baixar todos os dados em CSV
   - Resumo estatístico por tipo de sensor
+  - Distribuição de qualidade por sensor
 - **Layout responsivo** e visual moderno
 
 ---
@@ -638,12 +641,16 @@ Permitir o acompanhamento em tempo real e a análise histórica das medições d
 
 O dashboard realiza automaticamente análises de não conformidade e exibe alertas visuais no topo da página para facilitar a identificação de situações críticas:
 
+- **Temperatura fora da faixa ideal:**
+  - Alerta se algum valor de temperatura estiver abaixo de 18°C ou acima de 25°C.
 - **Umidade fora da faixa ideal:**
   - Alerta se algum valor de umidade estiver abaixo de 30% ou acima de 70%.
 - **Luminosidade fora da faixa recomendada:**
   - Alerta se algum valor de luminosidade estiver abaixo de 300 ou acima de 3500.
 - **Eventos de vibração detectados:**
   - Alerta se houver qualquer evento de vibração (valor 1).
+- **Qualidade dos dados:**
+  - Alertas automáticos para registros com qualidade 'error' ou 'warning'.
 
 Esses limites podem ser facilmente ajustados no código conforme a necessidade do seu projeto.
 
