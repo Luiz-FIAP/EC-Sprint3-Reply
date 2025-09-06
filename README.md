@@ -73,7 +73,12 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ├── wokwi.toml                        # Configuração do projeto Wokwi
 ├── platformio.ini                    # Configuração PlatformIO
 ├── requirements.txt                   # Dependências Python do projeto
+├── DER.dmd # Arquivo de modelagem do banco de dados
+├── Relacional.html # Visualização HTML do modelo relacional
+├── Logical.html # Visualização HTML do modelo lógico
 ├── .gitignore                        # Arquivos ignorados pelo Git
+├── DER/ # Diretório de modelagem de dados
+│   └── ...                           # Arquivos da modelagem de dados
 ├── src/
 │   └── main.cpp                      # Código principal Arduino/ESP32
 ├── sensor.ingest.local/
@@ -92,7 +97,8 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 │   ├── esquema.png                   # Esquema do circuito ESP32
 │   ├── logo-fiap.png                 # Logo da FIAP
 │   ├── play.png                      # Imagem do botão play
-│   └── servidor.png                  # Screenshot do servidor em execução
+│   ├── servidor.png                  # Screenshot do servidor em execução
+│   └── ...                           # Outras diversas imagens
 ├── .vscode/                          # Configurações do VS Code
 │   ├── settings.json                 # Configurações do editor
 │   └── extensions.json               # Extensões recomendadas
@@ -101,7 +107,8 @@ Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (tempe
 ## Modelo Banco de Dados
 
 <p align="center">
-<a><img src="imagens/Logical.png" alt="Terminal servidor.py" border="0" width=100%></a>
+<a href="Logical.html"><img src="imagens/Logical.png" alt="Modelo Lógico do Banco de Dados" border="0" width=100%></a><br>
+<i>Clique na imagem para visualizar o diagrama interativo completo</i>
 </p>
 
 ### 🏗️ Tabelas Principais
