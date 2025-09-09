@@ -43,6 +43,9 @@ A Hermes Reply atua com soluções digitais aplicadas à indústria, com foco em
 ## Descrição
 Este projeto simula um circuito funcional com ESP32 e 3 sensores virtuais (temperatura, vibração e luminosidade) para coleta e análise de dados em tempo real.
 
+## YouTube
+Segue link do <a href="https://youtu.be/teocNgXYciY">video</a> do projeto. 
+
 <p align="center">
 <a><img src="imagens/esquema.png" alt="Esquema da ESP32 com sensores" border="0" width=70% height=70%></a>
 </p>
