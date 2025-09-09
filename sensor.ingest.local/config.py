@@ -1,7 +1,7 @@
 # Configurações do Sistema de Monitoramento IoT
 # Centralizando configurações para facilitar manutenção
 
-=== CONFIGURAÇÕES DO BANCO DE DADOS ORACLE ===
+# === CONFIGURAÇÕES DO BANCO DE DADOS ORACLE ===
 DB_CONFIG = {
     "user": "fiap",
     "password": "123456", 

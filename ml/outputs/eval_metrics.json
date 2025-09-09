@@ -1,0 +1,9 @@
+{
+  "ARI": 1.0,
+  "AMI": 1.0,
+  "NMI": 1.0,
+  "Homogeneity": 1.0,
+  "Completeness": 1.0,
+  "VMeasure": 1.0,
+  "Accuracy_opt_map": 1.0
+}

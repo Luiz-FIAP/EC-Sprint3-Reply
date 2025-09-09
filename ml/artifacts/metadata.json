@@ -1,0 +1,20 @@
+{
+  "feature_cols": [
+    "temperatura_c",
+    "umidade_pct",
+    "vibracao_digital",
+    "luminosidade_analogica"
+  ],
+  "severity_map": {
+    "0": "bom",
+    "2": "alerta",
+    "3": "critico",
+    "4": "critico+",
+    "1": "critico++"
+  },
+  "model_selection": {
+    "method": "silhouette",
+    "best_k": 5,
+    "best_score": 0.6433545296601317
+  }
+}

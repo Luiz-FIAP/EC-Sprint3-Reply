@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Clusterização</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    h1, h2, h3 { margin: 8px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    img { width: 100%; height: auto; border: 1px solid #ddd; }
+    .meta { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Clusterização por KMeans</h1>
+  <div class="meta">
+    <p><b>Método de escolha de k:</b> silhouette</p>
+    <p><b>k escolhido:</b> 5</p>
+    <p><b>Score (método):</b> 0.6434</p>
+    <p><b>Amostras:</b> 3000</p>
+    <p><b>Features:</b> temperatura_c, umidade_pct, vibracao_digital, luminosidade_analogica</p>
+  </div>
+
+  <h2>Gráficos de seleção de k</h2>
+  <div class="grid">
+    <div>
+      <img src="../outputs/silhouette_scores.png" alt="Silhouette vs k" />
+    </div>
+    <div>
+      <img src="../outputs/ch_scores.png" alt="Calinski-Harabasz vs k" />
+    </div>
+  </div>
+
+  <h2>Projeção PCA (2D)</h2>
+  <div class="grid">
+    <div>
+      <img src="../outputs/pca_scatter.png" alt="PCA clusters" />
+    </div>
+    <div>
+      <a href="../outputs/pca_scatter.html">Versão interativa (HTML)</a>
+    </div>
+  </div>
+
+  <h2>Resumo por cluster</h2>
+  <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>cluster_id</th>
+      <th>severity</th>
+      <th>count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>bom</td>
+      <td>1743</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>critico++</td>
+      <td>191</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>alerta</td>
+      <td>259</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>critico</td>
+      <td>647</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>critico+</td>
+      <td>160</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
+            
