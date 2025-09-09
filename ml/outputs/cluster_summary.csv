@@ -1,0 +1,6 @@
+cluster_id,severity,count
+0,bom,1743
+1,critico++,191
+2,alerta,259
+3,critico,647
+4,critico+,160
